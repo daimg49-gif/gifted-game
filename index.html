@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v4 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v5 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -209,6 +209,12 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 .board .cell:focus-visible .cellframe{stroke:var(--gold-d);stroke-width:5}
 .board .litbox{fill:#F4CF87;fill-opacity:.18;stroke:#F4CF87;stroke-width:4}
 .sky .star .son{opacity:0} .sky .star.lit .son{opacity:1} .sky .star.lit .soff{opacity:0}
+.about h2{color:var(--night)}
+.needs{display:grid;gap:8px;margin-top:6px}
+@media (min-width:600px){.needs{grid-template-columns:1fr 1fr}}
+.needs div{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.needs b{display:block;color:var(--teal-d);font-size:1.05rem}
+.howto{background:#fff;color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:8px 14px;margin:6px 0 10px;text-align:center;font-weight:700}
 /* ---------- 遊戲二：工坊 ---------- */
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
 .chip{min-height:96px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
@@ -274,7 +280,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
 .status.wait{background:#fbe8c2;color:var(--gold-d)}
 .status.open{background:var(--teal-l);color:var(--teal-d)}
 .status.close{background:#eedfdc;color:var(--warn)}
-.foot{text-align:center;font-size:.82rem;color:#aab6ca;margin-top:24px}
+.foot{text-align:center;font-size:.9rem;line-height:1.6;color:#FFF8EB;background:rgba(17,26,44,.94);border:1px solid #3a4b6b;border-radius:12px;padding:10px 14px;margin:24px 0 0}
 .preview-flag{position:fixed;left:8px;bottom:8px;z-index:30;background:var(--warn);color:#fff;font-size:.72rem;padding:2px 8px;border-radius:6px;opacity:.85;pointer-events:none}
 
 /* ---------- 對話框 ---------- */
@@ -316,7 +322,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v4',
+  version: 'v5',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -589,11 +595,20 @@ SCREENS.home = () => `
         <button class="link" data-act="go" data-to="enroll">查看鑑定與報名</button>
         ${anyProgress()?'<button class="link" data-act="memento">看今天的紀錄</button><button class="link" data-act="restart">重新開始</button>':''}
       </div>
-      <p class="disclaim">這是親子探索活動，不是資優鑑定；遊戲表現不影響報名資格。</p>
     </div>
     <div>${islandHTML()}</div>
   </div>
-  <p class="foot">${esc(CONFIG.school.name)}資優班｜親子探索活動・非鑑定工具｜${esc(CONFIG.version)}</p>`;
+  <section class="panel about" aria-labelledby="aboutT">
+    <h2 id="aboutT">資優是什麼？</h2>
+    <p>國小資優教育強調因材施教。資優孩子在學習和情感上，常有探究、創造、領導與情意等方面的特殊需求，資優班依照這些需求調整課程與學習方式，並不是為了追求學科成績卓越。</p>
+    <div class="needs">
+      <div><b>探究</b>喜歡追問原因，想自己找資料、動手查證</div>
+      <div><b>創造</b>想用自己的方法解決問題，做出不一樣的作品</div>
+      <div><b>領導</b>願意和同學溝通分工，帶著大家完成任務</div>
+      <div><b>情意</b>情緒感受較敏銳、對自己要求較高，需要被理解與陪伴</div>
+    </div>
+  </section>
+  <p class="foot">${esc(CONFIG.school.name)}資優班｜遊戲頁面僅供資優宣導參考，並非正式鑑定，遊戲結果也不影響報名資格。</p>`;
 AFTER.home = () => { document.body.classList.add('home'); };
 
 SCREENS.intro = () => {
@@ -662,8 +677,7 @@ SCREENS.picker = () => {
   const st = k => S[k].done ? '<span class="tag">完成</span>' : S.skipped[k] ? '<span class="tag gold">略過</span>' : '';
   return `${guide('三站想先去哪一站都可以。','guide')}
   <div class="stations">
-    ${['g1','g2','g3'].map(k=>`<button class="station" data-act="go" data-to="${k}"><span class="ic" aria-hidden="true">${STATIONS[k].ic}</span>
-      <span><b>${STATIONS[k].name}</b>${STATIONS[k].one}</span><span class="st">${st(k)}</span></button>`).join('')}
+    ${['g1','g2','g3'].map(k=>`<button class="station" data-act="go" data-to="${k}"><span><b>${STATIONS[k].name}</b>${STATIONS[k].one}</span><span class="st">${st(k)}</span></button>`).join('')}
   </div>
   <div class="btns"><button class="btn ghost" data-act="memento">看今天的紀錄</button></div>`;
 };
@@ -788,20 +802,20 @@ function dots(n, cur, done){ return `<div class="dots" aria-label="第 ${cur+1} 
 SCREENS.g1 = () => {
   const g = S.g1, solved = g.solved[g.level], last = g.level===G1_LEVELS.length-1;
   let fb = '', cls = '';
-  if(solved){ fb = '⭐ 到站了！'; cls='ok'; }
+  if(solved){ fb = '到站了！'; cls='ok'; }
   else if(g1Last && !g1Last.ok && !g1Anim){ fb = '星星停住了，紅框那一塊轉一轉看看。'; cls='stop'; }
   return `${sceneBanner('機關修理所', STATIONS.g1.art, '#2b3550')}
   ${guide('轉一轉軌道，讓星星快遞開到燈塔！', solved?'happy':'idle')}
   <div class="panel">
     ${dots(G1_LEVELS.length, g.level, solved)}
-    <div class="pill" aria-label="玩法：點軌道轉方向，接好後按出發">👆<span>➜</span>🔄<span>➜</span>▶️<span>➜</span>⭐</div>
+    <p class="howto">點軌道轉方向，接好後按「出發」</p>
     ${g1BoardSVG()}
     <div class="fb ${cls}" id="g1fb" aria-live="polite">${esc(fb)}</div>
     ${solved
-      ? (last ? `<div class="btns"><button class="btn main" data-act="next" data-st="g1">下一站 ➜</button></div>`
-              : `<div class="btns"><button class="btn main" data-act="g1next">下一關 ➜</button></div>`)
-      : `<div class="btns two"><button class="btn main" data-act="g1run" ${g1Anim?'disabled':''} aria-label="出發">▶️ 出發</button>
-         <button class="btn ghost" data-act="g1hint" ${g.hint>=2?'disabled':''} aria-label="提示">💡 提示</button></div>`}
+      ? (last ? `<div class="btns"><button class="btn main" data-act="next" data-st="g1">下一站</button></div>`
+              : `<div class="btns"><button class="btn main" data-act="g1next">下一關</button></div>`)
+      : `<div class="btns two"><button class="btn main" data-act="g1run" ${g1Anim?'disabled':''} >出發</button>
+         <button class="btn ghost" data-act="g1hint" ${g.hint>=2?'disabled':''} >提示</button></div>`}
   </div>
   ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g1">略過這一站</button></div>` : ''}`;
 };
@@ -914,14 +928,14 @@ SCREENS.g2 = () => {
   <div class="panel">
     ${dots(n, g.round, g.roundSolved)}
     ${stonesSVG()}
-    <div class="pill" aria-label="玩法：看石頭上的圖形，從下面選出問號那一顆">👀<span>➜</span>❓<span>➜</span>👆</div>
+    <p class="howto">看石頭上的圖形，從下面選出問號那一顆</p>
     <div class="shopts" role="group" aria-label="選一顆石頭">
       ${R.opts.map(k=>`<button class="shopt ${g.roundSolved&&k===R.ans?'right':''}" data-act="g2pick" data-k="${k}" aria-label="${SHAPE_NAME[k]}" ${g.roundSolved?'disabled':''}>
         <svg viewBox="0 0 60 60" aria-hidden="true">${shapeSVG(k,30,30,52)}</svg></button>`).join('')}
     </div>
-    <div class="fb ok" aria-live="polite">${g.roundSolved ? (last?'🎉 毛球過河了！':'✔️ 鋪好了！') : ''}</div>
-    ${g.roundSolved ? (last ? `<div class="btns"><button class="btn main" data-act="next" data-st="g2">下一站 ➜</button></div>`
-                            : `<div class="btns"><button class="btn main" data-act="g2next">下一條河 ➜</button></div>`) : ''}
+    <div class="fb ok" aria-live="polite">${g.roundSolved ? (last?'毛球過河了！':'鋪好了！') : ''}</div>
+    ${g.roundSolved ? (last ? `<div class="btns"><button class="btn main" data-act="next" data-st="g2">下一站</button></div>`
+                            : `<div class="btns"><button class="btn main" data-act="g2next">下一條河</button></div>`) : ''}
   </div>
   ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g2">略過這一站</button></div>`:''}`;
 };
@@ -981,16 +995,16 @@ function g3Tap(i){
 SCREENS.g3 = () => {
   const g = S.g3, n = G3_ROUNDS.length, last = g.round===n-1, seq = G3_ROUNDS[Math.min(g.round,n-1)];
   let btn = '';
-  if(g.roundSolved) btn = last ? `<button class="btn main" data-act="next" data-st="g3">下一站 ➜</button>` : `<button class="btn main" data-act="g3next">下一片星空 ➜</button>`;
-  else if(g3Phase==='show') btn = `<button class="btn main" disabled>👀 看仔細…</button>`;
-  else if(g3Phase==='input') btn = `<button class="btn ghost" data-act="g3play">🔁 再看一次</button>`;
-  else btn = `<button class="btn main" data-act="g3play">${g.views>0?'🔁 再看一次':'▶️ 看星星'}</button>`;
-  const fb = g.roundSolved ? (last?'🌟 星座連起來了！':'✔️ 全部記住了！') : g3Phase==='input' ? `👆 ${g3Input.length}／${seq.length}` : '';
+  if(g.roundSolved) btn = last ? `<button class="btn main" data-act="next" data-st="g3">下一站</button>` : `<button class="btn main" data-act="g3next">下一片星空</button>`;
+  else if(g3Phase==='show') btn = `<button class="btn main" disabled>看仔細…</button>`;
+  else if(g3Phase==='input') btn = `<button class="btn ghost" data-act="g3play">再看一次</button>`;
+  else btn = `<button class="btn main" data-act="g3play">${g.views>0?'再看一次':'看星星'}</button>`;
+  const fb = g.roundSolved ? (last?'星座連起來了！':'全部記住了！') : g3Phase==='input' ? `已點 ${g3Input.length}／${seq.length}` : '';
   return `${sceneBanner('線索觀星臺', STATIONS.g3.art, '#1f2c48')}
   ${guide('星星會一顆一顆亮。看仔細，再照順序點一次！', g.roundSolved?'happy':'think')}
   <div class="panel">
     ${dots(n, g.round, g.roundSolved)}
-    <div class="pill" aria-label="玩法：先看星星亮的順序，再照順序點星星">👀<span>➜</span>⭐⭐⭐<span>➜</span>👆</div>
+    <p class="howto">先看星星亮的順序，再照順序點星星</p>
     ${skySVG()}
     <div class="fb ok" aria-live="polite">${fb}</div>
     <div class="btns">${btn}</div>
@@ -1045,7 +1059,6 @@ SCREENS.courses = () => {
   <div class="panel dark"><h2>這些思考，可以在哪裡繼續長大？</h2><p class="muted" style="margin:0">${esc(C.intro)}</p></div>
   <div class="panel"><h3>莒優教學特色</h3>
     <div class="feats">${C.features.map(f=>`<div class="feat"><b>${esc(f[0])}</b><p>${esc(f[1])}</p></div>`).join('')}</div></div>
-  <p class="note">課程安排、服務方式與招生對象，請依學校說明及當年度簡章確認。</p>
   <div class="btns"><a class="btn teal" href="${esc(C.courseUrl)}" target="_blank" rel="noopener">${esc(C.courseLabel)} ↗</a><button class="btn main" data-act="go" data-to="enroll">了解鑑定與報名</button></div>`;
 };
 function classSiteBtn(kind){
@@ -1076,7 +1089,6 @@ SCREENS.enroll = () => {
   </div>
   <div class="panel dark">
     <h3>想多認識莒光資優班？</h3>
-    <p class="muted">課程、活動照片和學生作品，都放在資優班網站上。</p>
     <div class="btns">${classSiteBtn('main')}</div>
   </div>
   <p class="foot">本網站為教育宣傳與親子探索用途，不收集作答與個人資料。</p>`;
