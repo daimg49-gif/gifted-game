@@ -1,0 +1,146 @@
+[
+  {
+    "file": "island.webp",
+    "width": 1200,
+    "height": 1600,
+    "bytes": 289026,
+    "alpha": false,
+    "quality": 60
+  },
+  {
+    "file": "scene-treehouse.webp",
+    "width": 1600,
+    "height": 700,
+    "bytes": 298332,
+    "alpha": false,
+    "quality": 80
+  },
+  {
+    "file": "scene-repair.webp",
+    "width": 1600,
+    "height": 700,
+    "bytes": 256352,
+    "alpha": false,
+    "quality": 75
+  },
+  {
+    "file": "scene-craft.webp",
+    "width": 1600,
+    "height": 700,
+    "bytes": 289492,
+    "alpha": false,
+    "quality": 80
+  },
+  {
+    "file": "scene-observatory.webp",
+    "width": 1600,
+    "height": 700,
+    "bytes": 262982,
+    "alpha": false,
+    "quality": 75
+  },
+  {
+    "file": "scene-dock.webp",
+    "width": 1600,
+    "height": 700,
+    "bytes": 260460,
+    "alpha": false,
+    "quality": 80
+  },
+  {
+    "file": "island-wide.webp",
+    "width": 1920,
+    "height": 1080,
+    "bytes": 247626,
+    "alpha": false,
+    "quality": 75
+  },
+  {
+    "file": "fluffball.png",
+    "width": 256,
+    "height": 256,
+    "bytes": 65559,
+    "alpha": true,
+    "quality": null
+  },
+  {
+    "file": "parent-card-1.webp",
+    "width": 800,
+    "height": 600,
+    "bytes": 189424,
+    "alpha": false,
+    "quality": 90
+  },
+  {
+    "file": "parent-card-2.webp",
+    "width": 800,
+    "height": 600,
+    "bytes": 177406,
+    "alpha": false,
+    "quality": 90
+  },
+  {
+    "file": "parent-card-3.webp",
+    "width": 800,
+    "height": 600,
+    "bytes": 174530,
+    "alpha": false,
+    "quality": 90
+  },
+  {
+    "file": "parent-card-4.webp",
+    "width": 800,
+    "height": 600,
+    "bytes": 140056,
+    "alpha": false,
+    "quality": 90
+  },
+  {
+    "file": "parent-card-5.webp",
+    "width": 800,
+    "height": 600,
+    "bytes": 195262,
+    "alpha": false,
+    "quality": 90
+  },
+  {
+    "file": "parent-card-6.webp",
+    "width": 800,
+    "height": 600,
+    "bytes": 172450,
+    "alpha": false,
+    "quality": 90
+  },
+  {
+    "file": "xiaoguang-idle.png",
+    "width": 512,
+    "height": 512,
+    "bytes": 255882,
+    "alpha": true,
+    "quality": null
+  },
+  {
+    "file": "xiaoguang-guide.png",
+    "width": 512,
+    "height": 512,
+    "bytes": 227066,
+    "alpha": true,
+    "quality": null
+  },
+  {
+    "file": "xiaoguang-think.png",
+    "width": 512,
+    "height": 512,
+    "bytes": 243599,
+    "alpha": true,
+    "quality": null
+  },
+  {
+    "file": "xiaoguang-happy.png",
+    "width": 512,
+    "height": 512,
+    "bytes": 252217,
+    "alpha": true,
+    "quality": null
+  }
+]

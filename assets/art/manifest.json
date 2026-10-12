@@ -1,0 +1,154 @@
+[
+  {
+    "id": "hero-island-mobile",
+    "file": "images/hero-island-mobile.webp",
+    "width": 1024,
+    "height": 1536,
+    "alpha": false,
+    "bytes": 507446
+  },
+  {
+    "id": "hero-island-desktop",
+    "file": "images/hero-island-desktop.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 534482
+  },
+  {
+    "id": "scene-parent-treehouse",
+    "file": "images/scene-parent-treehouse.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 440110
+  },
+  {
+    "id": "scene-repair-workshop",
+    "file": "images/scene-repair-workshop.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 604990
+  },
+  {
+    "id": "scene-imagination-river",
+    "file": "images/scene-imagination-river.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 627768
+  },
+  {
+    "id": "scene-observatory",
+    "file": "images/scene-observatory.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 547904
+  },
+  {
+    "id": "parent-card-01-questions",
+    "file": "images/parent-card-01-questions.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 518362
+  },
+  {
+    "id": "parent-card-02-deep-interest",
+    "file": "images/parent-card-02-deep-interest.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 489062
+  },
+  {
+    "id": "parent-card-03-noticing",
+    "file": "images/parent-card-03-noticing.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 483112
+  },
+  {
+    "id": "parent-card-04-other-way",
+    "file": "images/parent-card-04-other-way.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 359906
+  },
+  {
+    "id": "parent-card-05-different-rhythms",
+    "file": "images/parent-card-05-different-rhythms.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 538416
+  },
+  {
+    "id": "parent-card-06-expression",
+    "file": "images/parent-card-06-expression.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": false,
+    "bytes": 464128
+  },
+  {
+    "id": "mascot-xiaoguang-atlas",
+    "file": "images/mascot-xiaoguang-atlas.webp",
+    "width": 1774,
+    "height": 887,
+    "alpha": true,
+    "bytes": 914110
+  },
+  {
+    "id": "workshop-tools-atlas",
+    "file": "images/workshop-tools-atlas.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": true,
+    "bytes": 1401434
+  },
+  {
+    "id": "observatory-props-atlas",
+    "file": "images/observatory-props-atlas.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": true,
+    "bytes": 853786
+  },
+  {
+    "id": "keepsake-card-background",
+    "file": "images/keepsake-card-background.webp",
+    "width": 1024,
+    "height": 1536,
+    "alpha": false,
+    "bytes": 338460
+  },
+  {
+    "id": "river-proposal-bridge",
+    "file": "images/river-proposal-bridge.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": true,
+    "bytes": 1344288
+  },
+  {
+    "id": "river-proposal-boat",
+    "file": "images/river-proposal-boat.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": true,
+    "bytes": 1420062
+  },
+  {
+    "id": "river-proposal-zipline",
+    "file": "images/river-proposal-zipline.webp",
+    "width": 1536,
+    "height": 1024,
+    "alpha": true,
+    "bytes": 1182392
+  }
+]
