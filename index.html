@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v2 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v3 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -201,6 +201,17 @@ ul.clean li:last-child{border-bottom:none}
 ol.tl{list-style:none;padding:0;margin:0 0 4px}
 ol.tl li{display:flex;gap:12px;padding:2px 0}
 ol.tl b{min-width:3em;color:var(--teal-d)}
+.feats{display:grid;gap:10px}
+@media (min-width:600px){.feats{grid-template-columns:1fr 1fr}}
+.feat{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px}
+.feat b{color:var(--teal-d)} .feat p{margin:4px 0 0}
+.ctags{display:flex;flex-wrap:wrap;gap:8px}
+.ctags span{background:var(--teal-l);color:var(--teal-d);font-weight:700;border-radius:999px;padding:4px 14px}
+.acts li:before{content:"📍 "}
+.board .cellframe{fill:none;stroke:none}
+.board .cell:focus-visible .cellframe{stroke:var(--gold-d);stroke-width:5}
+.board .litbox{fill:#F4CF87;fill-opacity:.18;stroke:#F4CF87;stroke-width:4}
+.sky .star .son{opacity:0} .sky .star.lit .son{opacity:1} .sky .star.lit .soff{opacity:0}
 /* ---------- 遊戲二：工坊 ---------- */
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
 .chip{min-height:96px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
@@ -308,7 +319,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v2',
+  version: 'v3',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -321,11 +332,15 @@ const CONFIG = {
     classSiteUrl: 'https://daimg49.wixsite.com/chukps-giftedclass',
     classSiteLabel: '前往莒光資優班網'
   },
-  courses: [
-    { title:'提問與探究', text:'從好奇出發，練習提出問題、蒐集資料與說明發現。', img:'', imgAlt:'', example:{ name:'', desc:'', link:'' } },
-    { title:'創作與解題', text:'嘗試不同方法，把想法做成作品，透過測試再修改。', img:'', imgAlt:'', example:{ name:'', desc:'', link:'' } },
-    { title:'合作與自我了解', text:'與同學交流，也逐漸了解自己的學習方式與需要。', img:'', imgAlt:'', example:{ name:'', desc:'', link:'' } }
+  intro: '針對不同特質及潛能的孩子，莒光資優班每學期開設多元課程，並規劃校內外參訪、踏查活動，提供加深加廣的充實機會。',
+  features: [
+    ['獨立思考，自主學習','面對真實生活中的問題，能嘗試解決，並發揮創意挑戰多元成果。'],
+    ['自我認識，團隊合作','了解、接納個人優缺點，並在團隊互動中培養溝通、合作能力與態度。'],
+    ['戶外充實課程與專家座談','透過充實課程，豐富孩子們的生活經驗、滿足求知慾。'],
+    ['因材施教，加深加廣課程','依據孩子們的特質與需求，規劃適性課程，協助拓展天賦。']
   ],
+  courseTypes: ['獨立研究','領域選修','閱讀技巧','資訊科技','人文課程','情意教育','領導與創造'],
+  activities: ['旗山歷史人文踏查','嘉義觸口生態踏查','橋頭地檢署、法院參訪','科學微觀顯微鏡講座','小小地政士測量講座','創意科技積木競賽','創意機器人競賽','創意運動會競賽'],
   bgm: 'assets/art/bgm.mp3'   // 配樂檔（選用）；沒有這個檔案就只有提示音
 };
 
@@ -333,30 +348,24 @@ const PENDING = '正式資料待學校確認';
 
 /* ---------- 內容表 ---------- */
 const CARDS = [
-  { t:'為什麼後面，還有為什麼', d:'得到答案後，孩子有時還會繼續追問原因，或提出另一個問題。', k:'提問', e:'💧' },
-  { t:'我的研究小角落', d:'遇到喜歡的事物，孩子會自己找資料、試做，或反覆研究細節。', k:'深入興趣', e:'🦕' },
-  { t:'等等，這裡怪怪的', d:'孩子有時會注意到規律、矛盾或別人沒留意的小細節。', k:'留意線索', e:'🔍' },
-  { t:'我有另一個辦法', d:'遇到問題，孩子會提出與常見做法不同的想法，或改造原有方法。', k:'多元解法', e:'🌉' },
-  { t:'有些地方快，有些地方慢', d:'孩子在某些領域理解得快或投入很多，但其他日常事情仍需要提醒與協助。', k:'不同面向的差異', e:'🧩' },
-  { t:'腦袋裡很多，說出來不容易', d:'從聊天或實作看得出孩子有想法，但書寫、作業或口頭表達未必完整呈現。', k:'表達方式', e:'💭' }
+  { t:'思考敏捷、能舉一反三', d:'教過一種玩法，孩子很快變出新玩法，或用到別的地方。', e:'⚡' },
+  { t:'理解力極佳', d:'大人說明一件事，孩子很快聽懂，還能用自己的話講給別人聽。', e:'💡' },
+  { t:'記憶和閱讀能力強', d:'看過的書、去過的地方，隔很久還記得細節。', e:'📚' },
+  { t:'語彙量高', d:'說話時會用到比同齡孩子更多、更精準的詞。', e:'💬' },
+  { t:'具批判思考、富正義感', d:'會問「為什麼要這樣規定」，看到不公平的事很在意。', e:'⚖️' },
+  { t:'高度專注於感興趣的事物', d:'遇到喜歡的事可以做很久，叫吃飯都聽不到。', e:'🔍' }
 ];
 const CARD_OPTS = ['常看見','偶爾看見','還沒留意'];
 
 const ROUTES = {
   parent:  { label:'我想觀察孩子',  time:'2–3 分鐘',  say:'不用替孩子挑最漂亮的答案，回想你真的看過的情況就好。' },
-  child:   { label:'讓孩子試試看',  time:'4–6 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' },
-  together:{ label:'我們一起探索',  time:'8–10 分鐘', say:'孩子負責探索，大人先看一看；卡住時，可以問「你現在想試什麼？」' }
+  child:   { label:'讓孩子試試看',  time:'4–6 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' }
 };
 
 const STATIONS = {
   g1:{ name:'機關修理所', ic:'⚙️', one:'轉一轉，接好星星快遞的軌道', art:'assets/art/scene-repair.webp' },
   g2:{ name:'奇想工坊',   ic:'🪨', one:'看圖形規律，幫毛球鋪踏石',   art:'assets/art/scene-craft.webp' },
   g3:{ name:'線索觀星臺', ic:'🔭', one:'記住星星亮起的順序',         art:'assets/art/scene-observatory.webp' }
-};
-const PTIPS = {
-  g1:'剛才孩子怎麼決定要轉哪一塊？先想好、邊轉邊看，或看過提示再調整，都可以聊聊。',
-  g2:'孩子是先看完整排石頭，還是一顆一顆試？試錯也是找規律的一部分。',
-  g3:'問問孩子剛才怎麼記的：有人用數的，有人記位置，有人把星星想成一個形狀。'
 };
 const TALK = {
   cards:'最近哪一件事，孩子願意一直做下去？可以問問他喜歡的原因。',
@@ -575,7 +584,6 @@ SCREENS.home = () => `
       <div class="routes">
         <button class="route r1" data-act="route" data-r="parent">我想觀察孩子 <small>2–3 分鐘</small></button>
         <button class="route r2" data-act="route" data-r="child">讓孩子試試看 <small>4–6 分鐘</small></button>
-        <button class="route r3" data-act="route" data-r="together">我們一起探索 <small>8–10 分鐘</small></button>
       </div>
       <div class="homelinks">
         <button class="link" data-act="go" data-to="courses">直接了解資優班</button>
@@ -593,8 +601,7 @@ SCREENS.intro = () => {
   const r = ROUTES[S.route] || ROUTES.child;
   const mood = S.route==='child' ? 'happy' : 'guide';
   const plan = S.route==='parent' ? '翻開六張日常卡，回想孩子最近幾個月的樣子。'
-    : S.route==='child' ? '三個小任務：轉軌道、找規律、記星星。不用讀字，看圖就能玩，想先玩哪一個都可以。'
-    : '大人先看六張日常卡，接著換孩子玩三個看圖小任務，每一站後面有一句聊天提示。';
+    : '三個小任務：轉軌道、找規律、記星星。不用讀字，看圖就能玩，想先玩哪一個都可以。';
   return `${guide(r.say, mood)}
   <div class="panel"><h2>${esc(r.label)}</h2><p>${esc(plan)}</p><p class="muted">大約 ${esc(r.time)}・可以隨時略過或回到島嶼</p>
   <div class="btns"><button class="btn main" data-act="start">出發</button></div></div>`;
@@ -627,31 +634,59 @@ function seenList(){ return CARDS.map((c,i)=>({c,v:S.cards[i]})).filter(x=>x.v==
 SCREENS.parentResult = () => {
   const L = seenList();
   const body = L.length
-    ? `<ul class="clean">${L.map(x=>`<li><span class="tag ${x.v==='常看見'?'gold':''}">${x.v}</span><b>${esc(x.c.t)}</b><div class="muted">${esc(x.c.k)}</div></li>`).join('')}</ul>
+    ? `<ul class="clean">${L.map(x=>`<li><span class="tag ${x.v==='常看見'?'gold':''}">${x.v}</span><b>${esc(x.c.t)}</b><div class="muted">${esc(x.c.d)}</div></li>`).join('')}</ul>
        <p style="margin-top:12px">這些是你回想起來的生活片段。接下來可以留意：孩子在哪些情境最投入？用了哪些方法？需要什麼協助？</p>`
     : `<p>今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。</p>`;
-  const btns = S.route==='together'
-    ? `<button class="btn main" data-act="go" data-to="picker">換孩子出發</button>
-       <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>`
-    : `<button class="btn main" data-act="tochild">讓孩子玩一站</button>
-       <button class="btn teal" data-act="go" data-to="courses">看看資優班</button>
-       <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>`;
   return `${guide(L.length?'謝謝你花時間回想。':'沒關係，觀察可以從今天開始。','happy')}
   <div class="panel"><h2>你留意到的日常線索</h2>${body}
-  <p class="muted">這些描述不是資格判定；是否符合報名條件，請以當年度正式簡章為準。</p>
-  <div class="btns">${btns}</div></div>`;
+  <p class="muted">本觀察向度僅用於資優宣導，不影響鑑定資格與分數。</p>
+  <div class="btns">
+    <button class="btn main" data-act="tochild">讓孩子玩一站</button>
+    <button class="btn teal" data-act="go" data-to="courses">看看資優班</button>
+    <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>
+  </div></div>
+  <div class="panel">
+    <h3>資優生＝績優生？</h3>
+    <p>一般智能資優學生，指在記憶、理解、應用、分析等方面有優秀潛能的孩子。他們比較容易有不錯的學習表現，但成績好壞不是判斷資優的指標，他們一樣需要努力學習。</p>
+    <h3>他們也可能有這些煩惱</h3>
+    <ul class="clean">
+      <li>好奇心滿滿、想像力豐富，卻不知道怎麼發揮</li>
+      <li>同學聽不懂我在說什麼，想找有共同話題的朋友</li>
+      <li>對自己要求高，想做到完美，壓力好大</li>
+    </ul>
+    <p style="margin-top:10px">除了進階的挑戰，他們在人際與情意上也需要支持，這就是資優教育要做的事。</p>
+  </div>`;
 };
 
 /* ---------- 站點選擇 ---------- */
 SCREENS.picker = () => {
   const st = k => S[k].done ? '<span class="tag">完成</span>' : S.skipped[k] ? '<span class="tag gold">略過</span>' : '';
-  return `${guide(S.route==='together'?'換孩子上場！三站想先去哪一站都可以。':'三站想先去哪一站都可以。','guide')}
+  return `${guide('三站想先去哪一站都可以。','guide')}
   <div class="stations">
     ${['g1','g2','g3'].map(k=>`<button class="station" data-act="go" data-to="${k}"><span class="ic" aria-hidden="true">${STATIONS[k].ic}</span>
       <span><b>${STATIONS[k].name}</b>${STATIONS[k].one}</span><span class="st">${st(k)}</span></button>`).join('')}
   </div>
   <div class="btns"><button class="btn ghost" data-act="memento">看今天的紀錄</button></div>`;
 };
+
+/* ---------- 遊戲素材（ChatGPT 圖檔；載入成功才使用，否則用程式畫的備用圖） ---------- */
+const ART_FILES = {
+  g1bg:'g1-board-bg.webp', g1tile:'g1-tile.png', g1s:'g1-rail-straight.png', g1c:'g1-rail-curve.png',
+  g1rock:'g1-rock.png', g1flower:'g1-flower.png', g1car:'g1-star-car.png', g1lhOff:'g1-lighthouse-off.png', g1lhOn:'g1-lighthouse-on.png',
+  g2river:'g2-river.webp', g2stone:'g2-stone.png', g2house:'g2-house.png', fluff:'fluffball.png',
+  g3sky:'g3-sky.webp', g3off:'g3-star-off.png', g3on:'g3-star-on.png'
+};
+const ART = {};
+let artTimer = null;
+(function preloadArt(){
+  Object.keys(ART_FILES).forEach(k=>{
+    const src = 'assets/art/' + ART_FILES[k], im = new Image();
+    im.onload = ()=>{ ART[k] = src; clearTimeout(artTimer); artTimer = setTimeout(()=>{
+      if(['g1','g2','g3'].indexOf(S.screen)>=0 && !g1Anim && g3Phase!=='show') render(); }, 120); };
+    im.src = src;
+  });
+})();
+function aimg(k,x,y,w,h,extra){ return `<image href="${ART[k]}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet" ${extra||''}/>`; }
 
 /* =========================================================
    守門：遊戲一 機關修理所（轉軌道・空間推理）
@@ -700,12 +735,15 @@ function g1Wrong(){ // 沿路線順序，第一塊方向不對的零件
   return -1;
 }
 function railSVG(p, cls){
+  const ak = p.t==='s' ? 'g1s' : 'g1c';
+  if(ART[ak]) return `<g transform="rotate(${p.r*90} 50 50)" class="${cls||''}">${aimg(ak,0,0,100,100)}</g>`;
   const inner = p.t==='s'
     ? `<line x1="0" y1="50" x2="100" y2="50" class="rail"/><line x1="0" y1="50" x2="100" y2="50" class="rail2"/>${[15,38,62,85].map(x=>`<rect x="${x-3}" y="38" width="6" height="24" fill="#8a6a3a"/>`).join('')}`
     : `<path d="M50 0 A50 50 0 0 0 100 50" class="rail"/><path d="M50 0 A50 50 0 0 0 100 50" class="rail2"/>`;
   return `<g transform="rotate(${p.r*90} 50 50)" class="${cls||''}">${inner}</g>`;
 }
 function decoSVG(k){
+  if(ART['g1'+k]) return aimg('g1'+k,2,2,96,96);
   return k==='rock'
     ? `<ellipse cx="50" cy="62" rx="26" ry="16" fill="#8b93a3"/><ellipse cx="42" cy="56" rx="10" ry="5" fill="#a9b0bd"/>`
     : `<line x1="50" y1="72" x2="50" y2="46" stroke="#3f8a74" stroke-width="4"/>${[0,72,144,216,288].map(a=>`<circle cx="${50+9*Math.cos(a*Math.PI/180)}" cy="${40+9*Math.sin(a*Math.PI/180)}" r="7" fill="#e9a3b8"/>`).join('')}<circle cx="50" cy="40" r="5" fill="#F4CF87"/>`;
@@ -720,7 +758,8 @@ function g1BoardSVG(){
     if(p){
       const desc = p.t==='s' ? (p.r%2===0?'直軌，左右方向':'直軌，上下方向') : ['彎軌，上到右','彎軌，右到下','彎軌，下到左','彎軌，左到上'][p.r];
       cells += `<g class="cell" role="button" tabindex="0" data-act="cell" data-r="${r}" data-c="${c}" aria-label="第${r+1}排第${c+1}格，${desc}，點一下轉方向" transform="translate(${c*100} ${r*100})">
-        <rect class="cellbg" x="2" y="2" width="96" height="96" rx="10"/>${railSVG(p, litCells[r+','+c]?'lit':'')}</g>`;
+        <rect class="cellbg" x="2" y="2" width="96" height="96" rx="10"/>${ART.g1tile?aimg('g1tile',2,2,96,96):''}${railSVG(p, litCells[r+','+c]?'lit':'')}
+        ${litCells[r+','+c]?'<rect class="litbox" x="5" y="5" width="90" height="90" rx="10"/>':''}<rect class="cellframe" x="2" y="2" width="96" height="96" rx="10"/></g>`;
     } else {
       const d = L.deco.find(x=>x[0]===r&&x[1]===c);
       cells += `<g class="deco" aria-hidden="true" transform="translate(${c*100} ${r*100})"><rect x="2" y="2" width="96" height="96" rx="10" fill="#3a5a4c"/>${d?decoSVG(d[2]):''}</g>`;
@@ -735,19 +774,18 @@ function g1BoardSVG(){
     if(S.g1.hint>=2) mark += `<g transform="translate(${p[1]*100} ${p[0]*100})" class="ghost" pointer-events="none">${railSVG({t:p[2],r:p[3]})}</g>`;
   }
   return `<svg class="board" id="board" viewBox="-60 -20 420 340" role="group" aria-label="三乘三軌道方格">
-    <rect x="-60" y="-20" width="420" height="340" fill="#22314d" rx="14"/>
+    <rect x="-60" y="-20" width="420" height="340" fill="#22314d" rx="14"/>${ART.g1bg?aimg('g1bg',-60,-20,420,340,'preserveAspectRatio="xMidYMid slice"'):''}
     <g aria-hidden="true"><rect x="-52" y="36" width="50" height="28" rx="6" fill="#73B8A5"/><path d="M-36 42 L-20 50 L-36 58z" fill="#18243B"/></g>
-    <g aria-hidden="true" transform="translate(300 220)">
+    ${ART[solved?'g1lhOn':'g1lhOff'] ? `<g aria-hidden="true" transform="translate(300 200)">${aimg(solved?'g1lhOn':'g1lhOff',-6,0,60,110)}</g>` : `<g aria-hidden="true" transform="translate(300 220)">
       <rect x="12" y="20" width="24" height="70" fill="#FFF8EB"/><rect x="12" y="40" width="24" height="10" fill="#c0503f"/><rect x="12" y="66" width="24" height="10" fill="#c0503f"/>
       <rect x="8" y="10" width="32" height="14" rx="3" fill="#44506a"/>
       <circle cx="24" cy="12" r="${solved?22:8}" fill="${solved?'#F4CF87':'#5d6b85'}" opacity="${solved?.9:1}"/>
-    </g>
+    </g>`}
     ${cells}${mark}
-    <g id="car" aria-hidden="true" transform="translate(${solved?'340 250':'-30 50'})"><circle r="14" fill="#F4CF87" stroke="#8a5a12" stroke-width="2"/><path d="M0 -8 L2.4 -2.4 L8 -2.4 L3.6 1.2 L5.2 7 L0 3.6 L-5.2 7 L-3.6 1.2 L-8 -2.4 L-2.4 -2.4z" fill="#fff"/></g>
+    <g id="car" aria-hidden="true" transform="translate(${solved?'340 250':'-30 50'})">${ART.g1car?aimg('g1car',-20,-20,40,40):`<circle r="14" fill="#F4CF87" stroke="#8a5a12" stroke-width="2"/><path d="M0 -8 L2.4 -2.4 L8 -2.4 L3.6 1.2 L5.2 7 L0 3.6 L-5.2 7 L-3.6 1.2 L-8 -2.4 L-2.4 -2.4z" fill="#fff"/>`}</g>
   </svg>`;
 }
 function dots(n, cur, done){ return `<div class="dots" aria-label="第 ${cur+1} 關，共 ${n} 關">${Array.from({length:n},(_,i)=>`<i class="${i<cur||(i===cur&&done)?'on':''} ${i===cur?'cur':''}"></i>`).join('')}</div>`; }
-function ptip(k){ return `<div class="ptip"><b>給大人的小提示</b>${esc(PTIPS[k])}</div>`; }
 SCREENS.g1 = () => {
   const g = S.g1, solved = g.solved[g.level], last = g.level===G1_LEVELS.length-1;
   let fb = '', cls = '';
@@ -766,7 +804,6 @@ SCREENS.g1 = () => {
       : `<div class="btns two"><button class="btn main" data-act="g1run" ${g1Anim?'disabled':''} aria-label="出發">▶️ 出發</button>
          <button class="btn ghost" data-act="g1hint" ${g.hint>=2?'disabled':''} aria-label="提示">💡 提示</button></div>`}
   </div>
-  ${S.route==='together' && g.done ? ptip('g1') : ''}
   ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g1">略過這一站</button></div>` : ''}`;
 };
 function carPoints(path){
@@ -851,20 +888,21 @@ function shapeSVG(key, cx, cy, size){
 function stonesSVG(){
   const g = S.g2, R = G2_ROUNDS[Math.min(g.round,G2_ROUNDS.length-1)], solved = g.roundSolved;
   const xs = [58,108,158,208,258,308];
-  const fluff = `<g class="fluffHop"><ellipse cx="0" cy="0" rx="17" ry="15" fill="#e9dccb" stroke="#18243B" stroke-width="1.5"/><circle cx="-6" cy="-3" r="2.4" fill="#1c2638"/><circle cx="6" cy="-3" r="2.4" fill="#1c2638"/>
+  const fluff = ART.fluff ? `<g class="fluffHop">${aimg('fluff',-26,-30,52,52)}</g>` : `<g class="fluffHop"><ellipse cx="0" cy="0" rx="17" ry="15" fill="#e9dccb" stroke="#18243B" stroke-width="1.5"/><circle cx="-6" cy="-3" r="2.4" fill="#1c2638"/><circle cx="6" cy="-3" r="2.4" fill="#1c2638"/>
      <path d="M-4 4q4 3 8 0" stroke="#1c2638" stroke-width="1.8" fill="none"/><rect x="-24" y="-12" width="12" height="12" rx="3" fill="#c0503f"/>
-     <image href="assets/art/fluffball.png" x="-24" y="-26" width="48" height="48" onerror="this.remove()"/></g>`;
+     </g>`;
   const stones = xs.map((x,i)=>{
     const known = i<5, filled = i===5 && solved;
-    return `<ellipse cx="${x}" cy="150" rx="22" ry="11" fill="${known||filled?'#9aa3b2':'none'}" stroke="${known||filled?'#6b7385':'#FFF8EB'}" stroke-width="2" ${known||filled?'':'stroke-dasharray="5 4"'}/>
+    const stone = (known||filled) && ART.g2stone ? aimg('g2stone',x-28,136,56,28) : `<ellipse cx="${x}" cy="150" rx="22" ry="11" fill="${known||filled?'#9aa3b2':'none'}" stroke="${known||filled?'#6b7385':'#FFF8EB'}" stroke-width="2" ${known||filled?'':'stroke-dasharray="5 4"'}/>`;
+    return `${stone}
       ${known ? shapeSVG(R.seq[i], x, 122, 40) : filled ? shapeSVG(R.ans, x, 122, 40) : `<text x="${x}" y="134" text-anchor="middle" font-size="34" font-weight="700" fill="#F4CF87">?</text>`}`;
   }).join('');
   const atEnd = solved && PREF.reduce;
   return `<svg class="stones ${solved&&!PREF.reduce?'cross':''}" viewBox="0 78 360 122" role="img" aria-label="河上一排踏石：${R.seq.map(k=>SHAPE_NAME[k]).join('、')}，最後一顆是問號">
-    <rect width="360" height="200" fill="#2c3d5f"/>
+    ${ART.g2river ? aimg('g2river',0,78,360,122,'preserveAspectRatio="xMidYMid slice"') : `<rect width="360" height="200" fill="#2c3d5f"/>
     <rect x="0" y="140" width="34" height="60" fill="#3f8a74"/><rect x="330" y="140" width="30" height="60" fill="#3f8a74"/>
-    <rect x="34" y="146" width="296" height="54" fill="#4a7fb0"/><path d="M50 182q10-4 20 0t20 0M150 190q10-4 20 0t20 0M240 178q10-4 20 0" stroke="#9cc6e6" stroke-width="2" fill="none"/>
-    <rect x="334" y="112" width="24" height="28" fill="#a4733f"/><path d="M330 114l16-12 16 12z" fill="#7a4f2a"/>
+    <rect x="34" y="146" width="296" height="54" fill="#4a7fb0"/><path d="M50 182q10-4 20 0t20 0M150 190q10-4 20 0t20 0M240 178q10-4 20 0" stroke="#9cc6e6" stroke-width="2" fill="none"/>`}
+    ${ART.g2house ? aimg('g2house',326,92,34,50) : `<rect x="334" y="112" width="24" height="28" fill="#a4733f"/><path d="M330 114l16-12 16 12z" fill="#7a4f2a"/>`}
     ${stones}
     <g class="fluffMove" ${atEnd?'transform="translate(322 0)"':''}><g transform="translate(18 124)">${fluff}</g></g>
   </svg>`;
@@ -886,7 +924,6 @@ SCREENS.g2 = () => {
     ${g.roundSolved ? (last ? `<div class="btns"><button class="btn main" data-act="next" data-st="g2">下一站 ➜</button></div>`
                             : `<div class="btns"><button class="btn main" data-act="g2next">下一條河 ➜</button></div>`) : ''}
   </div>
-  ${S.route==='together' && g.done ? ptip('g2') : ''}
   ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g2">略過這一站</button></div>`:''}`;
 };
 
@@ -903,11 +940,11 @@ function skySVG(){
   const line = pathIdx.length>1 ? `<polyline points="${pathIdx.map(i=>STARS[i].join(',')).join(' ')}" fill="none" stroke="#F4CF87" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>` : '';
   const bg = Array.from({length:30},(_,i)=>`<circle cx="${(i*67)%320}" cy="${(i*43)%220}" r="${i%4?0.8:1.3}" fill="#FFF8EB" opacity=".6"/>`).join('');
   return `<svg class="sky" id="sky" viewBox="0 0 320 220" role="group" aria-label="夜空裡的六顆星星">
-    <rect width="320" height="220" rx="14" fill="#101a2e"/>${bg}${line}
+    <rect width="320" height="220" rx="14" fill="#101a2e"/>${ART.g3sky?aimg('g3sky',0,0,320,220,'preserveAspectRatio="xMidYMid slice"'):bg}${line}
     ${STARS.map((p,i)=>`<g class="star ${solved&&seq.indexOf(i)>=0?'lit':''}" data-star="${i}" data-act="g3tap" data-i="${i}" role="button" tabindex="0" aria-label="第 ${i+1} 顆星星">
       <circle cx="${p[0]}" cy="${p[1]}" r="28" fill="transparent" class="ring" stroke="none"/>
       <circle cx="${p[0]}" cy="${p[1]}" r="22" class="halo"/>
-      <path class="core" d="M${p[0]} ${p[1]-14} L${p[0]+4} ${p[1]-4} L${p[0]+14} ${p[1]-4} L${p[0]+6} ${p[1]+3} L${p[0]+9} ${p[1]+13} L${p[0]} ${p[1]+7} L${p[0]-9} ${p[1]+13} L${p[0]-6} ${p[1]+3} L${p[0]-14} ${p[1]-4} L${p[0]-4} ${p[1]-4}Z"/>
+      ${ART.g3off&&ART.g3on ? aimg('g3off',p[0]-20,p[1]-20,40,40,'class="soff"')+aimg('g3on',p[0]-20,p[1]-20,40,40,'class="son"') : `<path class="core" d="M${p[0]} ${p[1]-14} L${p[0]+4} ${p[1]-4} L${p[0]+14} ${p[1]-4} L${p[0]+6} ${p[1]+3} L${p[0]+9} ${p[1]+13} L${p[0]} ${p[1]+7} L${p[0]-9} ${p[1]+13} L${p[0]-6} ${p[1]+3} L${p[0]-14} ${p[1]-4} L${p[0]-4} ${p[1]-4}Z"/>`}
     </g>`).join('')}
   </svg>`;
 }
@@ -959,7 +996,6 @@ SCREENS.g3 = () => {
     <div class="fb ok" aria-live="polite">${fb}</div>
     <div class="btns">${btn}</div>
   </div>
-  ${S.route==='together' && g.done ? ptip('g3') : ''}
   ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g3">略過這一站</button></div>`:''}`;
 };
 
@@ -1005,19 +1041,16 @@ SCREENS.memento = () => {
 
 /* ---------- 資優班介紹 ---------- */
 SCREENS.courses = () => {
-  const P = CONFIG.preview;
-  const cards = CONFIG.courses.map(c=>{
-    const ex = c.example && c.example.name && c.example.desc;
-    if(!c.img && !P && !ex) return `<div class="panel course"><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p></div>`;
-    return `<div class="panel course">
-      ${c.img ? `<div class="cpic"><img src="${esc(c.img)}" alt="${esc(c.imgAlt||c.title)}" loading="lazy"></div>` : (P?`<div class="cpic"><div class="pend">學校授權照片待提供<br>（正式版沒有照片就不顯示這一格）</div></div>`:'')}
-      <h3>${esc(c.title)}</h3><p>${esc(c.text)}</p>
-      ${ex ? `<p class="muted"><b>${esc(c.example.name)}</b>：${esc(c.example.desc)}${c.example.link?` <a href="${esc(c.example.link)}" target="_blank" rel="noopener">看成果</a>`:''}</p>`
-           : (P?`<p class="pending">［學校實際課程名稱］［一句真實活動描述］待老師核對</p>`:'')}
-    </div>`; }).join('');
+  const C = CONFIG;
   return `${sceneBanner('碼頭：通往真實的學校','assets/art/scene-dock.webp','#2a3a55')}
-  <div class="panel dark"><h2>這些思考，可以在哪裡繼續長大？</h2></div>
-  ${cards}
+  <div class="panel dark"><h2>這些思考，可以在哪裡繼續長大？</h2><p class="muted" style="margin:0">${esc(C.intro)}</p></div>
+  <div class="panel"><h3>莒優教學特色</h3>
+    <div class="feats">${C.features.map(f=>`<div class="feat"><b>${esc(f[0])}</b><p>${esc(f[1])}</p></div>`).join('')}</div></div>
+  <div class="panel"><h3>課程規劃</h3>
+    <div class="ctags">${C.courseTypes.map(t=>`<span>${esc(t)}</span>`).join('')}</div>
+    <p class="muted" style="margin-top:8px">透過多元嘗試，啟發每個孩子的天賦。</p></div>
+  <div class="panel"><h3>參訪、講座與競賽</h3>
+    <ul class="clean acts">${C.activities.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
   <p class="note">課程安排、服務方式與招生對象，請依學校說明及當年度簡章確認。</p>
   <div class="btns"><button class="btn main" data-act="go" data-to="enroll">了解鑑定與報名</button>${classSiteBtn('ghost')}</div>`;
 };
@@ -1064,7 +1097,7 @@ function nextStation(cur){
   go(left.length ? left[0] : 'memento');
 }
 function startRoute(){
-  if(S.route==='parent' || S.route==='together'){ S.cardIdx = 0; go('cards'); }
+  if(S.route==='parent'){ S.cardIdx = 0; go('cards'); }
   else go('picker');
 }
 function finishCards(){
@@ -1111,7 +1144,7 @@ function act(el){
     case 'skipst': {
       const st = el.dataset.st;
       S.skipped[st] = true; save();
-      if(st==='cards'){ S.cardsDone = false; save(); if(S.route==='together') go('picker'); else go('parentResult'); }
+      if(st==='cards'){ S.cardsDone = false; save(); go('parentResult'); }
       else nextStation(st);
       break; }
     case 'next': nextStation(el.dataset.st); break;
