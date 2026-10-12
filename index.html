@@ -1,0 +1,1224 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>看見小宇宙</title>
+<meta name="description" content="親子探索小遊戲，附資優班介紹與正式鑑定報名資訊。本活動不是資優鑑定。">
+<meta name="theme-color" content="#18243B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   看見小宇宙 v2 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
+   ========================================================= */
+:root{
+  --night:#18243B; --night2:#223150; --night3:#2c3d5f;
+  --teal:#73B8A5; --teal-d:#2c6a5b; --teal-l:#d7ede6;
+  --gold:#F4CF87; --gold-d:#7a4f0e; --cream:#FFF8EB;
+  --ink:#1c2638; --ink2:#44506a; --line:#e2d6bd;
+  --warn:#a3402e; --r:16px; --tap:48px;
+}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+html.big{font-size:19px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--cream);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
+  line-height:1.6;min-height:100vh;overflow-x:hidden}
+body.has-wide-art{background:var(--night) url("assets/art/island-wide.webp") center/cover fixed}
+button,input,textarea{font:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- 頂部列 ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:6px;
+  padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));
+  background:rgba(24,36,59,.94);border-bottom:1px solid #31425f;backdrop-filter:blur(6px)}
+.top .sp{flex:1}
+.tbtn{min-height:44px;min-width:44px;padding:0 12px;border-radius:12px;border:1px solid #3d5072;
+  background:var(--night2);color:var(--cream);font-size:.95rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.tbtn.gold{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
+.tbtn[hidden]{display:none}
+
+.app{max-width:760px;margin:0 auto;padding:16px 16px 48px}
+
+/* ---------- 面板 ---------- */
+.panel{background:var(--cream);color:var(--ink);border-radius:var(--r);padding:18px;margin:14px 0}
+.panel.dark{background:var(--night2);color:var(--cream);border:1px solid #344765}
+.panel h2{margin:0 0 8px;font-size:1.3rem;line-height:1.4}
+.panel h3{margin:0 0 6px;font-size:1.08rem}
+.panel p{margin:0 0 10px}
+.muted{color:var(--ink2);font-size:.92rem}
+.dark .muted{color:#c9d3e3}
+.note{font-size:.88rem;color:#d7deea;margin:8px 0}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:var(--tap);
+  padding:10px 16px;border-radius:14px;border:2px solid transparent;cursor:pointer;
+  font-size:1.05rem;font-weight:700;text-align:center;text-decoration:none;line-height:1.35}
+.btn.main{background:var(--gold);color:var(--ink)}
+.btn.teal{background:var(--teal);color:var(--ink)}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor;font-weight:500}
+.btn.plain{background:#fff;color:var(--ink);border-color:var(--line);font-weight:500}
+.btn:disabled,.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.btns{display:grid;gap:10px;margin-top:12px}
+.btns.two{grid-template-columns:1fr 1fr}
+.link{background:none;border:none;color:var(--gold);text-decoration:underline;cursor:pointer;
+  min-height:44px;padding:0 6px;font-size:1rem}
+.panel .link{color:var(--teal-d)}
+
+/* ---------- 首頁 ---------- */
+.hero h1{margin:4px 0 0;font-size:2rem;letter-spacing:.06em;color:var(--gold)}
+.hero .sub{margin:0 0 6px;font-size:1.1rem;font-weight:500}
+.hero .lead{margin:0;color:#dfe6f1}
+.routes{display:grid;gap:10px;margin:14px 0 6px}
+.route{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:58px;
+  padding:10px 16px;border-radius:14px;border:none;cursor:pointer;background:var(--cream);color:var(--ink);
+  font-size:1.08rem;font-weight:700;text-align:left}
+.route small{font-weight:500;color:var(--ink2);font-size:.85rem;white-space:nowrap}
+.route.r1{background:var(--gold)} .route.r2{background:var(--teal)} .route.r3{background:var(--cream)}
+.homelinks{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center}
+.disclaim{font-size:.88rem;color:#d7deea;text-align:center;margin:4px 0 0}
+.homeTop{display:grid;gap:8px}
+@media (min-width:700px){ .homeTop{grid-template-columns:1fr 1fr;align-items:center} }
+
+/* ---------- 島嶼 ---------- */
+.island{position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:3/4;max-height:44vh}
+@media (min-width:700px){ .island{max-height:none} }
+.island .art,.island svg.draw,.island svg.hit{position:absolute;inset:0;width:100%;height:100%}
+.island .art{object-fit:contain;opacity:0;transition:opacity .4s}
+.island.has-art .art{opacity:1}
+.island.has-art svg.draw{display:none}
+.hit .spot{cursor:pointer}
+.hit .spot:focus-visible rect.hb{stroke:var(--gold);stroke-width:3}
+.glow{opacity:0;transition:opacity .8s}
+.glow.on{opacity:1}
+.lbl rect{fill:rgba(24,36,59,.88)}
+.lbl text{fill:#FFF8EB;font-size:11px;font-weight:700}
+.lbl.done rect{fill:var(--gold)} .lbl.done text{fill:var(--ink)}
+.twinkle{animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25}}
+.sway{transform-box:fill-box;transform-origin:50% 100%;animation:sw 4s ease-in-out infinite}
+@keyframes sw{50%{transform:rotate(2deg)}}
+
+/* ---------- 小光 ---------- */
+.guide{display:flex;gap:10px;align-items:flex-end;margin:12px 0}
+.mascot{position:relative;width:74px;height:74px;flex:none}
+.mascot svg,.mascot img{position:absolute;inset:0;width:100%;height:100%}
+.mascot img{object-fit:contain;opacity:0}
+.mascot.has-art img{opacity:1} .mascot.has-art svg{display:none}
+.bubble{position:relative;background:var(--cream);color:var(--ink);border-radius:16px;padding:10px 14px;flex:1}
+.bubble:before{content:"";position:absolute;left:-8px;bottom:14px;border:8px solid transparent;border-right-color:var(--cream);border-left:0}
+.bubble b{display:block;font-size:.8rem;color:var(--teal-d)}
+.peek{animation:peek .6s ease-out}
+@keyframes peek{from{transform:translateY(12px);opacity:0}}
+
+/* ---------- 場景橫幅 ---------- */
+.scene{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:16/7;background:linear-gradient(160deg,#2c3d5f,#18243B 70%);margin-top:6px}
+.scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.scene.has-art img{opacity:1}
+.scene .stitle{position:absolute;left:12px;bottom:10px;background:rgba(255,248,235,.95);color:var(--ink);
+  padding:4px 12px;border-radius:10px;font-weight:700;font-size:1.05rem}
+.scene svg.fb{position:absolute;inset:0;width:100%;height:100%}
+.scene.has-art svg.fb{display:none}
+
+/* ---------- 家長卡 ---------- */
+.prog{font-size:.9rem;color:var(--ink2);margin-bottom:6px}
+.pcard .pic{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--teal-l);margin-bottom:12px}
+.pcard .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+.pcard .pic.has-art img{opacity:1}
+.pcard .pic .fbx{position:absolute;inset:0;display:grid;place-items:center;font-size:4.2rem}
+.pcard .pic.has-art .fbx{display:none}
+.opts{display:grid;gap:8px;margin:10px 0}
+.opt{min-height:52px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);
+  font-size:1.05rem;cursor:pointer;text-align:left;padding:8px 14px;display:flex;align-items:center;gap:10px}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--ink2);flex:none}
+.opt[aria-pressed="true"],.opt[aria-checked="true"]{border-color:var(--teal-d);background:var(--teal-l);font-weight:700}
+.opt[aria-pressed="true"] .dot,.opt[aria-checked="true"] .dot{background:var(--teal-d);border-color:var(--teal-d);box-shadow:inset 0 0 0 3px #fff}
+.tag{display:inline-block;font-size:.8rem;padding:1px 8px;border-radius:999px;background:var(--teal-l);color:var(--teal-d);font-weight:700;margin-right:6px}
+.tag.gold{background:#fbe8c2;color:var(--gold-d)}
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:8px 0;border-bottom:1px solid var(--line)}
+ul.clean li:last-child{border-bottom:none}
+
+/* ---------- 站點選擇 ---------- */
+.stations{display:grid;gap:10px}
+.station{display:flex;gap:12px;align-items:center;min-height:72px;padding:10px 14px;border-radius:14px;border:none;
+  background:var(--cream);color:var(--ink);cursor:pointer;text-align:left;font-size:1rem}
+.station .ic{font-size:1.9rem;width:44px;text-align:center;flex:none}
+.station b{display:block;font-size:1.08rem}
+.station .st{margin-left:auto;font-size:.82rem;white-space:nowrap}
+
+/* ---------- 遊戲一：軌道 ---------- */
+.board{width:100%;max-width:420px;display:block;margin:0 auto;touch-action:manipulation;user-select:none}
+.board .cell{cursor:pointer}
+.board .cellbg{fill:#f3ead6;stroke:#cdbd9b;stroke-width:2}
+.board .cell:focus-visible .cellbg{stroke:var(--gold-d);stroke-width:5}
+.rail{fill:none;stroke:#6b4a2a;stroke-width:9;stroke-linecap:round}
+.rail2{fill:none;stroke:#c99a4a;stroke-width:3;stroke-linecap:round}
+.board .ghost{opacity:.4}
+.board .stopbox{fill:none;stroke:var(--warn);stroke-width:6;stroke-dasharray:10 6}
+.board .stopar{fill:var(--warn)}
+.tray{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.tool{min-height:64px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.95rem;gap:2px;padding:6px}
+.tool svg{width:34px;height:34px}
+.tool[aria-pressed="true"]{border-color:var(--teal-d);background:var(--teal-l);font-weight:700}
+.fb{min-height:1.6em;font-weight:700;margin:8px 0}
+.fb.ok{color:var(--teal-d)} .fb.stop{color:var(--warn)}
+.hintbox{background:#fbf0d8;border-radius:12px;padding:10px 14px;margin:10px 0;color:var(--ink)}
+
+.lit .rail{stroke:#c98a1f} .lit .rail2{stroke:#fff3c4}
+.deco{pointer-events:none}
+.pill{display:flex;justify-content:center;align-items:center;gap:8px;font-size:1.6rem;background:#fff;color:var(--ink);border-radius:999px;padding:4px 16px;margin:6px auto 10px;width:max-content;max-width:100%;border:2px solid var(--line);line-height:1.4}
+.pill span{font-size:1.1rem;color:var(--ink2)}
+.dots{display:flex;gap:8px;justify-content:center;margin:0 0 6px}
+.dots i{width:14px;height:14px;border-radius:50%;background:#d8ccb3}
+.dots i.cur{outline:2px solid var(--teal-d);outline-offset:2px}
+.dots i.on{background:var(--teal-d)}
+.shopts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.shopt{aspect-ratio:1;min-height:88px;border-radius:18px;border:3px solid var(--line);background:#fff;cursor:pointer;display:grid;place-items:center;padding:6px}
+.shopt svg{width:72%;height:72%}
+.shopt.right{border-color:var(--teal-d);background:var(--teal-l)}
+.shopt:disabled{cursor:default}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.stones{width:100%;display:block;border-radius:12px}
+.cross .fluffMove{animation:cross 2.2s ease-in-out forwards}
+@keyframes cross{to{transform:translateX(322px)}}
+.cross .fluffHop{animation:hop .36s ease-in-out 6}
+@keyframes hop{50%{transform:translateY(-16px)}}
+.sky{width:100%;max-width:440px;display:block;margin:0 auto;touch-action:manipulation;user-select:none}
+.sky .star{cursor:pointer}
+.sky .star .core{fill:#8fa0bf;stroke:#FFF8EB;stroke-width:1}
+.sky .star.lit .core{fill:#FFF3C4;stroke:#F4CF87;stroke-width:2}
+.sky .star .halo{fill:#F4CF87;opacity:0}
+.sky .star.lit .halo{opacity:.35}
+.sky .star:focus-visible .ring{stroke:var(--gold);stroke-width:3}
+.sky.wrong{animation:shake .4s}
+ol.tl{list-style:none;padding:0;margin:0 0 4px}
+ol.tl li{display:flex;gap:12px;padding:2px 0}
+ol.tl b{min-width:3em;color:var(--teal-d)}
+/* ---------- 遊戲二：工坊 ---------- */
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.chip{min-height:96px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:.92rem;padding:6px;text-align:center}
+.chip .ti{position:relative;width:46px;height:46px}
+.chip .ti img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0}
+.chip .ti.has-art img{opacity:1}
+.chip .ti .e{position:absolute;inset:0;display:grid;place-items:center;font-size:2rem}
+.chip .ti.has-art .e{display:none}
+.chip[aria-pressed="true"]{border-color:var(--teal-d);background:var(--teal-l);font-weight:700}
+textarea{width:100%;min-height:88px;border-radius:12px;border:2px solid var(--line);padding:10px;color:var(--ink);background:#fff;resize:vertical}
+.count{text-align:right;font-size:.85rem;color:var(--ink2)}
+.river{width:100%;display:block;border-radius:12px}
+.river .fluff,.river .plank,.river .boatg,.river .ropeF{transform-box:fill-box}
+.play .plank{transform-origin:0 50%;animation:plank 1s ease-out both}
+@keyframes plank{from{transform:scaleX(0)}}
+.play.m-bridge .walker{animation:walkB 2.6s 1s ease-in-out both}
+@keyframes walkB{to{transform:translateX(220px)}}
+.play.m-boat .boatg{animation:boat 3s .3s ease-in-out both}
+@keyframes boat{to{transform:translateX(200px)}}
+.play.m-rope .ropeF{animation:rope 2.6s .5s ease-in-out both}
+@keyframes rope{to{transform:translateX(210px)}}
+.reduce .play *{animation-duration:0s!important;animation-delay:0s!important}
+.proposal{background:#fff;border:2px dashed var(--teal-d);border-radius:12px;padding:12px;margin:10px 0;white-space:pre-wrap;word-break:break-word}
+
+/* ---------- 遊戲三：觀星臺 ---------- */
+.plants{width:100%;max-width:440px;display:block;margin:0 auto}
+.clues{display:grid;gap:8px;margin:10px 0}
+.clue{border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);text-align:left;cursor:pointer;
+  padding:10px 14px;min-height:52px;font-size:1rem}
+.clue .ct{font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.clue .cd{margin-top:6px;color:var(--ink)}
+.clue[aria-expanded="true"]{border-color:var(--teal-d);background:#f2faf7}
+
+/* ---------- 親子提示 ---------- */
+.ptip{border-left:6px solid var(--teal);background:#eef7f3;color:var(--ink);border-radius:10px;padding:10px 14px;margin:12px 0}
+.ptip b{display:block;color:var(--teal-d);font-size:.88rem}
+
+/* ---------- 紀念卡 ---------- */
+.memo{background:var(--cream);color:var(--ink);border-radius:20px;padding:20px;border:3px solid var(--gold);position:relative}
+.memo h2{margin:0;font-size:1.35rem;color:var(--night)}
+.memo .stamp{font-size:.82rem;color:var(--ink2);margin:2px 0 10px}
+.memo section{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+.memo h3{margin:0 0 4px;font-size:1rem;color:var(--teal-d)}
+.memo ul{margin:0;padding-left:1.2em}
+.memo .free{background:#fff;border-radius:8px;padding:6px 10px;margin:4px 0;white-space:pre-wrap;word-break:break-word}
+.lamps{display:flex;justify-content:center;gap:10px;margin:6px 0 4px}
+.lamp{width:46px;text-align:center;font-size:.72rem;color:#c9d3e3}
+.lamp i{display:block;width:30px;height:30px;margin:0 auto 2px;border-radius:50%;background:#3a4b6b;border:2px solid #56688a}
+.lamp.on i{background:radial-gradient(circle,#fff6d8,#F4CF87 60%,#d9a441);border-color:#F4CF87;box-shadow:0 0 14px #F4CF87}
+.lamp.on{color:var(--gold)}
+
+/* ---------- 課程與報名 ---------- */
+.course{display:grid;gap:10px}
+.cpic{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:repeating-linear-gradient(45deg,#e8efe9,#e8efe9 10px,#f4f8f5 10px,#f4f8f5 20px)}
+.cpic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cpic .pend{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink2);font-size:.9rem;text-align:center;padding:8px}
+table.info{width:100%;border-collapse:collapse;font-size:1rem}
+table.info th,table.info td{text-align:left;vertical-align:top;padding:10px 6px;border-bottom:1px solid var(--line)}
+table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
+.pending{color:var(--warn);font-weight:700}
+.status{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:.95rem;margin-bottom:8px}
+.status.wait{background:#fbe8c2;color:var(--gold-d)}
+.status.open{background:var(--teal-l);color:var(--teal-d)}
+.status.close{background:#eedfdc;color:var(--warn)}
+.foot{text-align:center;font-size:.82rem;color:#aab6ca;margin-top:24px}
+.preview-flag{position:fixed;left:8px;bottom:8px;z-index:30;background:var(--warn);color:#fff;font-size:.72rem;padding:2px 8px;border-radius:6px;opacity:.85;pointer-events:none}
+
+/* ---------- 對話框 ---------- */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(10,16,28,.7);display:grid;place-items:center;padding:16px}
+.modal[hidden]{display:none}
+.modal .panel{max-width:420px;width:100%}
+.switch{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:52px;border-bottom:1px solid var(--line)}
+.switch button{min-width:80px;min-height:44px;border-radius:999px;border:2px solid var(--ink2);background:#fff;color:var(--ink);cursor:pointer;font-weight:700}
+.switch button[aria-pressed="true"]{background:var(--teal-d);color:#fff;border-color:var(--teal-d)}
+.errbox{position:fixed;right:8px;bottom:8px;z-index:60;background:#fff;color:var(--warn);border:2px solid var(--warn);border-radius:10px;padding:6px 10px;font-size:.8rem;max-width:80vw}
+.errbox[hidden]{display:none}
+
+.reduce *{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (orientation:landscape) and (max-height:520px){
+  .island{max-height:none;max-width:300px}
+  .homeTop{grid-template-columns:1fr 1fr;align-items:center}
+}
+</style>
+</head>
+<body>
+<header class="top" role="banner">
+  <button class="tbtn" id="btnBack" type="button" aria-label="上一頁">‹ 上一頁</button>
+  <button class="tbtn" id="btnIsland" type="button" aria-label="返回島嶼">🏝️ 島嶼</button>
+  <span class="sp"></span>
+  <button class="tbtn" id="btnSet" type="button" aria-label="設定：聲音、動態、字級">⚙️</button>
+  <button class="tbtn gold" id="btnEnroll" type="button">鑑定與報名</button>
+</header>
+<main class="app" id="main" tabindex="-1"></main>
+<div class="sr" aria-live="polite" id="live"></div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="panel" id="modalBody"></div>
+</div>
+<div class="errbox" id="errbox" hidden role="alert"></div>
+
+<script>
+/* =========================================================
+   工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
+   ========================================================= */
+const CONFIG = {
+  version: 'v2',
+  preview: false,          // true＝開發預覽：顯示待填標記
+  school: {
+    name: '高雄市莒光國小',
+    eligibility: '設籍本市之國小二、四年級學生',
+    timeline: [ ['1月','報名'], ['3月','初選'], ['4月','複選'] ],
+    timelineNote: '實際日期仍須視每年簡章而定',
+    brochureUrl: '',                  // 官方簡章連結；填了就會變成「閱讀正式簡章」按鈕
+    brochureNote: '預計12月底出爐',     // 還沒有簡章時顯示的文字
+    brochureType: 'PDF',
+    classSiteUrl: 'https://daimg49.wixsite.com/chukps-giftedclass',
+    classSiteLabel: '前往莒光資優班網'
+  },
+  courses: [
+    { title:'提問與探究', text:'從好奇出發，練習提出問題、蒐集資料與說明發現。', img:'', imgAlt:'', example:{ name:'', desc:'', link:'' } },
+    { title:'創作與解題', text:'嘗試不同方法，把想法做成作品，透過測試再修改。', img:'', imgAlt:'', example:{ name:'', desc:'', link:'' } },
+    { title:'合作與自我了解', text:'與同學交流，也逐漸了解自己的學習方式與需要。', img:'', imgAlt:'', example:{ name:'', desc:'', link:'' } }
+  ],
+  bgm: 'assets/art/bgm.mp3'   // 配樂檔（選用）；沒有這個檔案就只有提示音
+};
+
+const PENDING = '正式資料待學校確認';
+
+/* ---------- 內容表 ---------- */
+const CARDS = [
+  { t:'為什麼後面，還有為什麼', d:'得到答案後，孩子有時還會繼續追問原因，或提出另一個問題。', k:'提問', e:'💧' },
+  { t:'我的研究小角落', d:'遇到喜歡的事物，孩子會自己找資料、試做，或反覆研究細節。', k:'深入興趣', e:'🦕' },
+  { t:'等等，這裡怪怪的', d:'孩子有時會注意到規律、矛盾或別人沒留意的小細節。', k:'留意線索', e:'🔍' },
+  { t:'我有另一個辦法', d:'遇到問題，孩子會提出與常見做法不同的想法，或改造原有方法。', k:'多元解法', e:'🌉' },
+  { t:'有些地方快，有些地方慢', d:'孩子在某些領域理解得快或投入很多，但其他日常事情仍需要提醒與協助。', k:'不同面向的差異', e:'🧩' },
+  { t:'腦袋裡很多，說出來不容易', d:'從聊天或實作看得出孩子有想法，但書寫、作業或口頭表達未必完整呈現。', k:'表達方式', e:'💭' }
+];
+const CARD_OPTS = ['常看見','偶爾看見','還沒留意'];
+
+const ROUTES = {
+  parent:  { label:'我想觀察孩子',  time:'2–3 分鐘',  say:'不用替孩子挑最漂亮的答案，回想你真的看過的情況就好。' },
+  child:   { label:'讓孩子試試看',  time:'4–6 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' },
+  together:{ label:'我們一起探索',  time:'8–10 分鐘', say:'孩子負責探索，大人先看一看；卡住時，可以問「你現在想試什麼？」' }
+};
+
+const STATIONS = {
+  g1:{ name:'機關修理所', ic:'⚙️', one:'轉一轉，接好星星快遞的軌道', art:'assets/art/scene-repair.webp' },
+  g2:{ name:'奇想工坊',   ic:'🪨', one:'看圖形規律，幫毛球鋪踏石',   art:'assets/art/scene-craft.webp' },
+  g3:{ name:'線索觀星臺', ic:'🔭', one:'記住星星亮起的順序',         art:'assets/art/scene-observatory.webp' }
+};
+const PTIPS = {
+  g1:'剛才孩子怎麼決定要轉哪一塊？先想好、邊轉邊看，或看過提示再調整，都可以聊聊。',
+  g2:'孩子是先看完整排石頭，還是一顆一顆試？試錯也是找規律的一部分。',
+  g3:'問問孩子剛才怎麼記的：有人用數的，有人記位置，有人把星星想成一個形狀。'
+};
+const TALK = {
+  cards:'最近哪一件事，孩子願意一直做下去？可以問問他喜歡的原因。',
+  g1:'你怎麼知道哪一塊軌道要轉？',
+  g2:'踏石上的圖形，是照什麼規律排的？',
+  g3:'你用什麼方法記住星星亮的順序？'
+};
+
+/* =========================================================
+   地基：狀態（只存在目前分頁 sessionStorage，不送出、不跨裝置）
+   ========================================================= */
+const KEY = 'xyz-state-v2';
+function fresh(){
+  return {
+    route:null, screen:'home', cardIdx:0,
+    cards:[null,null,null,null,null,null], cardsDone:false,
+    g1:{ level:0, rot:[1,0,0,0,3], solved:[false,false], runs:0, hint:0, hintUsed:false, done:false },
+    g2:{ round:0, roundSolved:false, solvedCount:0, done:false },
+    g3:{ round:0, roundSolved:false, best:0, views:0, done:false },
+    skipped:{}
+  };
+}
+function emptyBoard(){ return [[null,null,null],[null,null,null],[null,null,null]]; }
+let S = load();
+function load(){
+  try{ const s = JSON.parse(sessionStorage.getItem(KEY)); if(s && s.g1) return Object.assign(fresh(), s); }catch(e){}
+  return fresh();
+}
+function save(){ try{ sessionStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+const PREF = { sound:false, reduce:false, big:false };
+try{ Object.assign(PREF, JSON.parse(localStorage.getItem('xyz-pref')||'{}')); }catch(e){}
+if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) PREF.reduce = PREF.reduce || true;
+function savePref(){ try{ localStorage.setItem('xyz-pref', JSON.stringify(PREF)); }catch(e){} applyPref(); }
+function applyPref(){
+  document.documentElement.classList.toggle('big', !!PREF.big);
+  document.body.classList.toggle('reduce', !!PREF.reduce);
+  if(!PREF.sound && bgm) bgm.pause();
+}
+
+/* ---------- 小工具 ---------- */
+const $ = s => document.querySelector(s);
+const main = $('#main');
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function say(t){ const l=$('#live'); l.textContent=''; setTimeout(()=>{ l.textContent=t; },30); }
+function anyProgress(){ return S.cards.some(x=>x) || S.cardsDone || S.g1.runs>0 || S.g1.rot.join()!=='1,0,0,0,3' || S.g2.solvedCount>0 || S.g3.views>0; }
+// 圖片插槽：圖檔存在就淡入，不存在就保留程式畫的備用圖
+function artOK(img){ img.parentElement.classList.add('has-art'); }
+function artNo(img){ img.remove(); }
+function imgSlot(src, alt){ return `<img src="${esc(src)}" alt="${esc(alt||'')}" loading="lazy" onload="artOK(this)" onerror="artNo(this)">`; }
+
+/* ---------- 聲音（預設關閉） ---------- */
+let actx=null, bgm=null;
+try{ bgm = new Audio(); bgm.loop = true; bgm.volume = .35; bgm.preload='none'; }catch(e){ bgm=null; }
+function chime(ok){
+  if(!PREF.sound) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const notes = ok ? [660,880,1100] : [440,370];
+    notes.forEach((f,i)=>{
+      const o=actx.createOscillator(), g=actx.createGain();
+      o.type='sine'; o.frequency.value=f; o.connect(g); g.connect(actx.destination);
+      const t=actx.currentTime+i*.12; g.gain.setValueAtTime(.0001,t);
+      g.gain.exponentialRampToValueAtTime(.15,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+.3);
+      o.start(t); o.stop(t+.32);
+    });
+  }catch(e){}
+}
+function startBgm(){
+  if(!bgm || !PREF.sound) return;
+  if(!bgm.src){ bgm.src = CONFIG.bgm; bgm.onerror = ()=>{}; }
+  const p = bgm.play(); if(p && p.catch) p.catch(()=>{});
+}
+
+/* =========================================================
+   入口：畫面切換
+   ========================================================= */
+let hist = [];
+function go(screen, opt){
+  opt = opt || {};
+  if(S.screen==='g3' && screen!=='g3'){ g3Clear(); g3Phase='idle'; g3Input=[]; }
+  if(opt.push !== false && S.screen && S.screen !== screen) hist.push(S.screen);
+  if(hist.length>30) hist.shift();
+  S.screen = screen; save(); render();
+  window.scrollTo(0,0);
+  if(!opt.noFocus) main.focus({preventScroll:true});
+}
+function back(){
+  if(S.screen==='g3'){ g3Clear(); g3Phase='idle'; g3Input=[]; }
+  const p = hist.pop();
+  S.screen = p || 'home'; save(); render(); window.scrollTo(0,0);
+}
+function render(){
+  try{
+    const f = SCREENS[S.screen] || SCREENS.home;
+    main.innerHTML = f();
+    $('#btnBack').hidden = (S.screen==='home');
+    $('#btnIsland').hidden = (S.screen==='home');
+    $('#btnEnroll').hidden = (S.screen==='enroll');
+    if(AFTER[S.screen]) AFTER[S.screen]();
+  }catch(e){ showErr('R', e); }
+}
+
+/* ---------- 小光（程式畫的備用圖） ---------- */
+function mascotSVG(m){
+  const eyes = m==='happy'
+    ? '<path d="M36 46q4-5 8 0M56 46q4-5 8 0" stroke="#1c2638" stroke-width="3" fill="none" stroke-linecap="round"/>'
+    : m==='think'
+    ? '<circle cx="40" cy="46" r="3.6" fill="#1c2638"/><circle cx="61" cy="44" r="3.6" fill="#1c2638"/><path d="M56 37l9-3" stroke="#1c2638" stroke-width="2.5" stroke-linecap="round"/>'
+    : '<circle cx="40" cy="46" r="3.8" fill="#1c2638"/><circle cx="60" cy="46" r="3.8" fill="#1c2638"/><circle cx="41.3" cy="44.6" r="1.2" fill="#fff"/><circle cx="61.3" cy="44.6" r="1.2" fill="#fff"/>';
+  const mouth = m==='happy' ? '<path d="M43 56q7 7 14 0" stroke="#1c2638" stroke-width="3" fill="#e98b7b" stroke-linecap="round"/>'
+    : m==='think' ? '<path d="M45 58h9" stroke="#1c2638" stroke-width="3" stroke-linecap="round"/>'
+    : '<path d="M44 56q6 4 12 0" stroke="#1c2638" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  const arm = m==='guide' ? '<path d="M78 58q10-8 14-20" stroke="#5c9c8a" stroke-width="7" fill="none" stroke-linecap="round"/>' : '';
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <ellipse cx="50" cy="94" rx="26" ry="4" fill="#0d1526" opacity=".5"/>
+    <path d="M22 30q-6-14 6-18q6 6 6 14M78 30q6-14-6-18q-6 6-6 14" fill="#73B8A5"/>
+    <ellipse cx="50" cy="58" rx="33" ry="34" fill="#73B8A5"/>
+    <ellipse cx="50" cy="52" rx="23" ry="20" fill="#FFF8EB"/>
+    ${eyes}${mouth}
+    <circle cx="34" cy="55" r="4" fill="#f2b3a3" opacity=".7"/><circle cx="66" cy="55" r="4" fill="#f2b3a3" opacity=".7"/>
+    ${arm}
+    <path d="M24 70q-10 6-8 16" stroke="#5c9c8a" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <line x1="16" y1="86" x2="16" y2="80" stroke="#8a6a3a" stroke-width="2"/>
+    <rect x="9" y="80" width="14" height="16" rx="4" fill="#F4CF87" stroke="#8a5a12" stroke-width="2"/>
+    <circle cx="16" cy="88" r="4" fill="#fff6d8"/>
+  </svg>`;
+}
+function guide(text, mood, who){
+  mood = mood || 'idle';
+  return `<div class="guide peek">
+    <div class="mascot" role="img" aria-label="小光">${mascotSVG(mood)}${imgSlot('assets/art/xiaoguang-'+mood+'.png','')}</div>
+    <div class="bubble"><b>${esc(who||'小光')}</b>${esc(text)}</div></div>`;
+}
+function sceneBanner(title, art, fbColor){
+  return `<div class="scene">
+    <svg class="fb" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="320" height="140" fill="${fbColor||'#22314d'}"/>
+      ${[[30,20],[80,40],[150,15],[230,30],[290,18],[260,60],[120,55]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="1.6" fill="#FFF8EB" class="twinkle"/>`).join('')}
+      <path d="M0 110q80-30 160-10t160-6v46H0z" fill="#2c6a5b" opacity=".8"/>
+    </svg>
+    ${imgSlot(art,'')}
+    <span class="stitle">${esc(title)}</span></div>`;
+}
+
+/* ---------- 島嶼 ---------- */
+const SPOTS = [
+  { id:'tree',   to:'cards',   name:'家長觀察樹屋', x:75,  y:150, win:[78,128] },
+  { id:'repair', to:'g1',      name:'機關修理所',   x:220, y:132, win:[220,124] },
+  { id:'craft',  to:'g2',      name:'奇想工坊',     x:82,  y:252, win:[86,246] },
+  { id:'star',   to:'g3',      name:'線索觀星臺',   x:220, y:238, win:[222,226] },
+  { id:'dock',   to:'courses', name:'碼頭：真實的資優班', x:150, y:350, win:[124,334] }
+];
+function spotDone(id){
+  return id==='tree'?S.cardsDone : id==='repair'?S.g1.done : id==='craft'?S.g2.done : id==='star'?S.g3.done : false;
+}
+function islandDraw(){
+  const stars = Array.from({length:26},(_,i)=>{ const x=(i*73)%300, y=(i*41)%120+6; return `<circle cx="${x}" cy="${y}" r="${i%3?1.1:1.8}" fill="#FFF8EB" class="twinkle" style="animation-delay:${(i%7)*.4}s"/>`; }).join('');
+  return `<svg class="draw" viewBox="0 0 300 400" aria-hidden="true">
+    <defs><radialGradient id="gl"><stop offset="0" stop-color="#fff6d8"/><stop offset=".5" stop-color="#F4CF87" stop-opacity=".8"/><stop offset="1" stop-color="#F4CF87" stop-opacity="0"/></radialGradient></defs>
+    ${stars}
+    <circle cx="255" cy="40" r="16" fill="#FFF8EB" opacity=".9"/><circle cx="263" cy="35" r="14" fill="#18243B"/>
+    <path d="M20 300q-6-120 130-140q140 4 132 140q-30 30-62 28q-20 60-70 70q-50-10-72-70q-40 0-58-28z" fill="#3b2f2a"/>
+    <path d="M60 330q40 50 90 62q50-12 80-62" fill="#2a211e"/>
+    <path d="M14 200q8-80 136-96q130 12 138 96q4 92-8 104q-60 22-130 20q-80 2-130-20q-12-20-6-104z" fill="#3f8a74"/>
+    <path d="M24 196q10-70 126-82q118 10 128 82" fill="#73B8A5" opacity=".55"/>
+    <path d="M150 180q-30 40-60 60M150 180q40 30 70 50M150 180v130" stroke="#e7d9b9" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>
+    <!-- 樹屋 -->
+    <g><rect x="70" y="140" width="10" height="44" fill="#5b3b24"/>
+      <g class="sway"><circle cx="58" cy="108" r="22" fill="#2f6f5c"/><circle cx="92" cy="104" r="24" fill="#357c66"/><circle cx="75" cy="88" r="22" fill="#3d8a72"/></g>
+      <rect x="62" y="118" width="32" height="24" rx="3" fill="#a4733f"/><path d="M58 120l20-14 20 14z" fill="#7a4f2a"/>
+      <rect x="73" y="123" width="10" height="10" rx="2" fill="#2a3550"/></g>
+    <!-- 修理所 -->
+    <g><rect x="198" y="112" width="46" height="34" rx="3" fill="#8f6a44"/><path d="M193 114l28-20 28 20z" fill="#c58f3e"/>
+      <rect x="214" y="118" width="12" height="12" rx="2" fill="#2a3550"/><circle cx="245" cy="98" r="9" fill="none" stroke="#d8a54a" stroke-width="4" stroke-dasharray="4 3"/></g>
+    <!-- 工坊 -->
+    <g><rect x="60" y="232" width="48" height="34" rx="3" fill="#9a6b45"/><path d="M55 234l29-18 29 18z" fill="#6c4a32"/>
+      <rect x="96" y="208" width="8" height="18" fill="#6c4a32"/><rect x="80" y="240" width="12" height="12" rx="2" fill="#2a3550"/></g>
+    <!-- 觀星臺 -->
+    <g><rect x="204" y="226" width="36" height="30" fill="#b9a688"/><path d="M200 228a22 20 0 0 1 44 0z" fill="#d8c7a3"/>
+      <rect x="230" y="200" width="22" height="7" rx="3" fill="#c58f3e" transform="rotate(-30 230 203)"/>
+      <rect x="216" y="220" width="12" height="12" rx="6" fill="#2a3550"/></g>
+    <!-- 碼頭 -->
+    <g><rect x="110" y="318" width="80" height="10" fill="#8f6a44"/><rect x="116" y="328" width="5" height="16" fill="#5b3b24"/><rect x="178" y="328" width="5" height="16" fill="#5b3b24"/>
+      <rect x="121" y="322" width="5" height="16" fill="#5b3b24"/><rect x="118" y="326" width="12" height="14" rx="3" fill="#F4CF87" stroke="#8a5a12" stroke-width="1.5"/>
+      <path d="M160 342q20 12 40 0z" fill="#c58f3e"/></g>
+  </svg>`;
+}
+function islandHTML(){
+  const hit = `<svg class="hit" viewBox="0 0 300 400" role="group" aria-label="探索島地圖">
+    <defs><radialGradient id="gl2"><stop offset="0" stop-color="#fff6d8"/><stop offset=".45" stop-color="#F4CF87" stop-opacity=".85"/><stop offset="1" stop-color="#F4CF87" stop-opacity="0"/></radialGradient></defs>
+    ${SPOTS.map(s=>{
+      const d = spotDone(s.id), w = s.name.length*11+16;
+      return `<g class="spot" role="button" tabindex="0" data-act="spot" data-to="${s.to}" aria-label="${esc(s.name)}${d?'，已探索':''}">
+        <circle class="glow ${d||s.id==='dock'?'on':''}" cx="${s.win[0]}" cy="${s.win[1]}" r="18" fill="url(#gl2)"/>
+        <rect class="hb" x="${s.x-36}" y="${s.y-48}" width="72" height="66" rx="10" fill="transparent"/>
+        <g class="lbl ${d?'done':''}"><rect x="${s.x-w/2}" y="${s.y+14}" width="${w}" height="18" rx="9"/>
+          <text x="${s.x}" y="${s.y+27}" text-anchor="middle">${d?'✓ ':''}${esc(s.name)}</text></g>
+      </g>`;}).join('')}
+  </svg>`;
+  return `<div class="island">${islandDraw()}<img class="art" src="assets/art/island.webp" alt="" onload="artOK(this)" onerror="artNo(this)">${hit}</div>`;
+}
+
+/* =========================================================
+   各畫面
+   ========================================================= */
+const SCREENS = {};
+const AFTER = {};
+
+SCREENS.home = () => `
+  <div class="homeTop">
+    <div class="hero">
+      <h1>看見小宇宙</h1>
+      <p class="sub">一起發現孩子的思考風景</p>
+      <p class="lead">有些想法，藏在孩子的日常裡。從觀察或遊戲開始，看看你會發現什麼。</p>
+      <div class="routes">
+        <button class="route r1" data-act="route" data-r="parent">我想觀察孩子 <small>2–3 分鐘</small></button>
+        <button class="route r2" data-act="route" data-r="child">讓孩子試試看 <small>4–6 分鐘</small></button>
+        <button class="route r3" data-act="route" data-r="together">我們一起探索 <small>8–10 分鐘</small></button>
+      </div>
+      <div class="homelinks">
+        <button class="link" data-act="go" data-to="courses">直接了解資優班</button>
+        <button class="link" data-act="go" data-to="enroll">查看鑑定與報名</button>
+        ${anyProgress()?'<button class="link" data-act="memento">看今天的紀錄</button><button class="link" data-act="restart">重新開始</button>':''}
+      </div>
+      <p class="disclaim">這是親子探索活動，不是資優鑑定；遊戲表現不影響報名資格。</p>
+    </div>
+    <div>${islandHTML()}</div>
+  </div>
+  <p class="foot">${esc(CONFIG.school.name)}資優班｜親子探索活動・非鑑定工具｜${esc(CONFIG.version)}</p>`;
+AFTER.home = () => { document.body.classList.add('home'); };
+
+SCREENS.intro = () => {
+  const r = ROUTES[S.route] || ROUTES.child;
+  const mood = S.route==='child' ? 'happy' : 'guide';
+  const plan = S.route==='parent' ? '翻開六張日常卡，回想孩子最近幾個月的樣子。'
+    : S.route==='child' ? '三個小任務：轉軌道、找規律、記星星。不用讀字，看圖就能玩，想先玩哪一個都可以。'
+    : '大人先看六張日常卡，接著換孩子玩三個看圖小任務，每一站後面有一句聊天提示。';
+  return `${guide(r.say, mood)}
+  <div class="panel"><h2>${esc(r.label)}</h2><p>${esc(plan)}</p><p class="muted">大約 ${esc(r.time)}・可以隨時略過或回到島嶼</p>
+  <div class="btns"><button class="btn main" data-act="start">出發</button></div></div>`;
+};
+
+/* ---------- 家長觀察樹屋 ---------- */
+SCREENS.cards = () => {
+  const i = Math.min(S.cardIdx, 5), c = CARDS[i], v = S.cards[i];
+  return `${sceneBanner('家長觀察樹屋','assets/art/scene-treehouse.webp','#263a3a')}
+  <div class="panel pcard">
+    <div class="prog">第 ${i+1} 張／共 6 張</div>
+    <div class="pic"><div class="fbx" aria-hidden="true">${c.e}</div>${imgSlot('assets/art/parent-card-'+(i+1)+'.webp','')}</div>
+    <h2>${esc(c.t)}</h2>
+    <p>${esc(c.d)}</p>
+    <p class="muted" id="cq">回想最近幾個月，你是否看過類似情況？</p>
+    <div class="opts" role="radiogroup" aria-labelledby="cq">
+      ${CARD_OPTS.map(o=>`<button class="opt" role="radio" aria-checked="${v===o}" data-act="cardpick" data-v="${o}"><span class="dot"></span>${o}</button>`).join('')}
+    </div>
+    <div class="btns two">
+      <button class="btn plain" data-act="cardprev" ${i===0?'disabled':''}>上一張</button>
+      <button class="btn main" data-act="cardnext" ${v?'':'disabled'}>${i===5?'看看我的紀錄':'下一張'}</button>
+    </div>
+    <div class="btns two">
+      <button class="link" data-act="cardskip">略過這一張</button>
+      <button class="link" data-act="skipst" data-st="cards">略過這一站</button>
+    </div>
+  </div>`;
+};
+function seenList(){ return CARDS.map((c,i)=>({c,v:S.cards[i]})).filter(x=>x.v==='常看見'||x.v==='偶爾看見'); }
+SCREENS.parentResult = () => {
+  const L = seenList();
+  const body = L.length
+    ? `<ul class="clean">${L.map(x=>`<li><span class="tag ${x.v==='常看見'?'gold':''}">${x.v}</span><b>${esc(x.c.t)}</b><div class="muted">${esc(x.c.k)}</div></li>`).join('')}</ul>
+       <p style="margin-top:12px">這些是你回想起來的生活片段。接下來可以留意：孩子在哪些情境最投入？用了哪些方法？需要什麼協助？</p>`
+    : `<p>今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。</p>`;
+  const btns = S.route==='together'
+    ? `<button class="btn main" data-act="go" data-to="picker">換孩子出發</button>
+       <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>`
+    : `<button class="btn main" data-act="tochild">讓孩子玩一站</button>
+       <button class="btn teal" data-act="go" data-to="courses">看看資優班</button>
+       <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>`;
+  return `${guide(L.length?'謝謝你花時間回想。':'沒關係，觀察可以從今天開始。','happy')}
+  <div class="panel"><h2>你留意到的日常線索</h2>${body}
+  <p class="muted">這些描述不是資格判定；是否符合報名條件，請以當年度正式簡章為準。</p>
+  <div class="btns">${btns}</div></div>`;
+};
+
+/* ---------- 站點選擇 ---------- */
+SCREENS.picker = () => {
+  const st = k => S[k].done ? '<span class="tag">完成</span>' : S.skipped[k] ? '<span class="tag gold">略過</span>' : '';
+  return `${guide(S.route==='together'?'換孩子上場！三站想先去哪一站都可以。':'三站想先去哪一站都可以。','guide')}
+  <div class="stations">
+    ${['g1','g2','g3'].map(k=>`<button class="station" data-act="go" data-to="${k}"><span class="ic" aria-hidden="true">${STATIONS[k].ic}</span>
+      <span><b>${STATIONS[k].name}</b>${STATIONS[k].one}</span><span class="st">${st(k)}</span></button>`).join('')}
+  </div>
+  <div class="btns"><button class="btn ghost" data-act="memento">看今天的紀錄</button></div>`;
+};
+
+/* =========================================================
+   守門：遊戲一 機關修理所（轉軌道・空間推理）
+   方向 0北 1東 2南 3西；直軌 r0=東西 r1=南北；彎軌 r0=北東 r1=東南 r2=南西 r3=西北
+   ========================================================= */
+const DR = [[-1,0],[0,1],[1,0],[0,-1]];
+function openings(p){ return p.t==='s' ? (p.r%2===0?[1,3]:[0,2]) : [p.r%4,(p.r+1)%4]; }
+function simulate(board){
+  let r=0,c=0,entry=3; const path=[];
+  for(let step=0; step<20; step++){
+    const p = board[r][c];
+    if(!p) return { ok:false, reason:'empty', stop:[r,c], entry, path };
+    const o = openings(p);
+    if(o.indexOf(entry)<0) return { ok:false, reason:'mismatch', stop:[r,c], entry, path };
+    const exit = o[0]===entry ? o[1] : o[0];
+    path.push({ r, c, entry, exit });
+    const nr=r+DR[exit][0], nc=c+DR[exit][1];
+    if(nr<0||nr>2||nc<0||nc>2){
+      if(r===2 && c===2 && exit===1) return { ok:true, path };
+      return { ok:false, reason:'edge', stop:[r,c], exit, path };
+    }
+    r=nr; c=nc; entry=(exit+2)%4;
+  }
+  return { ok:false, reason:'loop', stop:[r,c], path };
+}
+// 每關：零件 [列, 行, 種類, 正確方向]、開局方向、裝飾格
+const G1_LEVELS = [
+  { pieces:[[0,0,'s',0],[0,1,'s',0],[0,2,'c',2],[1,2,'s',1],[2,2,'c',0]], start:[1,0,0,0,3],
+    deco:[[1,0,'rock'],[2,0,'flower'],[1,1,'flower'],[2,1,'rock']] },
+  { pieces:[[0,0,'c',2],[1,0,'c',0],[1,1,'c',2],[2,1,'c',0],[2,2,'s',0]], start:[1,2,3,1,1],
+    deco:[[0,1,'flower'],[0,2,'rock'],[1,2,'flower'],[2,0,'rock']] }
+];
+let g1Last = null, g1Anim = false;
+function g1Init(level){ S.g1.level = level; S.g1.rot = G1_LEVELS[level].start.slice(); S.g1.hint = 0; g1Last = null; }
+function g1Board(rotOverride){
+  const L = G1_LEVELS[S.g1.level], b = emptyBoard();
+  L.pieces.forEach((p,i)=>{ b[p[0]][p[1]] = { t:p[2], r:(rotOverride||S.g1.rot)[i] }; });
+  return b;
+}
+function g1Wrong(){ // 沿路線順序，第一塊方向不對的零件
+  const L = G1_LEVELS[S.g1.level];
+  for(let i=0;i<L.pieces.length;i++){
+    const p=L.pieces[i], mod = p[2]==='s'?2:4;
+    if(S.g1.rot[i]%mod !== p[3]%mod) return i;
+  }
+  return -1;
+}
+function railSVG(p, cls){
+  const inner = p.t==='s'
+    ? `<line x1="0" y1="50" x2="100" y2="50" class="rail"/><line x1="0" y1="50" x2="100" y2="50" class="rail2"/>${[15,38,62,85].map(x=>`<rect x="${x-3}" y="38" width="6" height="24" fill="#8a6a3a"/>`).join('')}`
+    : `<path d="M50 0 A50 50 0 0 0 100 50" class="rail"/><path d="M50 0 A50 50 0 0 0 100 50" class="rail2"/>`;
+  return `<g transform="rotate(${p.r*90} 50 50)" class="${cls||''}">${inner}</g>`;
+}
+function decoSVG(k){
+  return k==='rock'
+    ? `<ellipse cx="50" cy="62" rx="26" ry="16" fill="#8b93a3"/><ellipse cx="42" cy="56" rx="10" ry="5" fill="#a9b0bd"/>`
+    : `<line x1="50" y1="72" x2="50" y2="46" stroke="#3f8a74" stroke-width="4"/>${[0,72,144,216,288].map(a=>`<circle cx="${50+9*Math.cos(a*Math.PI/180)}" cy="${40+9*Math.sin(a*Math.PI/180)}" r="7" fill="#e9a3b8"/>`).join('')}<circle cx="50" cy="40" r="5" fill="#F4CF87"/>`;
+}
+function g1BoardSVG(){
+  const L = G1_LEVELS[S.g1.level], b = g1Board(), live = simulate(b);
+  const litCells = {}; live.path.forEach(p=>{ litCells[p.r+','+p.c]=1; });
+  const solved = S.g1.solved[S.g1.level];
+  let cells = '';
+  for(let r=0;r<3;r++) for(let c=0;c<3;c++){
+    const p = b[r][c];
+    if(p){
+      const desc = p.t==='s' ? (p.r%2===0?'直軌，左右方向':'直軌，上下方向') : ['彎軌，上到右','彎軌，右到下','彎軌，下到左','彎軌，左到上'][p.r];
+      cells += `<g class="cell" role="button" tabindex="0" data-act="cell" data-r="${r}" data-c="${c}" aria-label="第${r+1}排第${c+1}格，${desc}，點一下轉方向" transform="translate(${c*100} ${r*100})">
+        <rect class="cellbg" x="2" y="2" width="96" height="96" rx="10"/>${railSVG(p, litCells[r+','+c]?'lit':'')}</g>`;
+    } else {
+      const d = L.deco.find(x=>x[0]===r&&x[1]===c);
+      cells += `<g class="deco" aria-hidden="true" transform="translate(${c*100} ${r*100})"><rect x="2" y="2" width="96" height="96" rx="10" fill="#3a5a4c"/>${d?decoSVG(d[2]):''}</g>`;
+    }
+  }
+  let mark = '';
+  const wi = g1Wrong();
+  const showMark = !solved && !g1Anim && wi>=0 && ((g1Last && !g1Last.ok) || S.g1.hint>=1);
+  if(showMark){
+    const p = L.pieces[wi];
+    mark = `<rect class="stopbox" x="${p[1]*100+4}" y="${p[0]*100+4}" width="92" height="92" rx="10" pointer-events="none"/>`;
+    if(S.g1.hint>=2) mark += `<g transform="translate(${p[1]*100} ${p[0]*100})" class="ghost" pointer-events="none">${railSVG({t:p[2],r:p[3]})}</g>`;
+  }
+  return `<svg class="board" id="board" viewBox="-60 -20 420 340" role="group" aria-label="三乘三軌道方格">
+    <rect x="-60" y="-20" width="420" height="340" fill="#22314d" rx="14"/>
+    <g aria-hidden="true"><rect x="-52" y="36" width="50" height="28" rx="6" fill="#73B8A5"/><path d="M-36 42 L-20 50 L-36 58z" fill="#18243B"/></g>
+    <g aria-hidden="true" transform="translate(300 220)">
+      <rect x="12" y="20" width="24" height="70" fill="#FFF8EB"/><rect x="12" y="40" width="24" height="10" fill="#c0503f"/><rect x="12" y="66" width="24" height="10" fill="#c0503f"/>
+      <rect x="8" y="10" width="32" height="14" rx="3" fill="#44506a"/>
+      <circle cx="24" cy="12" r="${solved?22:8}" fill="${solved?'#F4CF87':'#5d6b85'}" opacity="${solved?.9:1}"/>
+    </g>
+    ${cells}${mark}
+    <g id="car" aria-hidden="true" transform="translate(${solved?'340 250':'-30 50'})"><circle r="14" fill="#F4CF87" stroke="#8a5a12" stroke-width="2"/><path d="M0 -8 L2.4 -2.4 L8 -2.4 L3.6 1.2 L5.2 7 L0 3.6 L-5.2 7 L-3.6 1.2 L-8 -2.4 L-2.4 -2.4z" fill="#fff"/></g>
+  </svg>`;
+}
+function dots(n, cur, done){ return `<div class="dots" aria-label="第 ${cur+1} 關，共 ${n} 關">${Array.from({length:n},(_,i)=>`<i class="${i<cur||(i===cur&&done)?'on':''} ${i===cur?'cur':''}"></i>`).join('')}</div>`; }
+function ptip(k){ return `<div class="ptip"><b>給大人的小提示</b>${esc(PTIPS[k])}</div>`; }
+SCREENS.g1 = () => {
+  const g = S.g1, solved = g.solved[g.level], last = g.level===G1_LEVELS.length-1;
+  let fb = '', cls = '';
+  if(solved){ fb = '⭐ 到站了！'; cls='ok'; }
+  else if(g1Last && !g1Last.ok && !g1Anim){ fb = '星星停住了，紅框那一塊轉一轉看看。'; cls='stop'; }
+  return `${sceneBanner('機關修理所', STATIONS.g1.art, '#2b3550')}
+  ${guide('轉一轉軌道，讓星星快遞開到燈塔！', solved?'happy':'idle')}
+  <div class="panel">
+    ${dots(G1_LEVELS.length, g.level, solved)}
+    <div class="pill" aria-label="玩法：點軌道轉方向，接好後按出發">👆<span>➜</span>🔄<span>➜</span>▶️<span>➜</span>⭐</div>
+    ${g1BoardSVG()}
+    <div class="fb ${cls}" id="g1fb" aria-live="polite">${esc(fb)}</div>
+    ${solved
+      ? (last ? `<div class="btns"><button class="btn main" data-act="next" data-st="g1">下一站 ➜</button></div>`
+              : `<div class="btns"><button class="btn main" data-act="g1next">下一關 ➜</button></div>`)
+      : `<div class="btns two"><button class="btn main" data-act="g1run" ${g1Anim?'disabled':''} aria-label="出發">▶️ 出發</button>
+         <button class="btn ghost" data-act="g1hint" ${g.hint>=2?'disabled':''} aria-label="提示">💡 提示</button></div>`}
+  </div>
+  ${S.route==='together' && g.done ? ptip('g1') : ''}
+  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g1">略過這一站</button></div>` : ''}`;
+};
+function carPoints(path){
+  const pts = [[-30,50]];
+  const mid = (r,c,d)=>[c*100+50+DR[d][1]*50, r*100+50+DR[d][0]*50];
+  path.forEach(s=>{
+    const a = mid(s.r,s.c,s.entry), b = mid(s.r,s.c,s.exit);
+    pts.push(a);
+    if((s.entry+2)%4===s.exit){ pts.push([s.c*100+50, s.r*100+50]); }
+    else {
+      const cx = s.c*100 + (a[0]+b[0]-2*(s.c*100+50)>0?100:0);
+      const cy = s.r*100 + (a[1]+b[1]-2*(s.r*100+50)>0?100:0);
+      const ccx=s.c*100+50, ccy=s.r*100+50, L=Math.hypot(ccx-cx,ccy-cy);
+      pts.push([cx+(ccx-cx)*50/L, cy+(ccy-cy)*50/L]);
+    }
+    pts.push(b);
+  });
+  return pts;
+}
+function runG1(){
+  if(g1Anim || S.g1.solved[S.g1.level]) return;
+  const res = simulate(g1Board());
+  S.g1.runs++;
+  const pts = carPoints(res.path);
+  if(res.ok) pts.push([340,250]);
+  const finish = ()=>{
+    g1Anim = false;
+    if(res.ok){
+      S.g1.solved[S.g1.level] = true;
+      if(S.g1.level===G1_LEVELS.length-1){ S.g1.done = true; delete S.skipped.g1; }
+      chime(true); say('到站了！');
+    } else { chime(false); say('星星停住了。'); }
+    g1Last = res; save(); render();
+    const car=$('#car'); if(car && !res.ok){ const e=pts[pts.length-1]; car.setAttribute('transform',`translate(${e[0]} ${e[1]})`); }
+  };
+  g1Last = null; g1Anim = true; render();
+  const car = $('#car');
+  if(PREF.reduce || !car){ finish(); return; }
+  let i=0; const seg=150;
+  (function step(){
+    if(i>=pts.length-1){ setTimeout(finish,120); return; }
+    const a=pts[i], b=pts[i+1], t0=performance.now();
+    (function fr(now){
+      const k=Math.min(1,(now-t0)/seg);
+      car.setAttribute('transform',`translate(${a[0]+(b[0]-a[0])*k} ${a[1]+(b[1]-a[1])*k})`);
+      if(k<1) requestAnimationFrame(fr); else { i++; step(); }
+    })(t0);
+  })();
+}
+function tapCell(r,c){
+  if(g1Anim || S.g1.solved[S.g1.level]) return;
+  const L = G1_LEVELS[S.g1.level], i = L.pieces.findIndex(p=>p[0]===r&&p[1]===c);
+  if(i<0) return;
+  S.g1.rot[i] = (S.g1.rot[i]+1) % (L.pieces[i][2]==='s'?2:4);
+  g1Last = null; save(); render();
+  const el = document.querySelector(`[data-act="cell"][data-r="${r}"][data-c="${c}"]`); if(el) el.focus();
+}
+
+/* =========================================================
+   守門：遊戲二 奇想工坊（踏石找規律・圖形推理）
+   ========================================================= */
+const SH = {
+  C:{k:'circle',c:'#F4CF87'}, T:{k:'tri',c:'#73B8A5'}, Q:{k:'square',c:'#e07a5f'},
+  R:{k:'circle',c:'#e07a5f'}, B:{k:'circle',c:'#5b8fd6'}, G:{k:'circle',c:'#9bd27a'},
+  s:{k:'square',c:'#73B8A5',s:.45}, m:{k:'square',c:'#73B8A5',s:.7}, l:{k:'square',c:'#73B8A5',s:.98},
+  au:{k:'arrow',c:'#F4CF87',rot:0}, ar:{k:'arrow',c:'#F4CF87',rot:90}, ad:{k:'arrow',c:'#F4CF87',rot:180}, al:{k:'arrow',c:'#F4CF87',rot:270}
+};
+const SHAPE_NAME = { C:'金色圓形', T:'綠色三角形', Q:'紅色方形', R:'紅色圓形', B:'藍色圓形', G:'綠色圓形', s:'小方形', m:'中方形', l:'大方形', au:'向上箭頭', ar:'向右箭頭', ad:'向下箭頭', al:'向左箭頭' };
+const G2_ROUNDS = [
+  { seq:['C','T','C','T','C'], ans:'T', opts:['C','T','Q'] },
+  { seq:['R','B','B','R','B'], ans:'B', opts:['R','G','B'] },
+  { seq:['s','m','l','s','m'], ans:'l', opts:['l','s','m'] },
+  { seq:['au','ar','ad','al','au'], ans:'ar', opts:['al','ad','ar'] }
+];
+function shapeSVG(key, cx, cy, size){
+  const d = SH[key], s = size*(d.s||.8)/2, st = 'stroke="#18243B" stroke-width="2.5" stroke-linejoin="round"';
+  if(d.k==='circle') return `<circle cx="${cx}" cy="${cy}" r="${s}" fill="${d.c}" ${st}/>`;
+  if(d.k==='tri') return `<polygon points="${cx},${cy-s} ${cx+s},${cy+s*.85} ${cx-s},${cy+s*.85}" fill="${d.c}" ${st}/>`;
+  if(d.k==='square') return `<rect x="${cx-s}" y="${cy-s}" width="${2*s}" height="${2*s}" rx="${s*.18}" fill="${d.c}" ${st}/>`;
+  return `<g transform="rotate(${d.rot} ${cx} ${cy})"><path d="M${cx} ${cy-s} L${cx+s*.85} ${cy} L${cx+s*.32} ${cy} L${cx+s*.32} ${cy+s} L${cx-s*.32} ${cy+s} L${cx-s*.32} ${cy} L${cx-s*.85} ${cy}Z" fill="${d.c}" ${st}/></g>`;
+}
+function stonesSVG(){
+  const g = S.g2, R = G2_ROUNDS[Math.min(g.round,G2_ROUNDS.length-1)], solved = g.roundSolved;
+  const xs = [58,108,158,208,258,308];
+  const fluff = `<g class="fluffHop"><ellipse cx="0" cy="0" rx="17" ry="15" fill="#e9dccb" stroke="#18243B" stroke-width="1.5"/><circle cx="-6" cy="-3" r="2.4" fill="#1c2638"/><circle cx="6" cy="-3" r="2.4" fill="#1c2638"/>
+     <path d="M-4 4q4 3 8 0" stroke="#1c2638" stroke-width="1.8" fill="none"/><rect x="-24" y="-12" width="12" height="12" rx="3" fill="#c0503f"/>
+     <image href="assets/art/fluffball.png" x="-24" y="-26" width="48" height="48" onerror="this.remove()"/></g>`;
+  const stones = xs.map((x,i)=>{
+    const known = i<5, filled = i===5 && solved;
+    return `<ellipse cx="${x}" cy="150" rx="22" ry="11" fill="${known||filled?'#9aa3b2':'none'}" stroke="${known||filled?'#6b7385':'#FFF8EB'}" stroke-width="2" ${known||filled?'':'stroke-dasharray="5 4"'}/>
+      ${known ? shapeSVG(R.seq[i], x, 122, 40) : filled ? shapeSVG(R.ans, x, 122, 40) : `<text x="${x}" y="134" text-anchor="middle" font-size="34" font-weight="700" fill="#F4CF87">?</text>`}`;
+  }).join('');
+  const atEnd = solved && PREF.reduce;
+  return `<svg class="stones ${solved&&!PREF.reduce?'cross':''}" viewBox="0 78 360 122" role="img" aria-label="河上一排踏石：${R.seq.map(k=>SHAPE_NAME[k]).join('、')}，最後一顆是問號">
+    <rect width="360" height="200" fill="#2c3d5f"/>
+    <rect x="0" y="140" width="34" height="60" fill="#3f8a74"/><rect x="330" y="140" width="30" height="60" fill="#3f8a74"/>
+    <rect x="34" y="146" width="296" height="54" fill="#4a7fb0"/><path d="M50 182q10-4 20 0t20 0M150 190q10-4 20 0t20 0M240 178q10-4 20 0" stroke="#9cc6e6" stroke-width="2" fill="none"/>
+    <rect x="334" y="112" width="24" height="28" fill="#a4733f"/><path d="M330 114l16-12 16 12z" fill="#7a4f2a"/>
+    ${stones}
+    <g class="fluffMove" ${atEnd?'transform="translate(322 0)"':''}><g transform="translate(18 124)">${fluff}</g></g>
+  </svg>`;
+}
+SCREENS.g2 = () => {
+  const g = S.g2, n = G2_ROUNDS.length;
+  const R = G2_ROUNDS[Math.min(g.round,n-1)], last = g.round===n-1;
+  return `${sceneBanner('奇想工坊', STATIONS.g2.art, '#3a2f3a')}
+  ${guide('毛球要踩石頭過河。最後一顆石頭，應該長什麼樣子？', g.roundSolved?'happy':'think')}
+  <div class="panel">
+    ${dots(n, g.round, g.roundSolved)}
+    ${stonesSVG()}
+    <div class="pill" aria-label="玩法：看石頭上的圖形，從下面選出問號那一顆">👀<span>➜</span>❓<span>➜</span>👆</div>
+    <div class="shopts" role="group" aria-label="選一顆石頭">
+      ${R.opts.map(k=>`<button class="shopt ${g.roundSolved&&k===R.ans?'right':''}" data-act="g2pick" data-k="${k}" aria-label="${SHAPE_NAME[k]}" ${g.roundSolved?'disabled':''}>
+        <svg viewBox="0 0 60 60" aria-hidden="true">${shapeSVG(k,30,30,52)}</svg></button>`).join('')}
+    </div>
+    <div class="fb ok" aria-live="polite">${g.roundSolved ? (last?'🎉 毛球過河了！':'✔️ 鋪好了！') : ''}</div>
+    ${g.roundSolved ? (last ? `<div class="btns"><button class="btn main" data-act="next" data-st="g2">下一站 ➜</button></div>`
+                            : `<div class="btns"><button class="btn main" data-act="g2next">下一條河 ➜</button></div>`) : ''}
+  </div>
+  ${S.route==='together' && g.done ? ptip('g2') : ''}
+  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g2">略過這一站</button></div>`:''}`;
+};
+
+/* =========================================================
+   守門：遊戲三 線索觀星臺（星星亮燈順序・記憶）
+   ========================================================= */
+const STARS = [[62,58],[160,36],[258,64],[92,150],[192,128],[272,168]];
+const G3_ROUNDS = [[0,3,4],[1,4,2,5],[5,3,0,1,4]];
+let g3Phase = 'idle', g3Input = [], g3Timer = [];
+function g3Clear(){ g3Timer.forEach(clearTimeout); g3Timer = []; }
+function skySVG(){
+  const g = S.g3, seq = G3_ROUNDS[Math.min(g.round,G3_ROUNDS.length-1)], solved = g.roundSolved;
+  const pathIdx = solved ? seq : g3Input;
+  const line = pathIdx.length>1 ? `<polyline points="${pathIdx.map(i=>STARS[i].join(',')).join(' ')}" fill="none" stroke="#F4CF87" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>` : '';
+  const bg = Array.from({length:30},(_,i)=>`<circle cx="${(i*67)%320}" cy="${(i*43)%220}" r="${i%4?0.8:1.3}" fill="#FFF8EB" opacity=".6"/>`).join('');
+  return `<svg class="sky" id="sky" viewBox="0 0 320 220" role="group" aria-label="夜空裡的六顆星星">
+    <rect width="320" height="220" rx="14" fill="#101a2e"/>${bg}${line}
+    ${STARS.map((p,i)=>`<g class="star ${solved&&seq.indexOf(i)>=0?'lit':''}" data-star="${i}" data-act="g3tap" data-i="${i}" role="button" tabindex="0" aria-label="第 ${i+1} 顆星星">
+      <circle cx="${p[0]}" cy="${p[1]}" r="28" fill="transparent" class="ring" stroke="none"/>
+      <circle cx="${p[0]}" cy="${p[1]}" r="22" class="halo"/>
+      <path class="core" d="M${p[0]} ${p[1]-14} L${p[0]+4} ${p[1]-4} L${p[0]+14} ${p[1]-4} L${p[0]+6} ${p[1]+3} L${p[0]+9} ${p[1]+13} L${p[0]} ${p[1]+7} L${p[0]-9} ${p[1]+13} L${p[0]-6} ${p[1]+3} L${p[0]-14} ${p[1]-4} L${p[0]-4} ${p[1]-4}Z"/>
+    </g>`).join('')}
+  </svg>`;
+}
+function g3Light(i, on){ const el = document.querySelector(`[data-star="${i}"]`); if(el) el.classList.toggle('lit', on); }
+function g3Play(){
+  if(g3Phase==='show' || S.g3.roundSolved) return;
+  g3Clear(); g3Input = []; g3Phase = 'show'; S.g3.views++; save(); render();
+  const seq = G3_ROUNDS[S.g3.round], on = 600, gap = 250;
+  seq.forEach((idx,k)=>{
+    g3Timer.push(setTimeout(()=>g3Light(idx,true), 400 + k*(on+gap)));
+    g3Timer.push(setTimeout(()=>g3Light(idx,false), 400 + k*(on+gap) + on));
+  });
+  g3Timer.push(setTimeout(()=>{ g3Phase='input'; render(); say('換你點了'); }, 400 + seq.length*(on+gap)));
+}
+function g3Tap(i){
+  if(g3Phase!=='input' || S.g3.roundSolved) return;
+  const seq = G3_ROUNDS[S.g3.round];
+  g3Input.push(i);
+  if(seq[g3Input.length-1] !== i){
+    g3Input = []; g3Phase = 'idle'; chime(false); render();
+    const sk=$('#sky'); if(sk){ sk.classList.add('wrong'); setTimeout(()=>sk.classList.remove('wrong'),450); }
+    say('順序不一樣，再看一次吧');
+    return;
+  }
+  if(g3Input.length === seq.length){
+    S.g3.roundSolved = true; S.g3.best = Math.max(S.g3.best, seq.length);
+    if(S.g3.round===G3_ROUNDS.length-1){ S.g3.done = true; delete S.skipped.g3; }
+    g3Phase = 'idle'; g3Input = []; save(); chime(true); render(); say('全部記住了！');
+    return;
+  }
+  render();
+  g3Light(i,true); setTimeout(()=>g3Light(i,false), 300);
+  const el = document.querySelector(`[data-star="${i}"]`); if(el) el.focus();
+}
+SCREENS.g3 = () => {
+  const g = S.g3, n = G3_ROUNDS.length, last = g.round===n-1, seq = G3_ROUNDS[Math.min(g.round,n-1)];
+  let btn = '';
+  if(g.roundSolved) btn = last ? `<button class="btn main" data-act="next" data-st="g3">下一站 ➜</button>` : `<button class="btn main" data-act="g3next">下一片星空 ➜</button>`;
+  else if(g3Phase==='show') btn = `<button class="btn main" disabled>👀 看仔細…</button>`;
+  else if(g3Phase==='input') btn = `<button class="btn ghost" data-act="g3play">🔁 再看一次</button>`;
+  else btn = `<button class="btn main" data-act="g3play">${g.views>0?'🔁 再看一次':'▶️ 看星星'}</button>`;
+  const fb = g.roundSolved ? (last?'🌟 星座連起來了！':'✔️ 全部記住了！') : g3Phase==='input' ? `👆 ${g3Input.length}／${seq.length}` : '';
+  return `${sceneBanner('線索觀星臺', STATIONS.g3.art, '#1f2c48')}
+  ${guide('星星會一顆一顆亮。看仔細，再照順序點一次！', g.roundSolved?'happy':'think')}
+  <div class="panel">
+    ${dots(n, g.round, g.roundSolved)}
+    <div class="pill" aria-label="玩法：先看星星亮的順序，再照順序點星星">👀<span>➜</span>⭐⭐⭐<span>➜</span>👆</div>
+    ${skySVG()}
+    <div class="fb ok" aria-live="polite">${fb}</div>
+    <div class="btns">${btn}</div>
+  </div>
+  ${S.route==='together' && g.done ? ptip('g3') : ''}
+  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g3">略過這一站</button></div>`:''}`;
+};
+
+/* ---------- 探索紀念卡 ---------- */
+function memoData(){
+  const parent = seenList().map(x=>`${x.v}：${x.c.t}`);
+  const did = [], talk = [];
+  const nums = ['一','二','三','四','五'];
+  S.g1.solved.forEach((v,i)=>{ if(v) did.push(`修好第${nums[i]}關的軌道`); });
+  if(S.g1.runs>0) did.push(`試跑了 ${S.g1.runs} 次`);
+  if(S.g1.hintUsed) did.push('打開了提示');
+  const n2 = S.g2.solvedCount;
+  if(n2>0) did.push(`鋪好 ${n2} 顆踏石${S.g2.done?'，毛球過河了':''}`);
+  if(S.g3.best>0) did.push(`記住 ${S.g3.best} 顆星星亮起的順序`);
+  if(S.cardsDone && (S.route!=='child')) talk.push(TALK.cards);
+  ['g1','g2','g3'].forEach(k=>{ if(S[k].done) talk.push(TALK[k]); });
+  return { parent, did, free:[], talk, showParent: S.cardsDone || S.cards.some(x=>x) };
+}
+SCREENS.memento = () => {
+  const d = memoData();
+  const empty = !d.parent.length && !d.did.length && !S.cardsDone;
+  const lamps = [['樹屋',S.cardsDone],['修理所',S.g1.done],['工坊',S.g2.done],['觀星臺',S.g3.done]];
+  return `<div class="lamps" aria-label="已探索的建築">${lamps.map(l=>`<div class="lamp ${l[1]?'on':''}"><i></i>${l[0]}</div>`).join('')}</div>
+  ${empty ? guide('下次可以從任一站開始。','guide') : guide('今天的燈亮起來了！','happy')}
+  <div class="memo" id="memo">
+    <h2>今天的小宇宙紀錄</h2>
+    <div class="stamp">親子探索紀錄・非鑑定結果</div>
+    ${d.showParent ? `<section><h3>家長留意到的片段</h3>${d.parent.length?`<ul>${d.parent.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。</p>'}</section>`:''}
+    ${d.did.length ? `<section><h3>孩子今天做了什麼</h3><ul>${d.did.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${d.free.map(f=>`<div class="free">${esc(f)}</div>`).join('')}</section>`:''}
+    ${d.talk.length ? `<section><h3>下一次可以聊聊</h3><ul>${d.talk.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`:''}
+    ${empty ? '<section><p>還沒有探索紀錄。回到島嶼，從任一站開始吧！</p></section>':''}
+    <section><p class="muted" style="margin:0">短短幾個任務，只能看見今天的一小部分。孩子的興趣、經驗與需要，可以在生活裡繼續了解。</p></section>
+  </div>
+  <div class="btns two">
+    <button class="btn plain" data-act="download" ${empty?'disabled':''}>下載紀念卡</button>
+    <button class="btn plain" data-act="go" data-to="home">繼續探索</button>
+  </div>
+  <div class="btns">
+    <button class="btn main" data-act="go" data-to="courses">看看真實的資優班</button>
+    <button class="btn ghost" data-act="go" data-to="enroll">直接看鑑定與報名</button>
+  </div>`;
+};
+
+/* ---------- 資優班介紹 ---------- */
+SCREENS.courses = () => {
+  const P = CONFIG.preview;
+  const cards = CONFIG.courses.map(c=>{
+    const ex = c.example && c.example.name && c.example.desc;
+    if(!c.img && !P && !ex) return `<div class="panel course"><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p></div>`;
+    return `<div class="panel course">
+      ${c.img ? `<div class="cpic"><img src="${esc(c.img)}" alt="${esc(c.imgAlt||c.title)}" loading="lazy"></div>` : (P?`<div class="cpic"><div class="pend">學校授權照片待提供<br>（正式版沒有照片就不顯示這一格）</div></div>`:'')}
+      <h3>${esc(c.title)}</h3><p>${esc(c.text)}</p>
+      ${ex ? `<p class="muted"><b>${esc(c.example.name)}</b>：${esc(c.example.desc)}${c.example.link?` <a href="${esc(c.example.link)}" target="_blank" rel="noopener">看成果</a>`:''}</p>`
+           : (P?`<p class="pending">［學校實際課程名稱］［一句真實活動描述］待老師核對</p>`:'')}
+    </div>`; }).join('');
+  return `${sceneBanner('碼頭：通往真實的學校','assets/art/scene-dock.webp','#2a3a55')}
+  <div class="panel dark"><h2>這些思考，可以在哪裡繼續長大？</h2></div>
+  ${cards}
+  <p class="note">課程安排、服務方式與招生對象，請依學校說明及當年度簡章確認。</p>
+  <div class="btns"><button class="btn main" data-act="go" data-to="enroll">了解鑑定與報名</button>${classSiteBtn('ghost')}</div>`;
+};
+function classSiteBtn(kind){
+  const u = CONFIG.school.classSiteUrl;
+  if(u) return `<a class="btn ${kind||'teal'}" href="${esc(u)}" target="_blank" rel="noopener">${esc(CONFIG.school.classSiteLabel)} ↗</a>`;
+  return CONFIG.preview ? `<button class="btn ${kind||'teal'}" disabled>${esc(CONFIG.school.classSiteLabel)}（網址待設定）</button>` : '';
+}
+
+/* ---------- 鑑定與報名 ---------- */
+SCREENS.enroll = () => {
+  const s = CONFIG.school;
+  const brochure = s.brochureUrl
+    ? `<a class="btn main" href="${esc(s.brochureUrl)}" target="_blank" rel="noopener">閱讀正式簡章（${esc(s.brochureType)}）↗</a>`
+    : `<button class="btn main" disabled>簡章${esc(s.brochureNote)}</button>`;
+  return `<div class="panel">
+    <h2>想進一步了解？從正式資訊開始。</h2>
+    <p>無論今天玩了幾站，都可以了解報名條件與流程。親子探索活動不決定是否能報名。</p>
+    <table class="info">
+      <tr><th scope="row">學校</th><td>${esc(s.name)}</td></tr>
+      <tr><th scope="row">報名資格</th><td>${esc(s.eligibility)}</td></tr>
+      <tr><th scope="row">基本時程</th><td>
+        <ol class="tl">${s.timeline.map(t=>`<li><b>${esc(t[0])}</b>${esc(t[1])}</li>`).join('')}</ol>
+        <span class="muted">${esc(s.timelineNote)}</span></td></tr>
+      <tr><th scope="row">正式簡章</th><td>${s.brochureUrl ? '請點下方按鈕閱讀' : `<b>${esc(s.brochureNote)}</b>`}</td></tr>
+    </table>
+    <p class="muted" style="margin-top:10px">資格、鑑定方式與重要提醒，以官方簡章為準。</p>
+    <div class="btns">${brochure}</div>
+  </div>
+  <div class="panel dark">
+    <h3>想多認識莒光資優班？</h3>
+    <p class="muted">課程、活動照片和學生作品，都放在資優班網站上。</p>
+    <div class="btns">${classSiteBtn('main')}</div>
+  </div>
+  <p class="foot">本網站為教育宣傳與親子探索用途，不收集作答與個人資料。</p>`;
+};
+
+/* =========================================================
+   動作分派
+   ========================================================= */
+function nextStation(cur){
+  if(cur) S.skipped[cur] = S.skipped[cur] && !S[cur].done;
+  const left = ['g1','g2','g3'].filter(k=>!S[k].done && !S.skipped[k] && k!==cur);
+  go(left.length ? left[0] : 'memento');
+}
+function startRoute(){
+  if(S.route==='parent' || S.route==='together'){ S.cardIdx = 0; go('cards'); }
+  else go('picker');
+}
+function finishCards(){
+  S.cardsDone = true; delete S.skipped.cards; save(); go('parentResult');
+}
+function confirmRestart(){
+  modal(`<h2 id="modalTitle">重新開始？</h2><p>這次的選擇和作答會全部清除，沒辦法復原。</p>
+    <div class="btns two"><button class="btn plain" data-act="mclose">先不要</button><button class="btn main" data-act="doRestart">清除並重來</button></div>`);
+}
+function modal(html){ $('#modalBody').innerHTML = html; $('#modal').hidden = false; const b=$('#modalBody button'); if(b) b.focus(); }
+function closeModal(){ $('#modal').hidden = true; }
+function openSettings(){
+  const sw = (k,label,desc)=>`<div class="switch"><span>${label}<br><span class="muted">${desc}</span></span><button data-act="pref" data-k="${k}" aria-pressed="${!!PREF[k]}">${PREF[k]?'開':'關'}</button></div>`;
+  modal(`<h2 id="modalTitle">設定</h2>
+    ${sw('sound','聲音','提示音與配樂，預設關閉')}
+    ${sw('reduce','減少動態','關掉動畫，直接顯示結果')}
+    ${sw('big','大字模式','放大所有文字')}
+    <div class="btns"><button class="btn main" data-act="mclose">完成</button></div>`);
+}
+
+function act(el){
+  const a = el.dataset.act;
+  switch(a){
+    case 'route': S.route = el.dataset.r; save(); go('intro'); break;
+    case 'start': startRoute(); break;
+    case 'go': go(el.dataset.to); break;
+    case 'spot': {
+      const to = el.dataset.to;
+      if(!S.route) S.route = to==='cards' ? 'parent' : 'child';
+      if(to==='cards'){ S.cardIdx = S.cardsDone?0:S.cardIdx; }
+      save(); go(to); break; }
+    case 'tochild': S.route='child'; save(); go('picker'); break;
+    case 'memento': go('memento'); break;
+    case 'restart': confirmRestart(); break;
+    case 'doRestart': { const r=S.route; S = fresh(); g1Last=null; g3Clear(); g3Phase='idle'; hist=[]; save(); closeModal(); go('home',{push:false}); break; }
+    case 'mclose': closeModal(); break;
+    case 'pref': PREF[el.dataset.k] = !PREF[el.dataset.k]; savePref(); if(el.dataset.k==='sound' && PREF.sound) startBgm(); openSettings(); render(); break;
+
+    case 'cardpick': S.cards[S.cardIdx] = el.dataset.v; save(); render(); { const b=document.querySelector('[data-act="cardnext"]'); if(b) b.focus(); } break;
+    case 'cardnext': if(S.cardIdx>=5) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
+    case 'cardprev': if(S.cardIdx>0){ S.cardIdx--; save(); render(); main.focus(); } break;
+    case 'cardskip': S.cards[S.cardIdx] = null; if(S.cardIdx>=5) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
+
+    case 'skipst': {
+      const st = el.dataset.st;
+      S.skipped[st] = true; save();
+      if(st==='cards'){ S.cardsDone = false; save(); if(S.route==='together') go('picker'); else go('parentResult'); }
+      else nextStation(st);
+      break; }
+    case 'next': nextStation(el.dataset.st); break;
+
+    case 'cell': tapCell(+el.dataset.r, +el.dataset.c); break;
+    case 'g1run': runG1(); break;
+    case 'g1hint': S.g1.hint = Math.min(2, S.g1.hint+1); S.g1.hintUsed = true; save(); render(); break;
+    case 'g1next': g1Init(S.g1.level+1); save(); render(); main.focus(); break;
+
+    case 'g2pick': {
+      const R = G2_ROUNDS[S.g2.round];
+      if(el.dataset.k===R.ans){
+        S.g2.roundSolved = true; S.g2.solvedCount = Math.max(S.g2.solvedCount, S.g2.round+1);
+        if(S.g2.round===G2_ROUNDS.length-1){ S.g2.done = true; delete S.skipped.g2; }
+        save(); chime(true); render(); say('答對了，毛球跳過去了');
+      } else {
+        chime(false); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); say('再看一次石頭的樣子');
+      }
+      break; }
+    case 'g2next': S.g2.round++; S.g2.roundSolved = false; save(); render(); main.focus(); break;
+
+    case 'g3play': g3Play(); break;
+    case 'g3tap': g3Tap(+el.dataset.i); break;
+    case 'g3next': g3Clear(); g3Phase='idle'; g3Input=[]; S.g3.round++; S.g3.roundSolved=false; S.g3.views=0; save(); render(); main.focus(); break;
+
+    case 'download': downloadMemo(); break;
+  }
+}
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-act]');
+  if(!el || el.disabled) return;
+  try{ act(el); }catch(err){ showErr('A', err); }
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && !$('#modal').hidden){ closeModal(); return; }
+  const el = e.target.closest && e.target.closest('[data-act]');
+  if(el && el.tagName!=='BUTTON' && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); try{ act(el); }catch(err){ showErr('K', err); } }
+});
+$('#btnBack').onclick = back;
+$('#btnIsland').onclick = ()=>go('home');
+$('#btnEnroll').onclick = ()=>go('enroll');
+$('#btnSet').onclick = openSettings;
+$('#modal').addEventListener('click', e=>{ if(e.target.id==='modal') closeModal(); });
+
+/* ---------- 紀念卡下載（在裝置上產生，不上傳） ---------- */
+async function downloadMemo(){
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const d = memoData(), W = 1080, pad = 72, font = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+    const cv = document.createElement('canvas'), x = cv.getContext('2d');
+    const blocks = [];
+    blocks.push({ t:'今天的小宇宙紀錄', s:58, w:700, c:'#18243B', g:8 });
+    blocks.push({ t:'親子探索紀錄・非鑑定結果', s:30, w:400, c:'#44506a', g:36 });
+    if(d.showParent){ blocks.push({ t:'家長留意到的片段', s:36, w:700, c:'#2c6a5b', g:10 });
+      (d.parent.length?d.parent:['今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。']).forEach(p=>blocks.push({ t:'・'+p, s:32, w:400, c:'#1c2638', g:6 })); blocks.push({gap:26}); }
+    if(d.did.length){ blocks.push({ t:'孩子今天做了什麼', s:36, w:700, c:'#2c6a5b', g:10 });
+      d.did.forEach(p=>blocks.push({ t:'・'+p, s:32, w:400, c:'#1c2638', g:6 }));
+      d.free.forEach(p=>blocks.push({ t:'「'+p+'」', s:30, w:400, c:'#44506a', g:6 })); blocks.push({gap:26}); }
+    if(d.talk.length){ blocks.push({ t:'下一次可以聊聊', s:36, w:700, c:'#2c6a5b', g:10 });
+      d.talk.forEach(p=>blocks.push({ t:'・'+p, s:32, w:400, c:'#1c2638', g:6 })); blocks.push({gap:26}); }
+    blocks.push({ t:'短短幾個任務，只能看見今天的一小部分。孩子的興趣、經驗與需要，可以在生活裡繼續了解。', s:28, w:400, c:'#44506a', g:6 });
+    const wrap = (t,s,w)=>{ x.font = `${w} ${s}px ${font}`; const lines=[]; let cur=''; for(const ch of t){ if(x.measureText(cur+ch).width > W-pad*2){ lines.push(cur); cur=ch; } else cur+=ch; } if(cur) lines.push(cur); return lines; };
+    let H = pad;
+    blocks.forEach(b=>{ if(b.gap){ H+=b.gap; return; } b.lines = wrap(b.t,b.s,b.w); H += b.lines.length*b.s*1.5 + b.g; });
+    H += pad + 60;
+    cv.width = W; cv.height = H;
+    x.fillStyle = '#18243B'; x.fillRect(0,0,W,H);
+    x.fillStyle = '#FFF8EB'; roundRect(x,24,24,W-48,H-48,40); x.fill();
+    x.strokeStyle = '#F4CF87'; x.lineWidth = 8; roundRect(x,24,24,W-48,H-48,40); x.stroke();
+    let y = pad + 20;
+    blocks.forEach(b=>{ if(b.gap){ y+=b.gap; return; } x.font = `${b.w} ${b.s}px ${font}`; x.fillStyle = b.c; x.textBaseline='top';
+      b.lines.forEach(l=>{ x.fillText(l, pad, y); y += b.s*1.5; }); y += b.g; });
+    x.font = `400 24px ${font}`; x.fillStyle = '#44506a'; x.fillText(`${CONFIG.school.name}資優班・看見小宇宙`, pad, H-pad-6);
+    cv.toBlob(blob=>{
+      if(!blob){ showErr('D', new Error('toBlob')); return; }
+      const url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = '看見小宇宙紀念卡.png'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 4000);
+      say('紀念卡已產生。');
+    }, 'image/png');
+  }catch(e){ showErr('D', e); }
+}
+function roundRect(x,a,b,w,h,r){ x.beginPath(); x.moveTo(a+r,b); x.arcTo(a+w,b,a+w,b+h,r); x.arcTo(a+w,b+h,a,b+h,r); x.arcTo(a,b+h,a,b,r); x.arcTo(a,b,a+w,b,r); x.closePath(); }
+
+/* ---------- 錯誤記錄積木 ---------- */
+function showErr(tag, e){
+  const code = `E-${tag}-${S.screen}-${Date.now().toString(36).slice(-4)}`;
+  const box = $('#errbox');
+  box.textContent = `出了點狀況，請截圖給老師：${code}｜${(e && e.message || e || '').toString().slice(0,60)}`;
+  box.hidden = false; setTimeout(()=>{ box.hidden = true; }, 9000);
+  try{ console.error(code, e); }catch(_){}
+}
+window.addEventListener('error', ev=>{ if(ev.target && ev.target.tagName==='IMG') return; showErr('W', ev.error||ev.message); });
+
+/* ---------- 寬螢幕背景圖（選用） ---------- */
+(function(){ const im = new Image(); im.onload = ()=>document.body.classList.add('has-wide-art'); im.src = 'assets/art/island-wide.webp'; })();
+
+/* ---------- 測試積木：給自動測試呼叫 ---------- */
+window.__GAME = {
+  state: ()=>JSON.parse(JSON.stringify(S)), go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
+  setRot: a=>{ S.g1.rot=a.slice(); g1Last=null; save(); render(); },
+  run: runG1, reset: ()=>{ S=fresh(); hist=[]; g1Last=null; save(); render(); }
+};
+
+if(CONFIG.preview){ const f=document.createElement('div'); f.className='preview-flag'; f.textContent='開發預覽'; document.body.appendChild(f); }
+applyPref();
+render();
+</script>
+</body>
+</html>
