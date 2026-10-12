@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v3 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v4 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -205,9 +205,6 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 @media (min-width:600px){.feats{grid-template-columns:1fr 1fr}}
 .feat{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px}
 .feat b{color:var(--teal-d)} .feat p{margin:4px 0 0}
-.ctags{display:flex;flex-wrap:wrap;gap:8px}
-.ctags span{background:var(--teal-l);color:var(--teal-d);font-weight:700;border-radius:999px;padding:4px 14px}
-.acts li:before{content:"📍 "}
 .board .cellframe{fill:none;stroke:none}
 .board .cell:focus-visible .cellframe{stroke:var(--gold-d);stroke-width:5}
 .board .litbox{fill:#F4CF87;fill-opacity:.18;stroke:#F4CF87;stroke-width:4}
@@ -319,7 +316,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v3',
+  version: 'v4',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -339,8 +336,8 @@ const CONFIG = {
     ['戶外充實課程與專家座談','透過充實課程，豐富孩子們的生活經驗、滿足求知慾。'],
     ['因材施教，加深加廣課程','依據孩子們的特質與需求，規劃適性課程，協助拓展天賦。']
   ],
-  courseTypes: ['獨立研究','領域選修','閱讀技巧','資訊科技','人文課程','情意教育','領導與創造'],
-  activities: ['旗山歷史人文踏查','嘉義觸口生態踏查','橋頭地檢署、法院參訪','科學微觀顯微鏡講座','小小地政士測量講座','創意科技積木競賽','創意機器人競賽','創意運動會競賽'],
+  courseUrl: 'https://daimg49.wixsite.com/chukps-giftedclass/services-1',
+  courseLabel: '看莒光資優班完整課程規劃',
   bgm: 'assets/art/bgm.mp3'   // 配樂檔（選用）；沒有這個檔案就只有提示音
 };
 
@@ -348,12 +345,14 @@ const PENDING = '正式資料待學校確認';
 
 /* ---------- 內容表 ---------- */
 const CARDS = [
-  { t:'思考敏捷、能舉一反三', d:'教過一種玩法，孩子很快變出新玩法，或用到別的地方。', e:'⚡' },
-  { t:'理解力極佳', d:'大人說明一件事，孩子很快聽懂，還能用自己的話講給別人聽。', e:'💡' },
-  { t:'記憶和閱讀能力強', d:'看過的書、去過的地方，隔很久還記得細節。', e:'📚' },
-  { t:'語彙量高', d:'說話時會用到比同齡孩子更多、更精準的詞。', e:'💬' },
-  { t:'具批判思考、富正義感', d:'會問「為什麼要這樣規定」，看到不公平的事很在意。', e:'⚖️' },
-  { t:'高度專注於感興趣的事物', d:'遇到喜歡的事可以做很久，叫吃飯都聽不到。', e:'🔍' }
+  { t:'喜歡變化玩法', d:'學會一個遊戲或方法後，有時會自己改規則、想新玩法。', e:'🎲' },
+  { t:'會用自己的話說明', d:'聽完一件事，能用自己的話再講一遍給別人聽。', e:'🗣️' },
+  { t:'對看過的事記得清楚', d:'讀過的書、去過的地方，過一陣子還記得一些細節。', e:'📚' },
+  { t:'喜歡用新學到的詞', d:'說話時會用上從書裡或大人那裡聽來的詞。', e:'💬' },
+  { t:'會問「為什麼要這樣」', d:'對規定或安排想知道原因，遇到覺得不公平的事會很在意。', e:'❓' },
+  { t:'對有興趣的事很投入', d:'做喜歡的事時可以待很久，有時沒聽到旁人叫他。', e:'🔍' },
+  { t:'情緒來得比較強烈', d:'開心、生氣或難過時，反應比同齡孩子明顯，需要多一點時間平復。', e:'🌊' },
+  { t:'對自己要求比較高', d:'做錯或沒做好時很在意，有時因此不想開始，或一直重做。', e:'🎯' }
 ];
 const CARD_OPTS = ['常看見','偶爾看見','還沒留意'];
 
@@ -377,11 +376,11 @@ const TALK = {
 /* =========================================================
    地基：狀態（只存在目前分頁 sessionStorage，不送出、不跨裝置）
    ========================================================= */
-const KEY = 'xyz-state-v2';
+const KEY = 'xyz-state-v3';
 function fresh(){
   return {
     route:null, screen:'home', cardIdx:0,
-    cards:[null,null,null,null,null,null], cardsDone:false,
+    cards:CARDS.map(()=>null), cardsDone:false,
     g1:{ level:0, rot:[1,0,0,0,3], solved:[false,false], runs:0, hint:0, hintUsed:false, done:false },
     g2:{ round:0, roundSolved:false, solvedCount:0, done:false },
     g3:{ round:0, roundSolved:false, best:0, views:0, done:false },
@@ -609,10 +608,10 @@ SCREENS.intro = () => {
 
 /* ---------- 家長觀察樹屋 ---------- */
 SCREENS.cards = () => {
-  const i = Math.min(S.cardIdx, 5), c = CARDS[i], v = S.cards[i];
+  const N = CARDS.length, i = Math.min(S.cardIdx, N-1), c = CARDS[i], v = S.cards[i];
   return `${sceneBanner('家長觀察樹屋','assets/art/scene-treehouse.webp','#263a3a')}
   <div class="panel pcard">
-    <div class="prog">第 ${i+1} 張／共 6 張</div>
+    <div class="prog">第 ${i+1} 張／共 ${N} 張</div>
     <div class="pic"><div class="fbx" aria-hidden="true">${c.e}</div>${imgSlot('assets/art/parent-card-'+(i+1)+'.webp','')}</div>
     <h2>${esc(c.t)}</h2>
     <p>${esc(c.d)}</p>
@@ -622,7 +621,7 @@ SCREENS.cards = () => {
     </div>
     <div class="btns two">
       <button class="btn plain" data-act="cardprev" ${i===0?'disabled':''}>上一張</button>
-      <button class="btn main" data-act="cardnext" ${v?'':'disabled'}>${i===5?'看看我的紀錄':'下一張'}</button>
+      <button class="btn main" data-act="cardnext" ${v?'':'disabled'}>${i===N-1?'看看我的紀錄':'下一張'}</button>
     </div>
     <div class="btns two">
       <button class="link" data-act="cardskip">略過這一張</button>
@@ -1046,13 +1045,8 @@ SCREENS.courses = () => {
   <div class="panel dark"><h2>這些思考，可以在哪裡繼續長大？</h2><p class="muted" style="margin:0">${esc(C.intro)}</p></div>
   <div class="panel"><h3>莒優教學特色</h3>
     <div class="feats">${C.features.map(f=>`<div class="feat"><b>${esc(f[0])}</b><p>${esc(f[1])}</p></div>`).join('')}</div></div>
-  <div class="panel"><h3>課程規劃</h3>
-    <div class="ctags">${C.courseTypes.map(t=>`<span>${esc(t)}</span>`).join('')}</div>
-    <p class="muted" style="margin-top:8px">透過多元嘗試，啟發每個孩子的天賦。</p></div>
-  <div class="panel"><h3>參訪、講座與競賽</h3>
-    <ul class="clean acts">${C.activities.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
   <p class="note">課程安排、服務方式與招生對象，請依學校說明及當年度簡章確認。</p>
-  <div class="btns"><button class="btn main" data-act="go" data-to="enroll">了解鑑定與報名</button>${classSiteBtn('ghost')}</div>`;
+  <div class="btns"><a class="btn teal" href="${esc(C.courseUrl)}" target="_blank" rel="noopener">${esc(C.courseLabel)} ↗</a><button class="btn main" data-act="go" data-to="enroll">了解鑑定與報名</button></div>`;
 };
 function classSiteBtn(kind){
   const u = CONFIG.school.classSiteUrl;
@@ -1137,9 +1131,9 @@ function act(el){
     case 'pref': PREF[el.dataset.k] = !PREF[el.dataset.k]; savePref(); if(el.dataset.k==='sound' && PREF.sound) startBgm(); openSettings(); render(); break;
 
     case 'cardpick': S.cards[S.cardIdx] = el.dataset.v; save(); render(); { const b=document.querySelector('[data-act="cardnext"]'); if(b) b.focus(); } break;
-    case 'cardnext': if(S.cardIdx>=5) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
+    case 'cardnext': if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
     case 'cardprev': if(S.cardIdx>0){ S.cardIdx--; save(); render(); main.focus(); } break;
-    case 'cardskip': S.cards[S.cardIdx] = null; if(S.cardIdx>=5) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
+    case 'cardskip': S.cards[S.cardIdx] = null; if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
 
     case 'skipst': {
       const st = el.dataset.st;
