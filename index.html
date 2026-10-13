@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v5 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v6 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -27,7 +27,6 @@ html.big{font-size:19px}
 body{margin:0;background:var(--night);color:var(--cream);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
   line-height:1.6;min-height:100vh;overflow-x:hidden}
-body.has-wide-art{background:var(--night) url("assets/art/island-wide.webp") center/cover fixed}
 button,input,textarea{font:inherit}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
@@ -90,7 +89,7 @@ a{color:inherit}
 .island .art,.island svg.draw,.island svg.hit{position:absolute;inset:0;width:100%;height:100%}
 .island .art{object-fit:contain;opacity:0;transition:opacity .4s}
 .island.has-art .art{opacity:1}
-.island.has-art svg.draw{display:none}
+.island:not(.has-art) .hit{visibility:hidden}
 .hit .spot{cursor:pointer}
 .hit .spot:focus-visible rect.hb{stroke:var(--gold);stroke-width:3}
 .glow{opacity:0;transition:opacity .8s}
@@ -116,7 +115,7 @@ a{color:inherit}
 @keyframes peek{from{transform:translateY(12px);opacity:0}}
 
 /* ---------- 場景橫幅 ---------- */
-.scene{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:16/7;background:linear-gradient(160deg,#2c3d5f,#18243B 70%);margin-top:6px}
+.scene{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:16/7;background:var(--night2);margin-top:6px}
 .scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
 .scene.has-art img{opacity:1}
 .scene .stitle{position:absolute;left:12px;bottom:10px;background:rgba(255,248,235,.95);color:var(--ink);
@@ -126,11 +125,6 @@ a{color:inherit}
 
 /* ---------- 家長卡 ---------- */
 .prog{font-size:.9rem;color:var(--ink2);margin-bottom:6px}
-.pcard .pic{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--teal-l);margin-bottom:12px}
-.pcard .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
-.pcard .pic.has-art img{opacity:1}
-.pcard .pic .fbx{position:absolute;inset:0;display:grid;place-items:center;font-size:4.2rem}
-.pcard .pic.has-art .fbx{display:none}
 .opts{display:grid;gap:8px;margin:10px 0}
 .opt{min-height:52px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);
   font-size:1.05rem;cursor:pointer;text-align:left;padding:8px 14px;display:flex;align-items:center;gap:10px}
@@ -210,10 +204,26 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 .board .litbox{fill:#F4CF87;fill-opacity:.18;stroke:#F4CF87;stroke-width:4}
 .sky .star .son{opacity:0} .sky .star.lit .son{opacity:1} .sky .star.lit .soff{opacity:0}
 .about h2{color:var(--night)}
-.needs{display:grid;gap:8px;margin-top:6px}
-@media (min-width:600px){.needs{grid-template-columns:1fr 1fr}}
-.needs div{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px}
-.needs b{display:block;color:var(--teal-d);font-size:1.05rem}
+.about{margin:12px 0 4px}
+.about p{margin:0 0 8px}
+.about .go{margin:0;font-weight:700;color:var(--teal-d)}
+.homeTop{align-items:start!important}
+.waiting{min-height:420px;background:var(--cream)}
+.qopts{display:grid;gap:8px;margin:12px 0}
+.bar{display:grid;grid-template-columns:3.2em 1fr 5.5em;gap:8px;align-items:center;margin:8px 0}
+.bar b{color:var(--ink)}
+.bar.hi b{color:var(--gold-d)}
+.bar .track{height:14px;background:#efe6d2;border-radius:999px;overflow:hidden}
+.bar .fill{height:100%;background:var(--teal-d);border-radius:999px}
+.bar.hi .fill{background:var(--gold-d)}
+.bar span{font-size:.88rem;color:var(--ink2);text-align:right}
+.typecard{background:var(--night);color:var(--cream);border-radius:16px;padding:16px;margin:4px 0 14px}
+.typecard small{color:var(--gold);font-weight:700;letter-spacing:.08em}
+.typecard h2{color:var(--gold)!important;margin:2px 0 6px!important;font-size:1.4rem}
+.typecard p{margin:0;color:#e6ecf5}
+details.refs{margin-top:10px}
+details.refs summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:var(--teal-d);font-weight:700}
+details.refs li{margin:6px 0;font-size:.9rem;color:var(--ink2)}
 .howto{background:#fff;color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:8px 14px;margin:6px 0 10px;text-align:center;font-weight:700}
 /* ---------- 遊戲二：工坊 ---------- */
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
@@ -304,9 +314,9 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
 <body>
 <header class="top" role="banner">
   <button class="tbtn" id="btnBack" type="button" aria-label="上一頁">‹ 上一頁</button>
-  <button class="tbtn" id="btnIsland" type="button" aria-label="返回島嶼">🏝️ 島嶼</button>
+  <button class="tbtn" id="btnIsland" type="button">首頁</button>
   <span class="sp"></span>
-  <button class="tbtn" id="btnSet" type="button" aria-label="設定：聲音、動態、字級">⚙️</button>
+  <button class="tbtn" id="btnSet" type="button" aria-label="設定：聲音、動態、字級">設定</button>
   <button class="tbtn gold" id="btnEnroll" type="button">鑑定與報名</button>
 </header>
 <main class="app" id="main" tabindex="-1"></main>
@@ -322,7 +332,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v5',
+  version: 'v6',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -350,27 +360,52 @@ const CONFIG = {
 const PENDING = '正式資料待學校確認';
 
 /* ---------- 內容表 ---------- */
+/* 家長觀察題：架構參考臺灣國小一般智能資優鑑定「觀察推薦表」四面向，
+   題意對照 Renzulli & Hartman (1971) SRBCSS；情意題另參考 Dąbrowski 過度激動特質理論 */
+const DIMS = {
+  inq:{ name:'探究', type:'好奇的小探險家',
+    desc:'孩子常追問原因、記得細節，也會主動找資料。這類表現對應鑑定觀察表的「認知」面向，以及 Renzulli 量表中的「學習特質」。',
+    tips:['被問倒時，可以回答「我們一起查查看」，把找答案的過程留給他。','帶他去圖書館或博物館，讓他自己挑一個想深入的主題。'] },
+  cre:{ name:'創造', type:'點子不斷的小發明家',
+    desc:'孩子常想出和別人不一樣的辦法，喜歡改造規則，也願意接受有難度的挑戰。這類表現對應鑑定觀察表的「創造」面向。',
+    tips:['聽到奇怪的點子，先問「你打算怎麼做？」，再一起討論。','準備紙箱、膠帶等材料，讓想法有機會做出來試試看。'] },
+  lead:{ name:'領導', type:'帶著大家前進的小隊長',
+    desc:'和同伴相處時，孩子常提出點子、安排分工，也能把想法說清楚。這類表現對應鑑定觀察表的「社會（領導）」面向。',
+    tips:['交給他一件家庭小任務，例如規劃週末半天的行程。','他想主導時，陪他練習先聽完別人的意見再做決定。'] },
+  aff:{ name:'情意', type:'感受細膩的小心靈',
+    desc:'孩子在意公平與對錯，對自己要求高，情緒反應也比較明顯。鑑定觀察表把這類表現放在「動機（情意）」面向；心理學家 Dąbrowski 的「過度激動特質」理論，也描述過這種強烈的感受。',
+    tips:['情緒很滿的時候，先陪他把感受說出來，平靜後再討論做法。','分享你自己做錯、再修正的經驗，讓他知道錯誤是學習的一部分。'] }
+};
+const DIM_ORDER = ['inq','cre','lead','aff'];
 const CARDS = [
-  { t:'喜歡變化玩法', d:'學會一個遊戲或方法後，有時會自己改規則、想新玩法。', e:'🎲' },
-  { t:'會用自己的話說明', d:'聽完一件事，能用自己的話再講一遍給別人聽。', e:'🗣️' },
-  { t:'對看過的事記得清楚', d:'讀過的書、去過的地方，過一陣子還記得一些細節。', e:'📚' },
-  { t:'喜歡用新學到的詞', d:'說話時會用上從書裡或大人那裡聽來的詞。', e:'💬' },
-  { t:'會問「為什麼要這樣」', d:'對規定或安排想知道原因，遇到覺得不公平的事會很在意。', e:'❓' },
-  { t:'對有興趣的事很投入', d:'做喜歡的事時可以待很久，有時沒聽到旁人叫他。', e:'🔍' },
-  { t:'情緒來得比較強烈', d:'開心、生氣或難過時，反應比同齡孩子明顯，需要多一點時間平復。', e:'🌊' },
-  { t:'對自己要求比較高', d:'做錯或沒做好時很在意，有時因此不想開始，或一直重做。', e:'🎯' }
+  { d:'inq',  t:'對有興趣的事，會一直追問「為什麼」「怎麼會這樣」。' },
+  { d:'cre',  t:'遇到問題時，會想出和別人不一樣的辦法。' },
+  { d:'lead', t:'和同伴一起玩或做事時，常是提出點子、安排分工的人。' },
+  { d:'aff',  t:'做有興趣的事很專注，可以持續很久，旁人叫他也不一定聽到。' },
+  { d:'inq',  t:'看過或聽過的事情，過一段時間還記得不少細節。' },
+  { d:'cre',  t:'喜歡改造玩法、規則或手邊的東西，讓它變得不一樣。' },
+  { d:'lead', t:'能把自己的想法說清楚，讓別人聽得懂。' },
+  { d:'aff',  t:'對自己要求比較高，做錯或沒做好時會很在意。' },
+  { d:'inq',  t:'說話時會用上比同齡孩子更多、更精準的詞語。' },
+  { d:'cre',  t:'喜歡挑戰有難度的題目或任務。' },
+  { d:'lead', t:'會留意別人的感受，願意幫忙協調爭執。' },
+  { d:'aff',  t:'很在意公平與對錯，看到不公平的事反應比較大。' },
+  { d:'inq',  t:'會主動找書或資料來看，讀的內容常超過同年級的程度。' },
+  { d:'cre',  t:'有自己的想法，意見不同時會說出來，並說明理由。' },
+  { d:'lead', t:'答應別人的事，會負責做完。' },
+  { d:'aff',  t:'情緒感受來得比較強烈，開心、難過或生氣都很明顯。' }
 ];
-const CARD_OPTS = ['常看見','偶爾看見','還沒留意'];
+const CARD_OPTS = ['很少看到','有時候','常常','幾乎每次'];
 
 const ROUTES = {
-  parent:  { label:'我想觀察孩子',  time:'2–3 分鐘',  say:'不用替孩子挑最漂亮的答案，回想你真的看過的情況就好。' },
+  parent:  { label:'我想觀察孩子',  time:'3–4 分鐘',  say:'不用替孩子挑最漂亮的答案，回想你真的看過的情況就好。' },
   child:   { label:'讓孩子試試看',  time:'4–6 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' }
 };
 
 const STATIONS = {
-  g1:{ name:'機關修理所', ic:'⚙️', one:'轉一轉，接好星星快遞的軌道', art:'assets/art/scene-repair.webp' },
-  g2:{ name:'奇想工坊',   ic:'🪨', one:'看圖形規律，幫毛球鋪踏石',   art:'assets/art/scene-craft.webp' },
-  g3:{ name:'線索觀星臺', ic:'🔭', one:'記住星星亮起的順序',         art:'assets/art/scene-observatory.webp' }
+  g1:{ name:'機關修理所', one:'轉一轉，接好星星快遞的軌道', art:'assets/art/scene-repair.webp' },
+  g2:{ name:'奇想工坊',   one:'看圖形規律，幫毛球鋪踏石',   art:'assets/art/scene-craft.webp' },
+  g3:{ name:'線索觀星臺', one:'記住星星亮起的順序',         art:'assets/art/scene-observatory.webp' }
 };
 const TALK = {
   cards:'最近哪一件事，孩子願意一直做下去？可以問問他喜歡的原因。',
@@ -382,7 +417,7 @@ const TALK = {
 /* =========================================================
    地基：狀態（只存在目前分頁 sessionStorage，不送出、不跨裝置）
    ========================================================= */
-const KEY = 'xyz-state-v3';
+const KEY = 'xyz-state-v6';
 function fresh(){
   return {
     route:null, screen:'home', cardIdx:0,
@@ -416,7 +451,7 @@ const $ = s => document.querySelector(s);
 const main = $('#main');
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function say(t){ const l=$('#live'); l.textContent=''; setTimeout(()=>{ l.textContent=t; },30); }
-function anyProgress(){ return S.cards.some(x=>x) || S.cardsDone || S.g1.runs>0 || S.g1.rot.join()!=='1,0,0,0,3' || S.g2.solvedCount>0 || S.g3.views>0; }
+function anyProgress(){ return S.cards.some(x=>x!=null) || S.cardsDone || S.g1.runs>0 || S.g1.rot.join()!=='1,0,0,0,3' || S.g2.solvedCount>0 || S.g3.views>0; }
 // 圖片插槽：圖檔存在就淡入，不存在就保留程式畫的備用圖
 function artOK(img){ img.parentElement.classList.add('has-art'); }
 function artNo(img){ img.remove(); }
@@ -475,43 +510,14 @@ function render(){
 }
 
 /* ---------- 小光（程式畫的備用圖） ---------- */
-function mascotSVG(m){
-  const eyes = m==='happy'
-    ? '<path d="M36 46q4-5 8 0M56 46q4-5 8 0" stroke="#1c2638" stroke-width="3" fill="none" stroke-linecap="round"/>'
-    : m==='think'
-    ? '<circle cx="40" cy="46" r="3.6" fill="#1c2638"/><circle cx="61" cy="44" r="3.6" fill="#1c2638"/><path d="M56 37l9-3" stroke="#1c2638" stroke-width="2.5" stroke-linecap="round"/>'
-    : '<circle cx="40" cy="46" r="3.8" fill="#1c2638"/><circle cx="60" cy="46" r="3.8" fill="#1c2638"/><circle cx="41.3" cy="44.6" r="1.2" fill="#fff"/><circle cx="61.3" cy="44.6" r="1.2" fill="#fff"/>';
-  const mouth = m==='happy' ? '<path d="M43 56q7 7 14 0" stroke="#1c2638" stroke-width="3" fill="#e98b7b" stroke-linecap="round"/>'
-    : m==='think' ? '<path d="M45 58h9" stroke="#1c2638" stroke-width="3" stroke-linecap="round"/>'
-    : '<path d="M44 56q6 4 12 0" stroke="#1c2638" stroke-width="3" fill="none" stroke-linecap="round"/>';
-  const arm = m==='guide' ? '<path d="M78 58q10-8 14-20" stroke="#5c9c8a" stroke-width="7" fill="none" stroke-linecap="round"/>' : '';
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">
-    <ellipse cx="50" cy="94" rx="26" ry="4" fill="#0d1526" opacity=".5"/>
-    <path d="M22 30q-6-14 6-18q6 6 6 14M78 30q6-14-6-18q-6 6-6 14" fill="#73B8A5"/>
-    <ellipse cx="50" cy="58" rx="33" ry="34" fill="#73B8A5"/>
-    <ellipse cx="50" cy="52" rx="23" ry="20" fill="#FFF8EB"/>
-    ${eyes}${mouth}
-    <circle cx="34" cy="55" r="4" fill="#f2b3a3" opacity=".7"/><circle cx="66" cy="55" r="4" fill="#f2b3a3" opacity=".7"/>
-    ${arm}
-    <path d="M24 70q-10 6-8 16" stroke="#5c9c8a" stroke-width="7" fill="none" stroke-linecap="round"/>
-    <line x1="16" y1="86" x2="16" y2="80" stroke="#8a6a3a" stroke-width="2"/>
-    <rect x="9" y="80" width="14" height="16" rx="4" fill="#F4CF87" stroke="#8a5a12" stroke-width="2"/>
-    <circle cx="16" cy="88" r="4" fill="#fff6d8"/>
-  </svg>`;
-}
 function guide(text, mood, who){
   mood = mood || 'idle';
   return `<div class="guide peek">
-    <div class="mascot" role="img" aria-label="小光">${mascotSVG(mood)}${imgSlot('assets/art/xiaoguang-'+mood+'.png','')}</div>
+    <div class="mascot" role="img" aria-label="小光">${imgSlot('assets/art/xiaoguang-'+mood+'.png','')}</div>
     <div class="bubble"><b>${esc(who||'小光')}</b>${esc(text)}</div></div>`;
 }
 function sceneBanner(title, art, fbColor){
   return `<div class="scene">
-    <svg class="fb" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <rect width="320" height="140" fill="${fbColor||'#22314d'}"/>
-      ${[[30,20],[80,40],[150,15],[230,30],[290,18],[260,60],[120,55]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="1.6" fill="#FFF8EB" class="twinkle"/>`).join('')}
-      <path d="M0 110q80-30 160-10t160-6v46H0z" fill="#2c6a5b" opacity=".8"/>
-    </svg>
     ${imgSlot(art,'')}
     <span class="stitle">${esc(title)}</span></div>`;
 }
@@ -527,38 +533,6 @@ const SPOTS = [
 function spotDone(id){
   return id==='tree'?S.cardsDone : id==='repair'?S.g1.done : id==='craft'?S.g2.done : id==='star'?S.g3.done : false;
 }
-function islandDraw(){
-  const stars = Array.from({length:26},(_,i)=>{ const x=(i*73)%300, y=(i*41)%120+6; return `<circle cx="${x}" cy="${y}" r="${i%3?1.1:1.8}" fill="#FFF8EB" class="twinkle" style="animation-delay:${(i%7)*.4}s"/>`; }).join('');
-  return `<svg class="draw" viewBox="0 0 300 400" aria-hidden="true">
-    <defs><radialGradient id="gl"><stop offset="0" stop-color="#fff6d8"/><stop offset=".5" stop-color="#F4CF87" stop-opacity=".8"/><stop offset="1" stop-color="#F4CF87" stop-opacity="0"/></radialGradient></defs>
-    ${stars}
-    <circle cx="255" cy="40" r="16" fill="#FFF8EB" opacity=".9"/><circle cx="263" cy="35" r="14" fill="#18243B"/>
-    <path d="M20 300q-6-120 130-140q140 4 132 140q-30 30-62 28q-20 60-70 70q-50-10-72-70q-40 0-58-28z" fill="#3b2f2a"/>
-    <path d="M60 330q40 50 90 62q50-12 80-62" fill="#2a211e"/>
-    <path d="M14 200q8-80 136-96q130 12 138 96q4 92-8 104q-60 22-130 20q-80 2-130-20q-12-20-6-104z" fill="#3f8a74"/>
-    <path d="M24 196q10-70 126-82q118 10 128 82" fill="#73B8A5" opacity=".55"/>
-    <path d="M150 180q-30 40-60 60M150 180q40 30 70 50M150 180v130" stroke="#e7d9b9" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>
-    <!-- 樹屋 -->
-    <g><rect x="70" y="140" width="10" height="44" fill="#5b3b24"/>
-      <g class="sway"><circle cx="58" cy="108" r="22" fill="#2f6f5c"/><circle cx="92" cy="104" r="24" fill="#357c66"/><circle cx="75" cy="88" r="22" fill="#3d8a72"/></g>
-      <rect x="62" y="118" width="32" height="24" rx="3" fill="#a4733f"/><path d="M58 120l20-14 20 14z" fill="#7a4f2a"/>
-      <rect x="73" y="123" width="10" height="10" rx="2" fill="#2a3550"/></g>
-    <!-- 修理所 -->
-    <g><rect x="198" y="112" width="46" height="34" rx="3" fill="#8f6a44"/><path d="M193 114l28-20 28 20z" fill="#c58f3e"/>
-      <rect x="214" y="118" width="12" height="12" rx="2" fill="#2a3550"/><circle cx="245" cy="98" r="9" fill="none" stroke="#d8a54a" stroke-width="4" stroke-dasharray="4 3"/></g>
-    <!-- 工坊 -->
-    <g><rect x="60" y="232" width="48" height="34" rx="3" fill="#9a6b45"/><path d="M55 234l29-18 29 18z" fill="#6c4a32"/>
-      <rect x="96" y="208" width="8" height="18" fill="#6c4a32"/><rect x="80" y="240" width="12" height="12" rx="2" fill="#2a3550"/></g>
-    <!-- 觀星臺 -->
-    <g><rect x="204" y="226" width="36" height="30" fill="#b9a688"/><path d="M200 228a22 20 0 0 1 44 0z" fill="#d8c7a3"/>
-      <rect x="230" y="200" width="22" height="7" rx="3" fill="#c58f3e" transform="rotate(-30 230 203)"/>
-      <rect x="216" y="220" width="12" height="12" rx="6" fill="#2a3550"/></g>
-    <!-- 碼頭 -->
-    <g><rect x="110" y="318" width="80" height="10" fill="#8f6a44"/><rect x="116" y="328" width="5" height="16" fill="#5b3b24"/><rect x="178" y="328" width="5" height="16" fill="#5b3b24"/>
-      <rect x="121" y="322" width="5" height="16" fill="#5b3b24"/><rect x="118" y="326" width="12" height="14" rx="3" fill="#F4CF87" stroke="#8a5a12" stroke-width="1.5"/>
-      <path d="M160 342q20 12 40 0z" fill="#c58f3e"/></g>
-  </svg>`;
-}
 function islandHTML(){
   const hit = `<svg class="hit" viewBox="0 0 300 400" role="group" aria-label="探索島地圖">
     <defs><radialGradient id="gl2"><stop offset="0" stop-color="#fff6d8"/><stop offset=".45" stop-color="#F4CF87" stop-opacity=".85"/><stop offset="1" stop-color="#F4CF87" stop-opacity="0"/></radialGradient></defs>
@@ -571,7 +545,7 @@ function islandHTML(){
           <text x="${s.x}" y="${s.y+27}" text-anchor="middle">${d?'✓ ':''}${esc(s.name)}</text></g>
       </g>`;}).join('')}
   </svg>`;
-  return `<div class="island">${islandDraw()}<img class="art" src="assets/art/island.webp" alt="" onload="artOK(this)" onerror="artNo(this)">${hit}</div>`;
+  return `<div class="island"><img class="art" src="assets/art/island.webp" alt="" onload="artOK(this)" onerror="artNo(this)">${hit}</div>`;
 }
 
 /* =========================================================
@@ -585,10 +559,14 @@ SCREENS.home = () => `
     <div class="hero">
       <h1>看見小宇宙</h1>
       <p class="sub">一起發現孩子的思考風景</p>
-      <p class="lead">有些想法，藏在孩子的日常裡。從觀察或遊戲開始，看看你會發現什麼。</p>
+      <section class="panel about" aria-labelledby="aboutT">
+        <h2 id="aboutT">資優是什麼？</h2>
+        <p>資優教育屬於特殊教育的一種，資優生在學習和情感上，常有探究、創造、領導與情意等特殊需求，資優班的誕生便是希望因材施教，提供適合資優生需求的課程與學習方式，所以別再誤解我們是追求成績表現的「績優班」啦！</p>
+        <p class="go">一起來看看孩子是否具資優特質吧！</p>
+      </section>
       <div class="routes">
-        <button class="route r1" data-act="route" data-r="parent">我想觀察孩子 <small>2–3 分鐘</small></button>
-        <button class="route r2" data-act="route" data-r="child">讓孩子試試看 <small>4–6 分鐘</small></button>
+        <button class="route r1" data-act="route" data-r="parent">我想觀察孩子 <small>${esc(ROUTES.parent.time)}</small></button>
+        <button class="route r2" data-act="route" data-r="child">讓孩子試試看 <small>${esc(ROUTES.child.time)}</small></button>
       </div>
       <div class="homelinks">
         <button class="link" data-act="go" data-to="courses">直接了解資優班</button>
@@ -598,62 +576,80 @@ SCREENS.home = () => `
     </div>
     <div>${islandHTML()}</div>
   </div>
-  <section class="panel about" aria-labelledby="aboutT">
-    <h2 id="aboutT">資優是什麼？</h2>
-    <p>國小資優教育強調因材施教。資優孩子在學習和情感上，常有探究、創造、領導與情意等方面的特殊需求，資優班依照這些需求調整課程與學習方式，並不是為了追求學科成績卓越。</p>
-    <div class="needs">
-      <div><b>探究</b>喜歡追問原因，想自己找資料、動手查證</div>
-      <div><b>創造</b>想用自己的方法解決問題，做出不一樣的作品</div>
-      <div><b>領導</b>願意和同學溝通分工，帶著大家完成任務</div>
-      <div><b>情意</b>情緒感受較敏銳、對自己要求較高，需要被理解與陪伴</div>
-    </div>
-  </section>
   <p class="foot">${esc(CONFIG.school.name)}資優班｜遊戲頁面僅供資優宣導參考，並非正式鑑定，遊戲結果也不影響報名資格。</p>`;
 AFTER.home = () => { document.body.classList.add('home'); };
 
 SCREENS.intro = () => {
   const r = ROUTES[S.route] || ROUTES.child;
   const mood = S.route==='child' ? 'happy' : 'guide';
-  const plan = S.route==='parent' ? '翻開六張日常卡，回想孩子最近幾個月的樣子。'
+  const plan = S.route==='parent' ? '共 16 題日常情境，回想孩子最近半年在家裡、出遊或和朋友相處的樣子，選出最接近的頻率。'
     : '三個小任務：轉軌道、找規律、記星星。不用讀字，看圖就能玩，想先玩哪一個都可以。';
   return `${guide(r.say, mood)}
-  <div class="panel"><h2>${esc(r.label)}</h2><p>${esc(plan)}</p><p class="muted">大約 ${esc(r.time)}・可以隨時略過或回到島嶼</p>
+  <div class="panel"><h2>${esc(r.label)}</h2><p>${esc(plan)}</p><p class="muted">大約 ${esc(r.time)}・可以隨時略過或回到首頁</p>
   <div class="btns"><button class="btn main" data-act="start">出發</button></div></div>`;
 };
 
 /* ---------- 家長觀察樹屋 ---------- */
 SCREENS.cards = () => {
   const N = CARDS.length, i = Math.min(S.cardIdx, N-1), c = CARDS[i], v = S.cards[i];
-  return `${sceneBanner('家長觀察樹屋','assets/art/scene-treehouse.webp','#263a3a')}
+  return `${sceneBanner('家長觀察樹屋','assets/art/scene-treehouse.webp')}
   <div class="panel pcard">
-    <div class="prog">第 ${i+1} 張／共 ${N} 張</div>
-    <div class="pic"><div class="fbx" aria-hidden="true">${c.e}</div>${imgSlot('assets/art/parent-card-'+(i+1)+'.webp','')}</div>
+    <div class="prog">第 ${i+1} 題／共 ${N} 題</div>
+    <div class="track" style="height:8px;background:#efe6d2;border-radius:999px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${Math.round((i)/N*100)}%;background:var(--teal-d)"></div></div>
+    <p class="muted" id="cq">最近半年，孩子有這樣的表現嗎？</p>
     <h2>${esc(c.t)}</h2>
-    <p>${esc(c.d)}</p>
-    <p class="muted" id="cq">回想最近幾個月，你是否看過類似情況？</p>
-    <div class="opts" role="radiogroup" aria-labelledby="cq">
-      ${CARD_OPTS.map(o=>`<button class="opt" role="radio" aria-checked="${v===o}" data-act="cardpick" data-v="${o}"><span class="dot"></span>${o}</button>`).join('')}
+    <div class="qopts" role="radiogroup" aria-labelledby="cq">
+      ${CARD_OPTS.map((o,k)=>`<button class="opt" role="radio" aria-checked="${v===k}" data-act="cardpick" data-v="${k}"><span class="dot"></span>${o}</button>`).join('')}
     </div>
     <div class="btns two">
-      <button class="btn plain" data-act="cardprev" ${i===0?'disabled':''}>上一張</button>
-      <button class="btn main" data-act="cardnext" ${v?'':'disabled'}>${i===N-1?'看看我的紀錄':'下一張'}</button>
+      <button class="btn plain" data-act="cardprev" ${i===0?'disabled':''}>上一題</button>
+      <button class="btn main" data-act="cardnext" ${v!=null?'':'disabled'}>${i===N-1?'看觀察結果':'下一題'}</button>
     </div>
     <div class="btns two">
-      <button class="link" data-act="cardskip">略過這一張</button>
+      <button class="link" data-act="cardskip">不確定，略過</button>
       <button class="link" data-act="skipst" data-st="cards">略過這一站</button>
     </div>
   </div>`;
 };
-function seenList(){ return CARDS.map((c,i)=>({c,v:S.cards[i]})).filter(x=>x.v==='常看見'||x.v==='偶爾看見'); }
+function levelWord(avg){ return avg==null ? '未作答' : avg<0.75 ? '較少看到' : avg<1.75 ? '有時看到' : avg<2.5 ? '常常看到' : '幾乎每次'; }
+function parentProfile(){
+  const sum={}, cnt={};
+  DIM_ORDER.forEach(k=>{ sum[k]=0; cnt[k]=0; });
+  CARDS.forEach((c,i)=>{ const v=S.cards[i]; if(v!=null){ sum[c.d]+=v; cnt[c.d]++; } });
+  const dims = DIM_ORDER.map(k=>({ k, avg: cnt[k]? sum[k]/cnt[k] : null }));
+  const answered = dims.filter(x=>x.avg!=null);
+  if(!answered.length) return { dims, top:[], quiet:false, none:true };
+  const max = Math.max(...answered.map(x=>x.avg));
+  const allAvg = answered.reduce((a,x)=>a+x.avg,0)/answered.length;
+  const quiet = max < 1;
+  const top = quiet ? [] : answered.filter(x=>x.avg >= max-0.25).map(x=>x.k);
+  return { dims, top, quiet, none:false, allAvg };
+}
 SCREENS.parentResult = () => {
-  const L = seenList();
-  const body = L.length
-    ? `<ul class="clean">${L.map(x=>`<li><span class="tag ${x.v==='常看見'?'gold':''}">${x.v}</span><b>${esc(x.c.t)}</b><div class="muted">${esc(x.c.d)}</div></li>`).join('')}</ul>
-       <p style="margin-top:12px">這些是你回想起來的生活片段。接下來可以留意：孩子在哪些情境最投入？用了哪些方法？需要什麼協助？</p>`
-    : `<p>今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。</p>`;
-  return `${guide(L.length?'謝謝你花時間回想。':'沒關係，觀察可以從今天開始。','happy')}
-  <div class="panel"><h2>你留意到的日常線索</h2>${body}
-  <p class="muted">本觀察向度僅用於資優宣導，不影響鑑定資格與分數。</p>
+  const P = parentProfile();
+  let head;
+  if(P.none) head = `<div class="typecard"><small>觀察結果</small><h2>還沒有作答</h2><p>可以回到家長觀察樹屋，想到再填。</p></div>`;
+  else if(P.quiet) head = `<div class="typecard"><small>觀察結果</small><h2>慢慢發光的小宇宙</h2><p>這次回想到的表現不多。很多特質只在特定情境出現，例如遇到真正有興趣的主題時，或在學校、才藝課裡。接下來可以多留意孩子主動投入的時刻。</p></div>`;
+  else {
+    const t = P.top.map(k=>DIMS[k]);
+    head = `<div class="typecard"><small>${t.length>1?'雙主軸觀察結果':'觀察結果'}</small>
+      <h2>${t.map(x=>esc(x.name+'型｜'+x.type)).join('<br>')}</h2>
+      ${t.map(x=>`<p style="margin-top:6px">${esc(x.desc)}</p>`).join('')}</div>`;
+  }
+  const bars = P.none ? '' : `<h3>四個面向的觀察頻率</h3>${P.dims.map(x=>`<div class="bar ${P.top.indexOf(x.k)>=0?'hi':''}"><b>${DIMS[x.k].name}</b>
+      <div class="track" aria-hidden="true"><div class="fill" style="width:${x.avg==null?0:Math.round(x.avg/3*100)}%"></div></div><span>${levelWord(x.avg)}</span></div>`).join('')}`;
+  const tips = (!P.none && !P.quiet) ? `<h3 style="margin-top:12px">可以這樣陪伴</h3><ul class="clean">${P.top.flatMap(k=>DIMS[k].tips).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>` : '';
+  return `${guide(P.none?'沒關係，觀察可以從今天開始。':'謝謝你花時間回想。','happy')}
+  <div class="panel">${head}${bars}${tips}
+  <p class="muted" style="margin-top:12px">本觀察向度僅用於資優宣導，不影響鑑定資格與分數。</p>
+  <details class="refs"><summary>這些題目怎麼來的？</summary>
+    <ul>
+      <li>四個面向參考臺灣國小一般智能資優鑑定簡章附的「觀察推薦表」：認知、動機（情意）、創造、社會（領導）。例：基隆市 115 學年度國民小學一般智能資賦優異學生鑑定簡章，附件二。</li>
+      <li>題意對照 Renzulli, J. S., & Hartman, R. K. (1971). Scale for rating behavioral characteristics of superior students. <i>Exceptional Children, 38</i>(3), 243–248.</li>
+      <li>家長觀察的參考價值：Silverman, L. K., Chitwood, D. G., & Waters, J. L. (1986). Young gifted children: Can parents identify giftedness? <i>Topics in Early Childhood Special Education, 6</i>(1), 23–38。研究發現家長對孩子發展的描述相當準確，但仍需正式評量才能確認。</li>
+      <li>情緒強烈的描述參考 Dąbrowski 的過度激動特質理論，可見 De Bondt, N., & Van Petegem, P. (2015). <i>Frontiers in Psychology, 6</i>, 1963。</li>
+      <li>本問卷為宣導用的自我觀察，不是標準化測驗；結果只呈現哪些面向比較常被看見，不判定是否為資優生。</li>
+    </ul></details>
   <div class="btns">
     <button class="btn main" data-act="tochild">讓孩子玩一站</button>
     <button class="btn teal" data-act="go" data-to="courses">看看資優班</button>
@@ -689,16 +685,23 @@ const ART_FILES = {
   g2river:'g2-river.webp', g2stone:'g2-stone.png', g2house:'g2-house.png', fluff:'fluffball.png',
   g3sky:'g3-sky.webp', g3off:'g3-star-off.png', g3on:'g3-star-on.png'
 };
-const ART = {};
+const ART = {}, ART_FAIL = {};
 let artTimer = null;
+function artSettle(){ clearTimeout(artTimer); artTimer = setTimeout(()=>{
+  if(['g1','g2','g3'].indexOf(S.screen)>=0 && !g1Anim && g3Phase!=='show') render(); }, 80); }
 (function preloadArt(){
   Object.keys(ART_FILES).forEach(k=>{
     const src = 'assets/art/' + ART_FILES[k], im = new Image();
-    im.onload = ()=>{ ART[k] = src; clearTimeout(artTimer); artTimer = setTimeout(()=>{
-      if(['g1','g2','g3'].indexOf(S.screen)>=0 && !g1Anim && g3Phase!=='show') render(); }, 120); };
+    im.onload = ()=>{ ART[k] = src; artSettle(); };
+    im.onerror = ()=>{ ART_FAIL[k] = true; artSettle(); };
     im.src = src;
   });
+  // 保險：6 秒還沒回應的圖，當作不存在
+  setTimeout(()=>{ Object.keys(ART_FILES).forEach(k=>{ if(!ART[k]) ART_FAIL[k] = true; }); artSettle(); }, 6000);
 })();
+const ART_GROUP = { g1:k=>/^g1/.test(k), g2:k=>/^g2|^fluff$/.test(k), g3:k=>/^g3/.test(k) };
+function artReady(g){ return Object.keys(ART_FILES).filter(ART_GROUP[g]).every(k=>ART[k]||ART_FAIL[k]); }
+function waitPanel(title, art){ return `${sceneBanner(title, art)}<div class="panel waiting" aria-busy="true" aria-label="載入中"></div>`; }
 function aimg(k,x,y,w,h,extra){ return `<image href="${ART[k]}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet" ${extra||''}/>`; }
 
 /* =========================================================
@@ -800,6 +803,7 @@ function g1BoardSVG(){
 }
 function dots(n, cur, done){ return `<div class="dots" aria-label="第 ${cur+1} 關，共 ${n} 關">${Array.from({length:n},(_,i)=>`<i class="${i<cur||(i===cur&&done)?'on':''} ${i===cur?'cur':''}"></i>`).join('')}</div>`; }
 SCREENS.g1 = () => {
+  if(!artReady('g1')) return waitPanel('機關修理所', STATIONS.g1.art);
   const g = S.g1, solved = g.solved[g.level], last = g.level===G1_LEVELS.length-1;
   let fb = '', cls = '';
   if(solved){ fb = '到站了！'; cls='ok'; }
@@ -921,6 +925,7 @@ function stonesSVG(){
   </svg>`;
 }
 SCREENS.g2 = () => {
+  if(!artReady('g2')) return waitPanel('奇想工坊', STATIONS.g2.art);
   const g = S.g2, n = G2_ROUNDS.length;
   const R = G2_ROUNDS[Math.min(g.round,n-1)], last = g.round===n-1;
   return `${sceneBanner('奇想工坊', STATIONS.g2.art, '#3a2f3a')}
@@ -993,6 +998,7 @@ function g3Tap(i){
   const el = document.querySelector(`[data-star="${i}"]`); if(el) el.focus();
 }
 SCREENS.g3 = () => {
+  if(!artReady('g3')) return waitPanel('線索觀星臺', STATIONS.g3.art);
   const g = S.g3, n = G3_ROUNDS.length, last = g.round===n-1, seq = G3_ROUNDS[Math.min(g.round,n-1)];
   let btn = '';
   if(g.roundSolved) btn = last ? `<button class="btn main" data-act="next" data-st="g3">下一站</button>` : `<button class="btn main" data-act="g3next">下一片星空</button>`;
@@ -1014,7 +1020,11 @@ SCREENS.g3 = () => {
 
 /* ---------- 探索紀念卡 ---------- */
 function memoData(){
-  const parent = seenList().map(x=>`${x.v}：${x.c.t}`);
+  const P = parentProfile(), parent = [];
+  if(!P.none){
+    parent.push(P.quiet ? '觀察結果：慢慢發光的小宇宙' : '觀察結果：' + P.top.map(k=>DIMS[k].name+'型｜'+DIMS[k].type).join('、'));
+    P.dims.forEach(x=>parent.push(`${DIMS[x.k].name}：${levelWord(x.avg)}`));
+  }
   const did = [], talk = [];
   const nums = ['一','二','三','四','五'];
   S.g1.solved.forEach((v,i)=>{ if(v) did.push(`修好第${nums[i]}關的軌道`); });
@@ -1025,7 +1035,7 @@ function memoData(){
   if(S.g3.best>0) did.push(`記住 ${S.g3.best} 顆星星亮起的順序`);
   if(S.cardsDone && (S.route!=='child')) talk.push(TALK.cards);
   ['g1','g2','g3'].forEach(k=>{ if(S[k].done) talk.push(TALK[k]); });
-  return { parent, did, free:[], talk, showParent: S.cardsDone || S.cards.some(x=>x) };
+  return { parent, did, free:[], talk, showParent: S.cardsDone || S.cards.some(x=>x!=null) };
 }
 SCREENS.memento = () => {
   const d = memoData();
@@ -1039,7 +1049,7 @@ SCREENS.memento = () => {
     ${d.showParent ? `<section><h3>家長留意到的片段</h3>${d.parent.length?`<ul>${d.parent.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。</p>'}</section>`:''}
     ${d.did.length ? `<section><h3>孩子今天做了什麼</h3><ul>${d.did.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${d.free.map(f=>`<div class="free">${esc(f)}</div>`).join('')}</section>`:''}
     ${d.talk.length ? `<section><h3>下一次可以聊聊</h3><ul>${d.talk.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`:''}
-    ${empty ? '<section><p>還沒有探索紀錄。回到島嶼，從任一站開始吧！</p></section>':''}
+    ${empty ? '<section><p>還沒有探索紀錄。回到首頁，從任一站開始吧！</p></section>':''}
     <section><p class="muted" style="margin:0">短短幾個任務，只能看見今天的一小部分。孩子的興趣、經驗與需要，可以在生活裡繼續了解。</p></section>
   </div>
   <div class="btns two">
@@ -1142,7 +1152,7 @@ function act(el){
     case 'mclose': closeModal(); break;
     case 'pref': PREF[el.dataset.k] = !PREF[el.dataset.k]; savePref(); if(el.dataset.k==='sound' && PREF.sound) startBgm(); openSettings(); render(); break;
 
-    case 'cardpick': S.cards[S.cardIdx] = el.dataset.v; save(); render(); { const b=document.querySelector('[data-act="cardnext"]'); if(b) b.focus(); } break;
+    case 'cardpick': S.cards[S.cardIdx] = +el.dataset.v; save(); if(S.cardIdx>=CARDS.length-1){ render(); const b=document.querySelector('[data-act="cardnext"]'); if(b) b.focus(); } else setTimeout(()=>{ S.cardIdx++; save(); render(); main.focus(); }, PREF.reduce?0:220); break;
     case 'cardnext': if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
     case 'cardprev': if(S.cardIdx>0){ S.cardIdx--; save(); render(); main.focus(); } break;
     case 'cardskip': S.cards[S.cardIdx] = null; if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
@@ -1246,11 +1256,11 @@ function showErr(tag, e){
 window.addEventListener('error', ev=>{ if(ev.target && ev.target.tagName==='IMG') return; showErr('W', ev.error||ev.message); });
 
 /* ---------- 寬螢幕背景圖（選用） ---------- */
-(function(){ const im = new Image(); im.onload = ()=>document.body.classList.add('has-wide-art'); im.src = 'assets/art/island-wide.webp'; })();
+
 
 /* ---------- 測試積木：給自動測試呼叫 ---------- */
 window.__GAME = {
-  state: ()=>JSON.parse(JSON.stringify(S)), go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
+  state: ()=>JSON.parse(JSON.stringify(S)), profile: ()=>parentProfile(), CARDS, artReady, go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
   setRot: a=>{ S.g1.rot=a.slice(); g1Last=null; save(); render(); },
   run: runG1, reset: ()=>{ S=fresh(); hist=[]; g1Last=null; save(); render(); }
 };
