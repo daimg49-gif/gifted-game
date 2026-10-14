@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v6 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v7 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -217,6 +217,13 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 .bar .fill{height:100%;background:var(--teal-d);border-radius:999px}
 .bar.hi .fill{background:var(--gold-d)}
 .bar span{font-size:.88rem;color:var(--ink2);text-align:right}
+.strength{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+.strength h3{display:flex;justify-content:space-between;align-items:baseline;color:var(--teal-d);font-size:1.15rem}
+.strength h3 span{font-size:.88rem;color:var(--ink2);font-weight:500}
+.strength p{margin:4px 0}
+.strength .tipt{font-weight:700;color:var(--ink);margin-top:8px}
+.strength ul{margin:2px 0 0;padding-left:1.2em}
+.strength li{margin:3px 0}
 .typecard{background:var(--night);color:var(--cream);border-radius:16px;padding:16px;margin:4px 0 14px}
 .typecard small{color:var(--gold);font-weight:700;letter-spacing:.08em}
 .typecard h2{color:var(--gold)!important;margin:2px 0 6px!important;font-size:1.4rem}
@@ -332,7 +339,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v6',
+  version: 'v7',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -363,17 +370,17 @@ const PENDING = '正式資料待學校確認';
 /* 家長觀察題：架構參考臺灣國小一般智能資優鑑定「觀察推薦表」四面向，
    題意對照 Renzulli & Hartman (1971) SRBCSS；情意題另參考 Dąbrowski 過度激動特質理論 */
 const DIMS = {
-  inq:{ name:'探究', type:'好奇的小探險家',
-    desc:'孩子常追問原因、記得細節，也會主動找資料。這類表現對應鑑定觀察表的「認知」面向，以及 Renzulli 量表中的「學習特質」。',
+  inq:{ name:'探究',
+    desc:'孩子常追問原因、記得細節，也會主動找資料。',
     tips:['被問倒時，可以回答「我們一起查查看」，把找答案的過程留給他。','帶他去圖書館或博物館，讓他自己挑一個想深入的主題。'] },
-  cre:{ name:'創造', type:'點子不斷的小發明家',
-    desc:'孩子常想出和別人不一樣的辦法，喜歡改造規則，也願意接受有難度的挑戰。這類表現對應鑑定觀察表的「創造」面向。',
+  cre:{ name:'創造',
+    desc:'孩子常想出和別人不一樣的辦法，喜歡改造規則，也願意接受有難度的挑戰。',
     tips:['聽到奇怪的點子，先問「你打算怎麼做？」，再一起討論。','準備紙箱、膠帶等材料，讓想法有機會做出來試試看。'] },
-  lead:{ name:'領導', type:'帶著大家前進的小隊長',
-    desc:'和同伴相處時，孩子常提出點子、安排分工，也能把想法說清楚。這類表現對應鑑定觀察表的「社會（領導）」面向。',
+  lead:{ name:'領導',
+    desc:'和同伴相處時，孩子常提出點子、安排分工，也能把想法說清楚。',
     tips:['交給他一件家庭小任務，例如規劃週末半天的行程。','他想主導時，陪他練習先聽完別人的意見再做決定。'] },
-  aff:{ name:'情意', type:'感受細膩的小心靈',
-    desc:'孩子在意公平與對錯，對自己要求高，情緒反應也比較明顯。鑑定觀察表把這類表現放在「動機（情意）」面向；心理學家 Dąbrowski 的「過度激動特質」理論，也描述過這種強烈的感受。',
+  aff:{ name:'情意',
+    desc:'孩子在意公平與對錯，對自己要求高，情緒反應也比較明顯。心理學家 Dąbrowski 的「過度激動特質」理論，描述過這種強烈的感受。',
     tips:['情緒很滿的時候，先陪他把感受說出來，平靜後再討論做法。','分享你自己做錯、再修正的經驗，讓他知道錯誤是學習的一部分。'] }
 };
 const DIM_ORDER = ['inq','cre','lead','aff'];
@@ -621,34 +628,28 @@ function parentProfile(){
   if(!answered.length) return { dims, top:[], quiet:false, none:true };
   const max = Math.max(...answered.map(x=>x.avg));
   const allAvg = answered.reduce((a,x)=>a+x.avg,0)/answered.length;
-  const quiet = max < 1;
-  const top = quiet ? [] : answered.filter(x=>x.avg >= max-0.25).map(x=>x.k);
-  return { dims, top, quiet, none:false, allAvg };
+  const strengths = answered.filter(x=>x.avg >= 1.75).sort((a,b)=>b.avg-a.avg).map(x=>x.k);
+  const quiet = strengths.length===0;
+  return { dims, top:strengths, strengths, quiet, none:false, allAvg };
 }
 SCREENS.parentResult = () => {
   const P = parentProfile();
-  let head;
-  if(P.none) head = `<div class="typecard"><small>觀察結果</small><h2>還沒有作答</h2><p>可以回到家長觀察樹屋，想到再填。</p></div>`;
-  else if(P.quiet) head = `<div class="typecard"><small>觀察結果</small><h2>慢慢發光的小宇宙</h2><p>這次回想到的表現不多。很多特質只在特定情境出現，例如遇到真正有興趣的主題時，或在學校、才藝課裡。接下來可以多留意孩子主動投入的時刻。</p></div>`;
-  else {
-    const t = P.top.map(k=>DIMS[k]);
-    head = `<div class="typecard"><small>${t.length>1?'雙主軸觀察結果':'觀察結果'}</small>
-      <h2>${t.map(x=>esc(x.name+'型｜'+x.type)).join('<br>')}</h2>
-      ${t.map(x=>`<p style="margin-top:6px">${esc(x.desc)}</p>`).join('')}</div>`;
-  }
-  const bars = P.none ? '' : `<h3>四個面向的觀察頻率</h3>${P.dims.map(x=>`<div class="bar ${P.top.indexOf(x.k)>=0?'hi':''}"><b>${DIMS[x.k].name}</b>
-      <div class="track" aria-hidden="true"><div class="fill" style="width:${x.avg==null?0:Math.round(x.avg/3*100)}%"></div></div><span>${levelWord(x.avg)}</span></div>`).join('')}`;
-  const tips = (!P.none && !P.quiet) ? `<h3 style="margin-top:12px">可以這樣陪伴</h3><ul class="clean">${P.top.flatMap(k=>DIMS[k].tips).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>` : '';
+  let body;
+  if(P.none) body = `<h2>還沒有作答</h2><p>可以回到家長觀察樹屋，想到再填。</p>`;
+  else if(P.quiet) body = `<h2>慢慢發光的小宇宙</h2><p>這次回想到的表現不多。很多特質只在特定情境出現，例如遇到真正有興趣的主題時，或在學校、才藝課裡。接下來可以多留意孩子主動投入的時刻。</p>`;
+  else body = `<h2>孩子的優勢</h2>${P.strengths.map(k=>{ const d=DIMS[k], lv=levelWord(P.dims.find(x=>x.k===k).avg);
+      return `<section class="strength"><h3>${esc(d.name)}<span>${esc(lv)}</span></h3><p>${esc(d.desc)}</p>
+        <p class="tipt">陪伴建議</p><ul>${d.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`; }).join('')}`;
   return `${guide(P.none?'沒關係，觀察可以從今天開始。':'謝謝你花時間回想。','happy')}
-  <div class="panel">${head}${bars}${tips}
+  <div class="panel">${body}
   <p class="muted" style="margin-top:12px">本觀察向度僅用於資優宣導，不影響鑑定資格與分數。</p>
   <details class="refs"><summary>這些題目怎麼來的？</summary>
     <ul>
-      <li>四個面向參考臺灣國小一般智能資優鑑定簡章附的「觀察推薦表」：認知、動機（情意）、創造、社會（領導）。例：基隆市 115 學年度國民小學一般智能資賦優異學生鑑定簡章，附件二。</li>
+      <li>四個面向參考國立臺灣師範大學特殊教育中心編印之量表。</li>
       <li>題意對照 Renzulli, J. S., & Hartman, R. K. (1971). Scale for rating behavioral characteristics of superior students. <i>Exceptional Children, 38</i>(3), 243–248.</li>
       <li>家長觀察的參考價值：Silverman, L. K., Chitwood, D. G., & Waters, J. L. (1986). Young gifted children: Can parents identify giftedness? <i>Topics in Early Childhood Special Education, 6</i>(1), 23–38。研究發現家長對孩子發展的描述相當準確，但仍需正式評量才能確認。</li>
       <li>情緒強烈的描述參考 Dąbrowski 的過度激動特質理論，可見 De Bondt, N., & Van Petegem, P. (2015). <i>Frontiers in Psychology, 6</i>, 1963。</li>
-      <li>本問卷為宣導用的自我觀察，不是標準化測驗；結果只呈現哪些面向比較常被看見，不判定是否為資優生。</li>
+      <li>本問卷為宣導用的自我觀察，不是標準化測驗；結果只列出家長常常看到的面向，不判定是否為資優生。</li>
     </ul></details>
   <div class="btns">
     <button class="btn main" data-act="tochild">讓孩子玩一站</button>
@@ -656,8 +657,8 @@ SCREENS.parentResult = () => {
     <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>
   </div></div>
   <div class="panel">
-    <h3>資優生＝績優生？</h3>
-    <p>一般智能資優學生，指在記憶、理解、應用、分析等方面有優秀潛能的孩子。他們比較容易有不錯的學習表現，但成績好壞不是判斷資優的指標，他們一樣需要努力學習。</p>
+    <h3>資優生≠績優生！</h3>
+    <p>一般智能資優學生，是指在記憶、理解、應用、分析等方面具有優秀潛能的孩子，他們也許會因為具備資優特質較容易有不錯的學習表現，但好成績並非必然，也不是判斷是否資優的標準，資優生仍需要付出努力喔！</p>
     <h3>他們也可能有這些煩惱</h3>
     <ul class="clean">
       <li>好奇心滿滿、想像力豐富，卻不知道怎麼發揮</li>
@@ -1022,8 +1023,8 @@ SCREENS.g3 = () => {
 function memoData(){
   const P = parentProfile(), parent = [];
   if(!P.none){
-    parent.push(P.quiet ? '觀察結果：慢慢發光的小宇宙' : '觀察結果：' + P.top.map(k=>DIMS[k].name+'型｜'+DIMS[k].type).join('、'));
-    P.dims.forEach(x=>parent.push(`${DIMS[x.k].name}：${levelWord(x.avg)}`));
+    if(P.quiet) parent.push('慢慢發光的小宇宙：多留意孩子主動投入的時刻');
+    else P.strengths.forEach(k=>parent.push(`孩子的優勢：${DIMS[k].name}（${levelWord(P.dims.find(x=>x.k===k).avg)}）`));
   }
   const did = [], talk = [];
   const nums = ['一','二','三','四','五'];
