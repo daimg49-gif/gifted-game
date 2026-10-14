@@ -1208,7 +1208,7 @@ SCREENS.enroll = () => {
       <tr><th scope="row">基本時程</th><td>
         <ol class="tl">${s.timeline.map(t=>`<li><b>${esc(t[0])}</b>${esc(t[1])}</li>`).join('')}</ol>
         <span class="muted">${esc(s.timelineNote)}</span></td></tr>
-      <tr><th scope="row">正式簡章</th><td>${s.brochureUrl ? '請點下方按鈕閱讀' : `<b>${esc(s.brochureNote)}</b><a class="calbtn" href="${esc(gcalUrl())}" target="_blank" rel="noopener">加入 Google 行事曆提醒 ↗</a>`}</td></tr>
+      <tr><th scope="row">正式簡章</th><td>${s.brochureUrl ? '請點下方按鈕閱讀' : `<b>${esc(s.brochureNote)}</b><a class="calbtn" href="${esc(gcalUrl())}" target="_blank" rel="noopener" aria-label="加入 Google 行事曆提醒">加入行事曆提醒 ↗</a>`}</td></tr>
     </table>
     <p class="muted" style="margin-top:10px">資格、鑑定方式與重要提醒，以官方簡章為準。</p>
     <div class="btns">${brochure}</div>
