@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v9 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v10 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -371,7 +371,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v9',
+  version: 'v10',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -704,8 +704,7 @@ SCREENS.parentResult = () => {
     <p class="muted" style="margin-top:14px">本觀察向度僅用於資優宣導，不影響鑑定資格與分數。</p>
     <details class="refs"><summary>這些題目怎麼來的？</summary>
       <ul>
-        <li>四個面向參考自桃園市、基隆市資優鑑定簡章觀察量表。</li>
-        <li>題意對照 Renzulli, J. S., & Hartman, R. K. (1971). Scale for rating behavioral characteristics of superior students. <i>Exceptional Children, 38</i>(3), 243–248.</li>
+        <li>量表題目參考、改寫自臺北市國小一般智能資優鑑定觀察表、高雄市資賦優異家長資源手冊，題意對照自 Renzulli, J. S., & Hartman, R. K. (1971). Scale for rating behavioral characteristics of superior students. <i>Exceptional Children, 38</i>(3), 243–248.</li>
         <li>家長觀察的參考價值：Silverman, L. K., Chitwood, D. G., & Waters, J. L. (1986). Young gifted children: Can parents identify giftedness? <i>Topics in Early Childhood Special Education, 6</i>(1), 23–38。研究發現家長對孩子發展的描述相當準確，但仍需正式評量才能確認。</li>
         <li>情緒感受的描述參考 Dąbrowski 的過度激動特質理論，可見 De Bondt, N., & Van Petegem, P. (2015). <i>Frontiers in Psychology, 6</i>, 1963。</li>
         <li>本問卷為宣導用的自我觀察，不是標準化測驗，不判定是否為資優生。</li>
@@ -747,8 +746,8 @@ function advocacyHTML(){
     <p>一般智能資優學生，是指在記憶、理解、應用、分析等方面具有優秀潛能的孩子，他們也許會因為具備資優特質較容易有不錯的學習表現，但好成績並非必然，也不是判斷是否資優的標準，資優生仍需要付出努力喔！</p>
 
     <h3 class="advh">${icon('compass')}資優特質，也帶來不同的需求</h3>
-    <div class="map" role="table" aria-label="孩子的特質與帶來的需求">
-      <div class="maph" role="row"><span role="columnheader">孩子的特質</span><span aria-hidden="true"></span><span role="columnheader">帶來的需求</span></div>
+    <div class="map" role="table" aria-label="孩子的特質與因此他需要的支持">
+      <div class="maph" role="row"><span role="columnheader">孩子的特質</span><span aria-hidden="true"></span><span role="columnheader">因此他需要</span></div>
       ${pairs.map(p=>`<div class="mrow" role="row"><span class="tr" role="cell">${esc(p[0])}</span>${arrow}<span class="nd" role="cell">${esc(p[1])}</span></div>`).join('')}
     </div>
 
@@ -761,9 +760,9 @@ function advocacyHTML(){
     </div>
 
     <div class="advfoot">
-      <b>為什麼要參加鑑定？</b>
-      <p>依《特殊教育法》，資賦優異和身心障礙一樣，都是特殊教育的服務對象。參加鑑定，是為了確認孩子在學習與情意上的需求，讓他得到合適的支持。</p>
-      <p>有沒有通過鑑定，都不代表孩子比較好或比較差。</p>
+      <b>資優鑑定的意義</b>
+      <p>事實上，資賦優異和身心障礙一樣，都是特殊教育法保障的對象。</p>
+      <p>參加資優鑑定，是為了確認孩子是否在學習與情意上有資優教育需求，並讓有需求的孩子得到合適的支持，鑑定的意義並不是用來區隔孩子們的優劣，邀請您與我們一起建立溫暖、支持的學習環境，讓不同天賦的孩子都能發光！</p>
     </div>
   </section>`;
 }
