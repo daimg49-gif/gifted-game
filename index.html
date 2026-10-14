@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v11 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v12 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -132,7 +132,8 @@ a{color:inherit}
 .opt{min-height:52px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);
   font-size:1.05rem;cursor:pointer;text-align:left;padding:8px 14px;display:flex;align-items:center;gap:10px}
 .opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--ink2);flex:none}
-.opt[aria-pressed="true"],.opt[aria-checked="true"]{border-color:var(--teal-d);background:var(--teal-l);font-weight:700}
+.opt[aria-pressed="true"],.opt[aria-checked="true"]{border-color:var(--teal-d);background:var(--teal-l);font-weight:700;box-shadow:0 0 0 3px rgba(44,106,91,.25)}
+.opt[aria-checked="true"]:after{content:"✓";margin-left:auto;color:var(--teal-d);font-weight:700}
 .opt[aria-pressed="true"] .dot,.opt[aria-checked="true"] .dot{background:var(--teal-d);border-color:var(--teal-d);box-shadow:inset 0 0 0 3px #fff}
 .tag{display:inline-block;font-size:.8rem;padding:1px 8px;border-radius:999px;background:var(--teal-l);color:var(--teal-d);font-weight:700;margin-right:6px}
 .tag.gold{background:#fbe8c2;color:var(--gold-d)}
@@ -257,6 +258,9 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 .advfoot b{display:block;color:var(--gold);font-size:1.05rem;margin-bottom:4px}
 .advfoot p{margin:4px 0 0;color:var(--cream)}
 .calbtn{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:8px;padding:8px 14px;border-radius:12px;background:var(--teal-l);color:var(--teal-d);font-weight:700;text-decoration:none;border:2px solid var(--teal)}
+.note-adult{border-left:6px solid var(--teal)}
+.note-adult h3{color:var(--teal-d)}
+.note-adult p{margin:0 0 8px}
 .typecard{background:var(--night);color:var(--cream);border-radius:16px;padding:16px;margin:4px 0 14px}
 .typecard small{color:var(--gold);font-weight:700;letter-spacing:.08em}
 .typecard h2{color:var(--gold)!important;margin:2px 0 6px!important;font-size:1.4rem}
@@ -372,7 +376,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v11',
+  version: 'v12',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -632,7 +636,14 @@ SCREENS.intro = () => {
   const mood = S.route==='child' ? 'happy' : 'guide';
   const plan = S.route==='parent' ? '共 16 題日常情境，回想孩子最近半年在家裡、出遊或和朋友相處的樣子，選出最接近的頻率。'
     : '三個小任務：轉軌道、找規律、記星星。不用讀字，看圖就能玩，想先玩哪一個都可以。';
-  return `${guide(r.say, mood)}
+  const childNote = S.route==='child' ? `<div class="panel note-adult">
+    <h3>給陪伴的大人</h3>
+    <p>一般智能資優，是指孩子在記憶、理解、推理、綜合等方面具有潛力。</p>
+    <p>這三個小遊戲用遊戲模擬的方式讓孩子挑戰：機關修理所練習空間推理，奇想工坊找出圖形規律，線索觀星臺考驗記憶。</p>
+    <p>建議您在旁陪伴，留意孩子處理問題時怎麼想；也可以問問他：「你是怎麼想到的？」聽聽孩子的想法，更能幫助您了解他的潛力。</p>
+    <p class="muted" style="margin:0">遊戲結果不代表能力高低，也不是正式鑑定。</p>
+  </div>` : '';
+  return `${guide(r.say, mood)}${childNote}
   <div class="panel"><h2>${esc(r.label)}</h2><p>${esc(plan)}</p><p class="muted">大約 ${esc(r.time)}・可以隨時略過或回到首頁</p>
   <div class="btns"><button class="btn main" data-act="start">出發</button></div></div>`;
 };
@@ -1232,6 +1243,7 @@ function startRoute(){
   if(S.route==='parent'){ S.cardIdx = 0; go('cards'); }
   else go('picker');
 }
+let cardLock = false;
 function finishCards(){
   S.cardsDone = true; delete S.skipped.cards; save(); go('parentResult');
 }
@@ -1268,7 +1280,18 @@ function act(el){
     case 'mclose': closeModal(); break;
     case 'pref': PREF[el.dataset.k] = !PREF[el.dataset.k]; savePref(); if(el.dataset.k==='sound' && PREF.sound) startBgm(); openSettings(); render(); break;
 
-    case 'cardpick': S.cards[S.cardIdx] = +el.dataset.v; save(); if(S.cardIdx>=CARDS.length-1){ render(); const b=document.querySelector('[data-act="cardnext"]'); if(b) b.focus(); } else setTimeout(()=>{ S.cardIdx++; save(); render(); main.focus(); }, PREF.reduce?0:220); break;
+    case 'cardpick': {
+      if(cardLock) break;
+      cardLock = true;
+      const idx = S.cardIdx;
+      S.cards[idx] = +el.dataset.v; save(); render();          // 先顯示選到的選項
+      setTimeout(()=>{
+        cardLock = false;
+        if(S.screen!=='cards' || S.cardIdx!==idx) return;
+        if(idx>=CARDS.length-1) finishCards();                // 最後一題：自動開啟結果頁
+        else { S.cardIdx++; save(); render(); main.focus(); }
+      }, 500);
+      break; }
     case 'cardnext': if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
     case 'cardprev': if(S.cardIdx>0){ S.cardIdx--; save(); render(); main.focus(); } break;
     case 'cardskip': S.cards[S.cardIdx] = null; if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
