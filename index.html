@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v8 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v9 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -246,6 +246,16 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 .pillars b{display:block;color:var(--teal-d);font-size:1.05rem}
 .pillars p{margin:4px 0 0;font-size:.95rem}
 .advfoot{margin:14px 0 0;padding:12px 14px;background:var(--night);color:var(--cream);border-radius:12px;font-weight:500}
+.map{background:#fff;border:2px solid var(--line);border-radius:14px;padding:6px 12px}
+.maph,.mrow{display:grid;grid-template-columns:1fr 34px 1fr;gap:8px;align-items:center}
+.maph{font-size:.82rem;font-weight:700;letter-spacing:.06em;color:var(--ink2);padding:6px 0;border-bottom:2px solid var(--line)}
+.mrow{padding:10px 0;border-bottom:1px dashed var(--line)}
+.mrow:last-child{border-bottom:none}
+.mrow .tr{color:var(--ink)}
+.mrow .nd{color:var(--teal-d);font-weight:700}
+.arr{width:34px;height:20px;fill:none;stroke:var(--gold-d);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.advfoot b{display:block;color:var(--gold);font-size:1.05rem;margin-bottom:4px}
+.advfoot p{margin:4px 0 0;color:var(--cream)}
 .typecard{background:var(--night);color:var(--cream);border-radius:16px;padding:16px;margin:4px 0 14px}
 .typecard small{color:var(--gold);font-weight:700;letter-spacing:.08em}
 .typecard h2{color:var(--gold)!important;margin:2px 0 6px!important;font-size:1.4rem}
@@ -361,7 +371,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v8',
+  version: 'v9',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -722,36 +732,39 @@ function icon(name){
   return `<svg viewBox="0 0 64 64" aria-hidden="true" class="ico">${P[name]}</svg>`;
 }
 function advocacyHTML(){
+  const pairs = [
+    ['好奇心強，會追問到底','有機會深入研究自己感興趣的主題'],
+    ['理解快，喜歡複雜的問題','符合程度、有挑戰性的學習任務'],
+    ['想法多，和別人不太一樣','讓點子被接住、實際動手試做的空間'],
+    ['情緒感受比較深','被理解，學習認識和調適情緒'],
+    ['對自己要求比較高','練習面對失誤與挫折'],
+    ['想法和同齡孩子不太一樣','找到能交流、聊得來的同伴']
+  ];
+  const arrow = '<svg viewBox="0 0 40 24" aria-hidden="true" class="arr"><path d="M2 12h30M24 4l10 8-10 8"/></svg>';
   return `<section class="panel adv" aria-labelledby="advT">
     <p class="kicker">認識資優教育</p>
     <h2 id="advT">資優生≠績優生！</h2>
     <p>一般智能資優學生，是指在記憶、理解、應用、分析等方面具有優秀潛能的孩子，他們也許會因為具備資優特質較容易有不錯的學習表現，但好成績並非必然，也不是判斷是否資優的標準，資優生仍需要付出努力喔！</p>
 
-    <h3 class="advh">${icon('clock')}學得快的孩子，也會「等」</h3>
-    <figure class="gap">
-      <svg viewBox="0 0 320 170" role="img" aria-label="示意圖：孩子已經準備好的程度高於課堂進度，兩者之間是等待的空窗期">
-        <line x1="34" y1="140" x2="304" y2="140" stroke="#cdbd9b" stroke-width="2"/>
-        <line x1="34" y1="140" x2="34" y2="14" stroke="#cdbd9b" stroke-width="2"/>
-        <text x="30" y="12" font-size="11" fill="#44506a" text-anchor="start">學習程度</text>
-        <text x="304" y="158" font-size="11" fill="#44506a" text-anchor="end">時間</text>
-        <path d="M34 120 C 100 60, 170 38, 300 26 L300 104 C 220 112, 140 120, 34 132 Z" fill="#F4CF87" opacity=".35"/>
-        <path d="M34 120 C 100 60, 170 38, 300 26" fill="none" stroke="#2c6a5b" stroke-width="4" stroke-linecap="round"/>
-        <path d="M34 132 C 140 120, 220 112, 300 104" fill="none" stroke="#7a4f0e" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round"/>
-        <text x="296" y="20" font-size="12" font-weight="700" fill="#2c6a5b" text-anchor="end">孩子已經準備好的程度</text>
-        <text x="296" y="122" font-size="12" font-weight="700" fill="#7a4f0e" text-anchor="end">課堂進度</text>
-        <text x="190" y="80" font-size="13" font-weight="700" fill="#18243B" text-anchor="middle">等待的空窗期</text>
-      </svg>
-      <figcaption>已經會的內容反覆練習、等同學跟上，時間一久，孩子容易覺得上課無聊，學習動機慢慢下降。</figcaption>
-    </figure>
-
-    <h3 class="advh">${icon('compass')}資優教育在做什麼？</h3>
-    <div class="pillars">
-      <div>${icon('book')}<b>加深加廣</b><p>在原本的學科上往深處走，接觸課本以外的主題，填補等待的空窗期。</p></div>
-      <div>${icon('spark')}<b>多元開發</b><p>透過獨立研究、創造思考、領導課程，讓不同類型的潛能都有機會被看見。</p></div>
-      <div>${icon('people')}<b>人際支持</b><p>和想法相近的同伴一起學習、討論，找到能聊得來的朋友。</p></div>
-      <div>${icon('heart')}<b>情意陪伴</b><p>面對完美主義、強烈情緒與挫折，學習認識自己、調整步調。</p></div>
+    <h3 class="advh">${icon('compass')}資優特質，也帶來不同的需求</h3>
+    <div class="map" role="table" aria-label="孩子的特質與帶來的需求">
+      <div class="maph" role="row"><span role="columnheader">孩子的特質</span><span aria-hidden="true"></span><span role="columnheader">帶來的需求</span></div>
+      ${pairs.map(p=>`<div class="mrow" role="row"><span class="tr" role="cell">${esc(p[0])}</span>${arrow}<span class="nd" role="cell">${esc(p[1])}</span></div>`).join('')}
     </div>
-    <p class="advfoot">資優教育讓孩子在適合的環境裡學習，持續保有對學習的熱情。</p>
+
+    <h3 class="advh">${icon('spark')}因材施教：資優班怎麼回應這些需求</h3>
+    <div class="pillars">
+      <div>${icon('book')}<b>獨立研究</b><p>從孩子自己的問題出發，練習找資料、設計研究、發表成果，回應想深入探究的需求。</p></div>
+      <div>${icon('spark')}<b>創造與領導</b><p>透過專題實作、創造思考與團隊任務，讓點子有機會做出來，也學習和別人合作。</p></div>
+      <div>${icon('people')}<b>同儕交流</b><p>和想法相近的同伴一起學習、討論，找到能聊得來的朋友。</p></div>
+      <div>${icon('heart')}<b>情意課程</b><p>認識自己的情緒和完美主義傾向，練習面對失誤與挫折，調整自己的步調。</p></div>
+    </div>
+
+    <div class="advfoot">
+      <b>為什麼要參加鑑定？</b>
+      <p>依《特殊教育法》，資賦優異和身心障礙一樣，都是特殊教育的服務對象。參加鑑定，是為了確認孩子在學習與情意上的需求，讓他得到合適的支持。</p>
+      <p>有沒有通過鑑定，都不代表孩子比較好或比較差。</p>
+    </div>
   </section>`;
 }
 
