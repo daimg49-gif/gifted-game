@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v12 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v13 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -376,7 +376,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v12',
+  version: 'v13',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -384,10 +384,12 @@ const CONFIG = {
     timeline: [ ['1月','報名'], ['3月','初選'], ['4月','複選'] ],
     timelineNote: '實際日期仍須視每年簡章而定',
     brochureUrl: '',                  // 官方簡章連結；填了就會變成「閱讀正式簡章」按鈕
-    brochureNote: '預計12月底出爐',     // 還沒有簡章時顯示的文字
+    brochureNote: '預計12月出爐',     // 還沒有簡章時顯示的文字
     brochureType: 'PDF',
     classSiteUrl: 'https://daimg49.wixsite.com/chukps-giftedclass',
-    classSiteLabel: '前往莒光資優班網'
+    classSiteLabel: '前往莒光資優班網',
+    centerUrl: 'https://class.kh.edu.tw/12821',
+    centerLabel: '前往高雄市資優中心'
   },
   intro: '針對不同特質及潛能的孩子，莒光資優班每學期開設多元課程，並規劃校內外參訪、踏查活動，提供加深加廣的充實機會。',
   features: [
@@ -398,7 +400,7 @@ const CONFIG = {
   ],
   reminder: {
     title: '洽詢高雄市國小資優鑑定簡章',
-    details: '高雄市國小一般智能資優鑑定簡章預計 12 月底公告，可查詢教育局公告，或至莒光資優班網查看。'
+    details: '高雄市國小一般智能資優鑑定簡章預計 12 月公告，可查詢教育局公告，或至莒光資優班網查看。'
   },
   courseUrl: 'https://daimg49.wixsite.com/chukps-giftedclass/services-1',
   courseLabel: '看莒光資優班完整課程規劃',
@@ -426,7 +428,7 @@ const DIMS = {
   aff:{ name:'情意',
     lead:'對公平和對錯很在意，對自己的要求比較高，情緒感受也比同齡孩子深',
     more:'他也很在意公平、對錯和自己的表現，情緒感受比較深',
-    tips:['孩子情緒上來的時候，先陪他說出現在的感受，等平靜下來再討論怎麼做。','分享你自己做錯、再修正的經驗，讓他知道犯錯是學習的一部分。','孩子對作品不滿意時，可以和他一起找出「已經做到的部分」，再決定下一步。'] }
+    tips:['孩子情緒上來的時候，先陪他說出現在的感受，等平靜下來再討論怎麼做。','分享您自己做錯、再修正的經驗，讓他知道犯錯是學習的一部分。','孩子對作品不滿意時，可以和他一起找出「已經做到的部分」，再決定下一步。'] }
 };
 const DIM_ORDER = ['inq','cre','lead','aff'];
 const CARDS = [
@@ -450,7 +452,7 @@ const CARDS = [
 const CARD_OPTS = ['很少看到','有時候','常常','幾乎每次'];
 
 const ROUTES = {
-  parent:  { label:'我想觀察孩子',  time:'3–4 分鐘',  say:'不用替孩子挑最漂亮的答案，回想你真的看過的情況就好。' },
+  parent:  { label:'我想觀察孩子',  time:'3–4 分鐘',  say:'不用替孩子挑最漂亮的答案，回想您真的看過的情況就好。' },
   child:   { label:'讓孩子試試看',  time:'4–6 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' }
 };
 
@@ -675,7 +677,7 @@ function strengthText(P){
   const S0 = P.strengths;
   if(!S0.length) return '';
   const first = DIMS[S0[0]], rest = S0.slice(1);
-  let t = '從你的觀察來看，孩子' + first.lead + '。';
+  let t = '從您的觀察來看，孩子' + first.lead + '。';
   const join = ['另外，','同時，','此外，'];
   rest.forEach((k,i)=>{ t += join[i] + DIMS[k].more + '。'; });
   const hasAff = S0.indexOf('aff')>=0, others = S0.filter(k=>k!=='aff').length;
@@ -711,7 +713,7 @@ SCREENS.parentResult = () => {
   }
   const bars = P.none ? '' : `<div class="bars" role="img" aria-label="四個面向的觀察長條圖">${P.dims.map(x=>`<div class="bar"><b>${DIMS[x.k].name}</b>
       <div class="track"><div class="fill" style="width:${x.avg==null?0:Math.max(4,Math.round(x.avg/3*100))}%"></div></div></div>`).join('')}</div>`;
-  return `${guide(P.none?'沒關係，觀察可以從今天開始。':'謝謝你花時間回想。','happy')}
+  return `${guide(P.none?'沒關係，觀察可以從今天開始。':'謝謝您花時間回想。','happy')}
   <div class="panel">
     <h2 class="rh">孩子的優勢</h2>
     ${bars}
@@ -1226,7 +1228,7 @@ SCREENS.enroll = () => {
   </div>
   <div class="panel dark">
     <h3>想多認識莒光資優班？</h3>
-    <div class="btns">${classSiteBtn('main')}</div>
+    <div class="btns">${classSiteBtn('main')}<a class="btn ghost" href="${esc(s.centerUrl)}" target="_blank" rel="noopener">${esc(s.centerLabel)} ↗</a></div>
   </div>
   <p class="foot">本網站為教育宣傳與親子探索用途，不收集作答與個人資料。</p>`;
 };
