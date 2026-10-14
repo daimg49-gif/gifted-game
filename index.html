@@ -6,12 +6,15 @@
 <title>看見小宇宙</title>
 <meta name="description" content="親子探索小遊戲，附資優班介紹與正式鑑定報名資訊。本活動不是資優鑑定。">
 <meta name="theme-color" content="#18243B">
+<link rel="preload" as="image" href="assets/art/island.webp" fetchpriority="high">
+<link rel="preload" as="image" href="assets/art/xiaoguang-guide.png">
+<link rel="preload" as="image" href="assets/art/xiaoguang-happy.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v7 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v8 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -87,7 +90,7 @@ a{color:inherit}
 .island{position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:3/4;max-height:44vh}
 @media (min-width:700px){ .island{max-height:none} }
 .island .art,.island svg.draw,.island svg.hit{position:absolute;inset:0;width:100%;height:100%}
-.island .art{object-fit:contain;opacity:0;transition:opacity .4s}
+.island .art{object-fit:contain;opacity:0;transition:opacity .15s}
 .island.has-art .art{opacity:1}
 .island:not(.has-art) .hit{visibility:hidden}
 .hit .spot{cursor:pointer}
@@ -116,7 +119,7 @@ a{color:inherit}
 
 /* ---------- 場景橫幅 ---------- */
 .scene{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:16/7;background:var(--night2);margin-top:6px}
-.scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .15s}
 .scene.has-art img{opacity:1}
 .scene .stitle{position:absolute;left:12px;bottom:10px;background:rgba(255,248,235,.95);color:var(--ink);
   padding:4px 12px;border-radius:10px;font-weight:700;font-size:1.05rem}
@@ -224,6 +227,25 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 .strength .tipt{font-weight:700;color:var(--ink);margin-top:8px}
 .strength ul{margin:2px 0 0;padding-left:1.2em}
 .strength li{margin:3px 0}
+.rh{font-size:1.25rem;color:var(--night);margin:4px 0 8px}
+.bars{margin:6px 0 12px}
+.bar{grid-template-columns:3.2em 1fr!important}
+.tips{margin:0;padding-left:1.2em}
+.tips li{margin:6px 0}
+.adv .kicker{margin:0;font-size:.85rem;font-weight:700;letter-spacing:.1em;color:var(--teal-d)}
+.adv h2{color:var(--night);font-size:1.35rem;margin:2px 0 8px}
+.advh{display:flex;align-items:center;gap:8px;margin:18px 0 8px;color:var(--night);font-size:1.12rem}
+.ico{width:30px;height:30px;flex:none;fill:none;stroke:var(--teal-d);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.gap{margin:0;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px}
+.gap svg{width:100%;display:block}
+.gap figcaption{font-size:.95rem;color:var(--ink);margin-top:6px}
+.pillars{display:grid;gap:10px}
+@media (min-width:600px){.pillars{grid-template-columns:1fr 1fr}}
+.pillars>div{background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.pillars .ico{width:36px;height:36px;display:block;margin-bottom:4px}
+.pillars b{display:block;color:var(--teal-d);font-size:1.05rem}
+.pillars p{margin:4px 0 0;font-size:.95rem}
+.advfoot{margin:14px 0 0;padding:12px 14px;background:var(--night);color:var(--cream);border-radius:12px;font-weight:500}
 .typecard{background:var(--night);color:var(--cream);border-radius:16px;padding:16px;margin:4px 0 14px}
 .typecard small{color:var(--gold);font-weight:700;letter-spacing:.08em}
 .typecard h2{color:var(--gold)!important;margin:2px 0 6px!important;font-size:1.4rem}
@@ -339,7 +361,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v7',
+  version: 'v8',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -371,17 +393,21 @@ const PENDING = '正式資料待學校確認';
    題意對照 Renzulli & Hartman (1971) SRBCSS；情意題另參考 Dąbrowski 過度激動特質理論 */
 const DIMS = {
   inq:{ name:'探究',
-    desc:'孩子常追問原因、記得細節，也會主動找資料。',
-    tips:['被問倒時，可以回答「我們一起查查看」，把找答案的過程留給他。','帶他去圖書館或博物館，讓他自己挑一個想深入的主題。'] },
+    lead:'對感興趣的事會追根究柢，記得不少細節，也會自己找書、找資料',
+    more:'他也常追問原因，看過的事記得清楚',
+    tips:['被孩子問倒時，可以說「我們一起查查看」，把找答案的過程留給他。','帶他去圖書館或博物館，讓他挑一個想深入的主題，慢慢查下去。'] },
   cre:{ name:'創造',
-    desc:'孩子常想出和別人不一樣的辦法，喜歡改造規則，也願意接受有難度的挑戰。',
-    tips:['聽到奇怪的點子，先問「你打算怎麼做？」，再一起討論。','準備紙箱、膠帶等材料，讓想法有機會做出來試試看。'] },
+    lead:'常想出和別人不一樣的辦法，喜歡改造玩法和規則，也願意挑戰有難度的任務',
+    more:'他也常有和別人不一樣的點子，喜歡動手改造',
+    tips:['聽到奇特的點子，先問「你打算怎麼做？」，聽完再一起討論。','家裡留一些紙箱、膠帶、舊材料，讓想法有機會動手做出來試試看。'] },
   lead:{ name:'領導',
-    desc:'和同伴相處時，孩子常提出點子、安排分工，也能把想法說清楚。',
-    tips:['交給他一件家庭小任務，例如規劃週末半天的行程。','他想主導時，陪他練習先聽完別人的意見再做決定。'] },
+    lead:'和同伴相處時常是提出點子、安排分工的人，也能把自己的想法說清楚',
+    more:'和同伴相處時，他也常主動安排分工、表達想法',
+    tips:['交給他一件家庭小任務，例如規劃週末半天的行程，從頭負責到尾。','他想當主導的人時，陪他練習先聽完別人的意見，再做決定。'] },
   aff:{ name:'情意',
-    desc:'孩子在意公平與對錯，對自己要求高，情緒反應也比較明顯。心理學家 Dąbrowski 的「過度激動特質」理論，描述過這種強烈的感受。',
-    tips:['情緒很滿的時候，先陪他把感受說出來，平靜後再討論做法。','分享你自己做錯、再修正的經驗，讓他知道錯誤是學習的一部分。'] }
+    lead:'對公平和對錯很在意，對自己的要求比較高，情緒感受也比同齡孩子深',
+    more:'他也很在意公平、對錯和自己的表現，情緒感受比較深',
+    tips:['孩子情緒上來的時候，先陪他說出現在的感受，等平靜下來再討論怎麼做。','分享你自己做錯、再修正的經驗，讓他知道犯錯是學習的一部分。','孩子對作品不滿意時，可以和他一起找出「已經做到的部分」，再決定下一步。'] }
 };
 const DIM_ORDER = ['inq','cre','lead','aff'];
 const CARDS = [
@@ -462,7 +488,7 @@ function anyProgress(){ return S.cards.some(x=>x!=null) || S.cardsDone || S.g1.r
 // 圖片插槽：圖檔存在就淡入，不存在就保留程式畫的備用圖
 function artOK(img){ img.parentElement.classList.add('has-art'); }
 function artNo(img){ img.remove(); }
-function imgSlot(src, alt){ return `<img src="${esc(src)}" alt="${esc(alt||'')}" loading="lazy" onload="artOK(this)" onerror="artNo(this)">`; }
+function imgSlot(src, alt){ return `<img src="${esc(src)}" alt="${esc(alt||'')}" decoding="async" onload="artOK(this)" onerror="artNo(this)">`; }
 
 /* ---------- 聲音（預設關閉） ---------- */
 let actx=null, bgm=null;
@@ -619,6 +645,19 @@ SCREENS.cards = () => {
   </div>`;
 };
 function levelWord(avg){ return avg==null ? '未作答' : avg<0.75 ? '較少看到' : avg<1.75 ? '有時看到' : avg<2.5 ? '常常看到' : '幾乎每次'; }
+function strengthText(P){
+  const S0 = P.strengths;
+  if(!S0.length) return '';
+  const first = DIMS[S0[0]], rest = S0.slice(1);
+  let t = '從你的觀察來看，孩子' + first.lead + '。';
+  const join = ['另外，','同時，','此外，'];
+  rest.forEach((k,i)=>{ t += join[i] + DIMS[k].more + '。'; });
+  const hasAff = S0.indexOf('aff')>=0, others = S0.filter(k=>k!=='aff').length;
+  if(hasAff && others) t += '這些特質讓他想得多、投入得深，在情緒和自我要求上，也需要大人多一點理解。';
+  else if(hasAff) t += '這樣的孩子很需要被理解，情緒被接住之後，他的想法才有空間展開。';
+  else t += '這些優勢最常出現在他真正感興趣的事情上，可以多留意那些讓他主動投入的時刻。';
+  return t;
+}
 function parentProfile(){
   const sum={}, cnt={};
   DIM_ORDER.forEach(k=>{ sum[k]=0; cnt[k]=0; });
@@ -634,40 +673,87 @@ function parentProfile(){
 }
 SCREENS.parentResult = () => {
   const P = parentProfile();
-  let body;
-  if(P.none) body = `<h2>還沒有作答</h2><p>可以回到家長觀察樹屋，想到再填。</p>`;
-  else if(P.quiet) body = `<h2>慢慢發光的小宇宙</h2><p>這次回想到的表現不多。很多特質只在特定情境出現，例如遇到真正有興趣的主題時，或在學校、才藝課裡。接下來可以多留意孩子主動投入的時刻。</p>`;
-  else body = `<h2>孩子的優勢</h2>${P.strengths.map(k=>{ const d=DIMS[k], lv=levelWord(P.dims.find(x=>x.k===k).avg);
-      return `<section class="strength"><h3>${esc(d.name)}<span>${esc(lv)}</span></h3><p>${esc(d.desc)}</p>
-        <p class="tipt">陪伴建議</p><ul>${d.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`; }).join('')}`;
+  let strengthHTML, tipsHTML = '';
+  if(P.none) strengthHTML = '<p>這次還沒有作答。可以回到家長觀察樹屋，想到再填。</p>';
+  else if(P.quiet) strengthHTML = '<p>這次回想到的表現不多。很多特質只在特定情境出現，例如遇到真正有興趣的主題時，或在學校、才藝課裡。接下來可以多留意孩子主動投入的時刻。</p>';
+  else {
+    strengthHTML = `<p>${esc(strengthText(P))}</p>`;
+    const tips = [];
+    P.strengths.forEach(k=>DIMS[k].tips.slice(0, P.strengths.length>2?1:2).forEach(t=>tips.push(t)));
+    tips.push('不必急著判斷孩子是不是資優。記下他投入的事和當時的樣子，之後和老師聊的時候會很有幫助。');
+    tipsHTML = `<h2 class="rh">陪伴建議</h2><ul class="tips">${tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`;
+  }
+  const bars = P.none ? '' : `<div class="bars" role="img" aria-label="四個面向的觀察長條圖">${P.dims.map(x=>`<div class="bar"><b>${DIMS[x.k].name}</b>
+      <div class="track"><div class="fill" style="width:${x.avg==null?0:Math.max(4,Math.round(x.avg/3*100))}%"></div></div></div>`).join('')}</div>`;
   return `${guide(P.none?'沒關係，觀察可以從今天開始。':'謝謝你花時間回想。','happy')}
-  <div class="panel">${body}
-  <p class="muted" style="margin-top:12px">本觀察向度僅用於資優宣導，不影響鑑定資格與分數。</p>
-  <details class="refs"><summary>這些題目怎麼來的？</summary>
-    <ul>
-      <li>四個面向參考國立臺灣師範大學特殊教育中心編印之量表。</li>
-      <li>題意對照 Renzulli, J. S., & Hartman, R. K. (1971). Scale for rating behavioral characteristics of superior students. <i>Exceptional Children, 38</i>(3), 243–248.</li>
-      <li>家長觀察的參考價值：Silverman, L. K., Chitwood, D. G., & Waters, J. L. (1986). Young gifted children: Can parents identify giftedness? <i>Topics in Early Childhood Special Education, 6</i>(1), 23–38。研究發現家長對孩子發展的描述相當準確，但仍需正式評量才能確認。</li>
-      <li>情緒強烈的描述參考 Dąbrowski 的過度激動特質理論，可見 De Bondt, N., & Van Petegem, P. (2015). <i>Frontiers in Psychology, 6</i>, 1963。</li>
-      <li>本問卷為宣導用的自我觀察，不是標準化測驗；結果只列出家長常常看到的面向，不判定是否為資優生。</li>
-    </ul></details>
-  <div class="btns">
-    <button class="btn main" data-act="tochild">讓孩子玩一站</button>
-    <button class="btn teal" data-act="go" data-to="courses">看看資優班</button>
-    <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>
-  </div></div>
   <div class="panel">
-    <h3>資優生≠績優生！</h3>
-    <p>一般智能資優學生，是指在記憶、理解、應用、分析等方面具有優秀潛能的孩子，他們也許會因為具備資優特質較容易有不錯的學習表現，但好成績並非必然，也不是判斷是否資優的標準，資優生仍需要付出努力喔！</p>
-    <h3>他們也可能有這些煩惱</h3>
-    <ul class="clean">
-      <li>好奇心滿滿、想像力豐富，卻不知道怎麼發揮</li>
-      <li>同學聽不懂我在說什麼，想找有共同話題的朋友</li>
-      <li>對自己要求高，想做到完美，壓力好大</li>
-    </ul>
-    <p style="margin-top:10px">除了進階的挑戰，他們在人際與情意上也需要支持，這就是資優教育要做的事。</p>
-  </div>`;
+    <h2 class="rh">孩子的優勢</h2>
+    ${bars}
+    ${strengthHTML}
+    ${tipsHTML}
+    <p class="muted" style="margin-top:14px">本觀察向度僅用於資優宣導，不影響鑑定資格與分數。</p>
+    <details class="refs"><summary>這些題目怎麼來的？</summary>
+      <ul>
+        <li>四個面向參考自桃園市、基隆市資優鑑定簡章觀察量表。</li>
+        <li>題意對照 Renzulli, J. S., & Hartman, R. K. (1971). Scale for rating behavioral characteristics of superior students. <i>Exceptional Children, 38</i>(3), 243–248.</li>
+        <li>家長觀察的參考價值：Silverman, L. K., Chitwood, D. G., & Waters, J. L. (1986). Young gifted children: Can parents identify giftedness? <i>Topics in Early Childhood Special Education, 6</i>(1), 23–38。研究發現家長對孩子發展的描述相當準確，但仍需正式評量才能確認。</li>
+        <li>情緒感受的描述參考 Dąbrowski 的過度激動特質理論，可見 De Bondt, N., & Van Petegem, P. (2015). <i>Frontiers in Psychology, 6</i>, 1963。</li>
+        <li>本問卷為宣導用的自我觀察，不是標準化測驗，不判定是否為資優生。</li>
+      </ul></details>
+    <div class="btns">
+      <button class="btn main" data-act="tochild">讓孩子玩一站</button>
+      <button class="btn teal" data-act="go" data-to="courses">看看資優班</button>
+      <button class="btn plain" data-act="go" data-to="enroll">鑑定與報名</button>
+    </div>
+  </div>
+  ${advocacyHTML()}`;
 };
+
+/* ---------- 資優宣導（結果頁下方） ---------- */
+function icon(name){
+  const P = {
+    book:'<path d="M8 12h18a6 6 0 0 1 6 6v26a5 5 0 0 0-5-5H8z"/><path d="M56 12H38a6 6 0 0 0-6 6v26a5 5 0 0 1 5-5h19z"/>',
+    compass:'<circle cx="32" cy="32" r="22"/><path d="M40 24l-5 11-11 5 5-11z"/>',
+    spark:'<path d="M32 8v10M32 46v10M8 32h10M46 32h10M15 15l7 7M42 42l7 7M49 15l-7 7M22 42l-7 7"/><circle cx="32" cy="32" r="6"/>',
+    people:'<circle cx="22" cy="22" r="7"/><circle cx="42" cy="22" r="7"/><path d="M8 50c2-9 8-14 14-14s12 5 14 14M28 50c2-9 8-14 14-14s12 5 14 14"/>',
+    heart:'<path d="M32 52S10 38 10 23a11 11 0 0 1 22-4 11 11 0 0 1 22 4c0 15-22 29-22 29z"/>',
+    clock:'<circle cx="32" cy="32" r="22"/><path d="M32 18v15l9 6"/>'
+  };
+  return `<svg viewBox="0 0 64 64" aria-hidden="true" class="ico">${P[name]}</svg>`;
+}
+function advocacyHTML(){
+  return `<section class="panel adv" aria-labelledby="advT">
+    <p class="kicker">認識資優教育</p>
+    <h2 id="advT">資優生≠績優生！</h2>
+    <p>一般智能資優學生，是指在記憶、理解、應用、分析等方面具有優秀潛能的孩子，他們也許會因為具備資優特質較容易有不錯的學習表現，但好成績並非必然，也不是判斷是否資優的標準，資優生仍需要付出努力喔！</p>
+
+    <h3 class="advh">${icon('clock')}學得快的孩子，也會「等」</h3>
+    <figure class="gap">
+      <svg viewBox="0 0 320 170" role="img" aria-label="示意圖：孩子已經準備好的程度高於課堂進度，兩者之間是等待的空窗期">
+        <line x1="34" y1="140" x2="304" y2="140" stroke="#cdbd9b" stroke-width="2"/>
+        <line x1="34" y1="140" x2="34" y2="14" stroke="#cdbd9b" stroke-width="2"/>
+        <text x="30" y="12" font-size="11" fill="#44506a" text-anchor="start">學習程度</text>
+        <text x="304" y="158" font-size="11" fill="#44506a" text-anchor="end">時間</text>
+        <path d="M34 120 C 100 60, 170 38, 300 26 L300 104 C 220 112, 140 120, 34 132 Z" fill="#F4CF87" opacity=".35"/>
+        <path d="M34 120 C 100 60, 170 38, 300 26" fill="none" stroke="#2c6a5b" stroke-width="4" stroke-linecap="round"/>
+        <path d="M34 132 C 140 120, 220 112, 300 104" fill="none" stroke="#7a4f0e" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round"/>
+        <text x="296" y="20" font-size="12" font-weight="700" fill="#2c6a5b" text-anchor="end">孩子已經準備好的程度</text>
+        <text x="296" y="122" font-size="12" font-weight="700" fill="#7a4f0e" text-anchor="end">課堂進度</text>
+        <text x="190" y="80" font-size="13" font-weight="700" fill="#18243B" text-anchor="middle">等待的空窗期</text>
+      </svg>
+      <figcaption>已經會的內容反覆練習、等同學跟上，時間一久，孩子容易覺得上課無聊，學習動機慢慢下降。</figcaption>
+    </figure>
+
+    <h3 class="advh">${icon('compass')}資優教育在做什麼？</h3>
+    <div class="pillars">
+      <div>${icon('book')}<b>加深加廣</b><p>在原本的學科上往深處走，接觸課本以外的主題，填補等待的空窗期。</p></div>
+      <div>${icon('spark')}<b>多元開發</b><p>透過獨立研究、創造思考、領導課程，讓不同類型的潛能都有機會被看見。</p></div>
+      <div>${icon('people')}<b>人際支持</b><p>和想法相近的同伴一起學習、討論，找到能聊得來的朋友。</p></div>
+      <div>${icon('heart')}<b>情意陪伴</b><p>面對完美主義、強烈情緒與挫折，學習認識自己、調整步調。</p></div>
+    </div>
+    <p class="advfoot">資優教育讓孩子在適合的環境裡學習，持續保有對學習的熱情。</p>
+  </section>`;
+}
 
 /* ---------- 站點選擇 ---------- */
 SCREENS.picker = () => {
@@ -689,7 +775,7 @@ const ART_FILES = {
 const ART = {}, ART_FAIL = {};
 let artTimer = null;
 function artSettle(){ clearTimeout(artTimer); artTimer = setTimeout(()=>{
-  if(['g1','g2','g3'].indexOf(S.screen)>=0 && !g1Anim && g3Phase!=='show') render(); }, 80); }
+  if(['g1','g2','g3'].indexOf(S.screen)>=0 && !g1Anim && g3Phase!=='show') render(); }, 30); }
 (function preloadArt(){
   Object.keys(ART_FILES).forEach(k=>{
     const src = 'assets/art/' + ART_FILES[k], im = new Image();
@@ -700,9 +786,7 @@ function artSettle(){ clearTimeout(artTimer); artTimer = setTimeout(()=>{
   // 保險：6 秒還沒回應的圖，當作不存在
   setTimeout(()=>{ Object.keys(ART_FILES).forEach(k=>{ if(!ART[k]) ART_FAIL[k] = true; }); artSettle(); }, 6000);
 })();
-const ART_GROUP = { g1:k=>/^g1/.test(k), g2:k=>/^g2|^fluff$/.test(k), g3:k=>/^g3/.test(k) };
-function artReady(g){ return Object.keys(ART_FILES).filter(ART_GROUP[g]).every(k=>ART[k]||ART_FAIL[k]); }
-function waitPanel(title, art){ return `${sceneBanner(title, art)}<div class="panel waiting" aria-busy="true" aria-label="載入中"></div>`; }
+function artFB(k, html){ return ART_FAIL[k] ? html : ''; }
 function aimg(k,x,y,w,h,extra){ return `<image href="${ART[k]}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet" ${extra||''}/>`; }
 
 /* =========================================================
@@ -754,6 +838,7 @@ function g1Wrong(){ // 沿路線順序，第一塊方向不對的零件
 function railSVG(p, cls){
   const ak = p.t==='s' ? 'g1s' : 'g1c';
   if(ART[ak]) return `<g transform="rotate(${p.r*90} 50 50)" class="${cls||''}">${aimg(ak,0,0,100,100)}</g>`;
+  if(!ART_FAIL[ak]) return '';
   const inner = p.t==='s'
     ? `<line x1="0" y1="50" x2="100" y2="50" class="rail"/><line x1="0" y1="50" x2="100" y2="50" class="rail2"/>${[15,38,62,85].map(x=>`<rect x="${x-3}" y="38" width="6" height="24" fill="#8a6a3a"/>`).join('')}`
     : `<path d="M50 0 A50 50 0 0 0 100 50" class="rail"/><path d="M50 0 A50 50 0 0 0 100 50" class="rail2"/>`;
@@ -761,6 +846,7 @@ function railSVG(p, cls){
 }
 function decoSVG(k){
   if(ART['g1'+k]) return aimg('g1'+k,2,2,96,96);
+  if(!ART_FAIL['g1'+k]) return '';
   return k==='rock'
     ? `<ellipse cx="50" cy="62" rx="26" ry="16" fill="#8b93a3"/><ellipse cx="42" cy="56" rx="10" ry="5" fill="#a9b0bd"/>`
     : `<line x1="50" y1="72" x2="50" y2="46" stroke="#3f8a74" stroke-width="4"/>${[0,72,144,216,288].map(a=>`<circle cx="${50+9*Math.cos(a*Math.PI/180)}" cy="${40+9*Math.sin(a*Math.PI/180)}" r="7" fill="#e9a3b8"/>`).join('')}<circle cx="50" cy="40" r="5" fill="#F4CF87"/>`;
@@ -793,18 +879,17 @@ function g1BoardSVG(){
   return `<svg class="board" id="board" viewBox="-60 -20 420 340" role="group" aria-label="三乘三軌道方格">
     <rect x="-60" y="-20" width="420" height="340" fill="#22314d" rx="14"/>${ART.g1bg?aimg('g1bg',-60,-20,420,340,'preserveAspectRatio="xMidYMid slice"'):''}
     <g aria-hidden="true"><rect x="-52" y="36" width="50" height="28" rx="6" fill="#73B8A5"/><path d="M-36 42 L-20 50 L-36 58z" fill="#18243B"/></g>
-    ${ART[solved?'g1lhOn':'g1lhOff'] ? `<g aria-hidden="true" transform="translate(300 200)">${aimg(solved?'g1lhOn':'g1lhOff',-6,0,60,110)}</g>` : `<g aria-hidden="true" transform="translate(300 220)">
+    ${ART[solved?'g1lhOn':'g1lhOff'] ? `<g aria-hidden="true" transform="translate(300 200)">${aimg(solved?'g1lhOn':'g1lhOff',-6,0,60,110)}</g>` : !ART_FAIL[solved?'g1lhOn':'g1lhOff'] ? '' : `<g aria-hidden="true" transform="translate(300 220)">
       <rect x="12" y="20" width="24" height="70" fill="#FFF8EB"/><rect x="12" y="40" width="24" height="10" fill="#c0503f"/><rect x="12" y="66" width="24" height="10" fill="#c0503f"/>
       <rect x="8" y="10" width="32" height="14" rx="3" fill="#44506a"/>
       <circle cx="24" cy="12" r="${solved?22:8}" fill="${solved?'#F4CF87':'#5d6b85'}" opacity="${solved?.9:1}"/>
     </g>`}
     ${cells}${mark}
-    <g id="car" aria-hidden="true" transform="translate(${solved?'340 250':'-30 50'})">${ART.g1car?aimg('g1car',-20,-20,40,40):`<circle r="14" fill="#F4CF87" stroke="#8a5a12" stroke-width="2"/><path d="M0 -8 L2.4 -2.4 L8 -2.4 L3.6 1.2 L5.2 7 L0 3.6 L-5.2 7 L-3.6 1.2 L-8 -2.4 L-2.4 -2.4z" fill="#fff"/>`}</g>
+    <g id="car" aria-hidden="true" transform="translate(${solved?'340 250':'-30 50'})">${ART.g1car?aimg('g1car',-20,-20,40,40):!ART_FAIL.g1car?'':`<circle r="14" fill="#F4CF87" stroke="#8a5a12" stroke-width="2"/><path d="M0 -8 L2.4 -2.4 L8 -2.4 L3.6 1.2 L5.2 7 L0 3.6 L-5.2 7 L-3.6 1.2 L-8 -2.4 L-2.4 -2.4z" fill="#fff"/>`}</g>
   </svg>`;
 }
 function dots(n, cur, done){ return `<div class="dots" aria-label="第 ${cur+1} 關，共 ${n} 關">${Array.from({length:n},(_,i)=>`<i class="${i<cur||(i===cur&&done)?'on':''} ${i===cur?'cur':''}"></i>`).join('')}</div>`; }
 SCREENS.g1 = () => {
-  if(!artReady('g1')) return waitPanel('機關修理所', STATIONS.g1.art);
   const g = S.g1, solved = g.solved[g.level], last = g.level===G1_LEVELS.length-1;
   let fb = '', cls = '';
   if(solved){ fb = '到站了！'; cls='ok'; }
@@ -906,27 +991,26 @@ function shapeSVG(key, cx, cy, size){
 function stonesSVG(){
   const g = S.g2, R = G2_ROUNDS[Math.min(g.round,G2_ROUNDS.length-1)], solved = g.roundSolved;
   const xs = [58,108,158,208,258,308];
-  const fluff = ART.fluff ? `<g class="fluffHop">${aimg('fluff',-26,-30,52,52)}</g>` : `<g class="fluffHop"><ellipse cx="0" cy="0" rx="17" ry="15" fill="#e9dccb" stroke="#18243B" stroke-width="1.5"/><circle cx="-6" cy="-3" r="2.4" fill="#1c2638"/><circle cx="6" cy="-3" r="2.4" fill="#1c2638"/>
+  const fluff = ART.fluff ? `<g class="fluffHop">${aimg('fluff',-26,-30,52,52)}</g>` : !ART_FAIL.fluff ? '<g class="fluffHop"></g>' : `<g class="fluffHop"><ellipse cx="0" cy="0" rx="17" ry="15" fill="#e9dccb" stroke="#18243B" stroke-width="1.5"/><circle cx="-6" cy="-3" r="2.4" fill="#1c2638"/><circle cx="6" cy="-3" r="2.4" fill="#1c2638"/>
      <path d="M-4 4q4 3 8 0" stroke="#1c2638" stroke-width="1.8" fill="none"/><rect x="-24" y="-12" width="12" height="12" rx="3" fill="#c0503f"/>
      </g>`;
   const stones = xs.map((x,i)=>{
     const known = i<5, filled = i===5 && solved;
-    const stone = (known||filled) && ART.g2stone ? aimg('g2stone',x-28,136,56,28) : `<ellipse cx="${x}" cy="150" rx="22" ry="11" fill="${known||filled?'#9aa3b2':'none'}" stroke="${known||filled?'#6b7385':'#FFF8EB'}" stroke-width="2" ${known||filled?'':'stroke-dasharray="5 4"'}/>`;
+    const stone = (known||filled) && ART.g2stone ? aimg('g2stone',x-28,136,56,28) : (known||filled) && !ART_FAIL.g2stone ? '' : `<ellipse cx="${x}" cy="150" rx="22" ry="11" fill="${known||filled?'#9aa3b2':'none'}" stroke="${known||filled?'#6b7385':'#FFF8EB'}" stroke-width="2" ${known||filled?'':'stroke-dasharray="5 4"'}/>`;
     return `${stone}
       ${known ? shapeSVG(R.seq[i], x, 122, 40) : filled ? shapeSVG(R.ans, x, 122, 40) : `<text x="${x}" y="134" text-anchor="middle" font-size="34" font-weight="700" fill="#F4CF87">?</text>`}`;
   }).join('');
   const atEnd = solved && PREF.reduce;
   return `<svg class="stones ${solved&&!PREF.reduce?'cross':''}" viewBox="0 78 360 122" role="img" aria-label="河上一排踏石：${R.seq.map(k=>SHAPE_NAME[k]).join('、')}，最後一顆是問號">
-    ${ART.g2river ? aimg('g2river',0,78,360,122,'preserveAspectRatio="xMidYMid slice"') : `<rect width="360" height="200" fill="#2c3d5f"/>
+    ${ART.g2river ? aimg('g2river',0,78,360,122,'preserveAspectRatio="xMidYMid slice"') : !ART_FAIL.g2river ? '<rect y="78" width="360" height="122" fill="#22314d"/>' : `<rect width="360" height="200" fill="#2c3d5f"/>
     <rect x="0" y="140" width="34" height="60" fill="#3f8a74"/><rect x="330" y="140" width="30" height="60" fill="#3f8a74"/>
     <rect x="34" y="146" width="296" height="54" fill="#4a7fb0"/><path d="M50 182q10-4 20 0t20 0M150 190q10-4 20 0t20 0M240 178q10-4 20 0" stroke="#9cc6e6" stroke-width="2" fill="none"/>`}
-    ${ART.g2house ? aimg('g2house',326,92,34,50) : `<rect x="334" y="112" width="24" height="28" fill="#a4733f"/><path d="M330 114l16-12 16 12z" fill="#7a4f2a"/>`}
+    ${ART.g2house ? aimg('g2house',326,92,34,50) : !ART_FAIL.g2house ? '' : `<rect x="334" y="112" width="24" height="28" fill="#a4733f"/><path d="M330 114l16-12 16 12z" fill="#7a4f2a"/>`}
     ${stones}
     <g class="fluffMove" ${atEnd?'transform="translate(322 0)"':''}><g transform="translate(18 124)">${fluff}</g></g>
   </svg>`;
 }
 SCREENS.g2 = () => {
-  if(!artReady('g2')) return waitPanel('奇想工坊', STATIONS.g2.art);
   const g = S.g2, n = G2_ROUNDS.length;
   const R = G2_ROUNDS[Math.min(g.round,n-1)], last = g.round===n-1;
   return `${sceneBanner('奇想工坊', STATIONS.g2.art, '#3a2f3a')}
@@ -959,11 +1043,11 @@ function skySVG(){
   const line = pathIdx.length>1 ? `<polyline points="${pathIdx.map(i=>STARS[i].join(',')).join(' ')}" fill="none" stroke="#F4CF87" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>` : '';
   const bg = Array.from({length:30},(_,i)=>`<circle cx="${(i*67)%320}" cy="${(i*43)%220}" r="${i%4?0.8:1.3}" fill="#FFF8EB" opacity=".6"/>`).join('');
   return `<svg class="sky" id="sky" viewBox="0 0 320 220" role="group" aria-label="夜空裡的六顆星星">
-    <rect width="320" height="220" rx="14" fill="#101a2e"/>${ART.g3sky?aimg('g3sky',0,0,320,220,'preserveAspectRatio="xMidYMid slice"'):bg}${line}
+    <rect width="320" height="220" rx="14" fill="#101a2e"/>${ART.g3sky?aimg('g3sky',0,0,320,220,'preserveAspectRatio="xMidYMid slice"'):ART_FAIL.g3sky?bg:''}${line}
     ${STARS.map((p,i)=>`<g class="star ${solved&&seq.indexOf(i)>=0?'lit':''}" data-star="${i}" data-act="g3tap" data-i="${i}" role="button" tabindex="0" aria-label="第 ${i+1} 顆星星">
       <circle cx="${p[0]}" cy="${p[1]}" r="28" fill="transparent" class="ring" stroke="none"/>
       <circle cx="${p[0]}" cy="${p[1]}" r="22" class="halo"/>
-      ${ART.g3off&&ART.g3on ? aimg('g3off',p[0]-20,p[1]-20,40,40,'class="soff"')+aimg('g3on',p[0]-20,p[1]-20,40,40,'class="son"') : `<path class="core" d="M${p[0]} ${p[1]-14} L${p[0]+4} ${p[1]-4} L${p[0]+14} ${p[1]-4} L${p[0]+6} ${p[1]+3} L${p[0]+9} ${p[1]+13} L${p[0]} ${p[1]+7} L${p[0]-9} ${p[1]+13} L${p[0]-6} ${p[1]+3} L${p[0]-14} ${p[1]-4} L${p[0]-4} ${p[1]-4}Z"/>`}
+      ${ART.g3off&&ART.g3on ? aimg('g3off',p[0]-20,p[1]-20,40,40,'class="soff"')+aimg('g3on',p[0]-20,p[1]-20,40,40,'class="son"') : !(ART_FAIL.g3off||ART_FAIL.g3on) ? '' : `<path class="core" d="M${p[0]} ${p[1]-14} L${p[0]+4} ${p[1]-4} L${p[0]+14} ${p[1]-4} L${p[0]+6} ${p[1]+3} L${p[0]+9} ${p[1]+13} L${p[0]} ${p[1]+7} L${p[0]-9} ${p[1]+13} L${p[0]-6} ${p[1]+3} L${p[0]-14} ${p[1]-4} L${p[0]-4} ${p[1]-4}Z"/>`}
     </g>`).join('')}
   </svg>`;
 }
@@ -999,7 +1083,6 @@ function g3Tap(i){
   const el = document.querySelector(`[data-star="${i}"]`); if(el) el.focus();
 }
 SCREENS.g3 = () => {
-  if(!artReady('g3')) return waitPanel('線索觀星臺', STATIONS.g3.art);
   const g = S.g3, n = G3_ROUNDS.length, last = g.round===n-1, seq = G3_ROUNDS[Math.min(g.round,n-1)];
   let btn = '';
   if(g.roundSolved) btn = last ? `<button class="btn main" data-act="next" data-st="g3">下一站</button>` : `<button class="btn main" data-act="g3next">下一片星空</button>`;
@@ -1023,8 +1106,7 @@ SCREENS.g3 = () => {
 function memoData(){
   const P = parentProfile(), parent = [];
   if(!P.none){
-    if(P.quiet) parent.push('慢慢發光的小宇宙：多留意孩子主動投入的時刻');
-    else P.strengths.forEach(k=>parent.push(`孩子的優勢：${DIMS[k].name}（${levelWord(P.dims.find(x=>x.k===k).avg)}）`));
+    parent.push(P.quiet ? '這次回想到的表現不多，接下來可以多留意孩子主動投入的時刻。' : strengthText(P));
   }
   const did = [], talk = [];
   const nums = ['一','二','三','四','五'];
@@ -1047,7 +1129,7 @@ SCREENS.memento = () => {
   <div class="memo" id="memo">
     <h2>今天的小宇宙紀錄</h2>
     <div class="stamp">親子探索紀錄・非鑑定結果</div>
-    ${d.showParent ? `<section><h3>家長留意到的片段</h3>${d.parent.length?`<ul>${d.parent.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。</p>'}</section>`:''}
+    ${d.showParent ? `<section><h3>孩子的優勢</h3>${d.parent.length?`<ul>${d.parent.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。</p>'}</section>`:''}
     ${d.did.length ? `<section><h3>孩子今天做了什麼</h3><ul>${d.did.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${d.free.map(f=>`<div class="free">${esc(f)}</div>`).join('')}</section>`:''}
     ${d.talk.length ? `<section><h3>下一次可以聊聊</h3><ul>${d.talk.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`:''}
     ${empty ? '<section><p>還沒有探索紀錄。回到首頁，從任一站開始吧！</p></section>':''}
@@ -1215,7 +1297,7 @@ async function downloadMemo(){
     const blocks = [];
     blocks.push({ t:'今天的小宇宙紀錄', s:58, w:700, c:'#18243B', g:8 });
     blocks.push({ t:'親子探索紀錄・非鑑定結果', s:30, w:400, c:'#44506a', g:36 });
-    if(d.showParent){ blocks.push({ t:'家長留意到的片段', s:36, w:700, c:'#2c6a5b', g:10 });
+    if(d.showParent){ blocks.push({ t:'孩子的優勢', s:36, w:700, c:'#2c6a5b', g:10 });
       (d.parent.length?d.parent:['今天先留下一個觀察任務：找一件孩子願意主動投入的事，聽聽他為什麼喜歡。']).forEach(p=>blocks.push({ t:'・'+p, s:32, w:400, c:'#1c2638', g:6 })); blocks.push({gap:26}); }
     if(d.did.length){ blocks.push({ t:'孩子今天做了什麼', s:36, w:700, c:'#2c6a5b', g:10 });
       d.did.forEach(p=>blocks.push({ t:'・'+p, s:32, w:400, c:'#1c2638', g:6 }));
@@ -1261,7 +1343,7 @@ window.addEventListener('error', ev=>{ if(ev.target && ev.target.tagName==='IMG'
 
 /* ---------- 測試積木：給自動測試呼叫 ---------- */
 window.__GAME = {
-  state: ()=>JSON.parse(JSON.stringify(S)), profile: ()=>parentProfile(), CARDS, artReady, go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
+  state: ()=>JSON.parse(JSON.stringify(S)), profile: ()=>parentProfile(), CARDS, strengthText: ()=>strengthText(parentProfile()), go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
   setRot: a=>{ S.g1.rot=a.slice(); g1Last=null; save(); render(); },
   run: runG1, reset: ()=>{ S=fresh(); hist=[]; g1Last=null; save(); render(); }
 };
