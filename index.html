@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v10 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v11 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -256,6 +256,7 @@ ol.tl b{min-width:3em;color:var(--teal-d)}
 .arr{width:34px;height:20px;fill:none;stroke:var(--gold-d);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 .advfoot b{display:block;color:var(--gold);font-size:1.05rem;margin-bottom:4px}
 .advfoot p{margin:4px 0 0;color:var(--cream)}
+.calbtn{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:8px;padding:8px 14px;border-radius:12px;background:var(--teal-l);color:var(--teal-d);font-weight:700;text-decoration:none;border:2px solid var(--teal)}
 .typecard{background:var(--night);color:var(--cream);border-radius:16px;padding:16px;margin:4px 0 14px}
 .typecard small{color:var(--gold);font-weight:700;letter-spacing:.08em}
 .typecard h2{color:var(--gold)!important;margin:2px 0 6px!important;font-size:1.4rem}
@@ -371,7 +372,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v10',
+  version: 'v11',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -391,6 +392,10 @@ const CONFIG = {
     ['戶外充實課程與專家座談','透過充實課程，豐富孩子們的生活經驗、滿足求知慾。'],
     ['因材施教，加深加廣課程','依據孩子們的特質與需求，規劃適性課程，協助拓展天賦。']
   ],
+  reminder: {
+    title: '洽詢高雄市國小資優鑑定簡章',
+    details: '高雄市國小一般智能資優鑑定簡章預計 12 月底公告，可查詢教育局公告，或至莒光資優班網查看。'
+  },
   courseUrl: 'https://daimg49.wixsite.com/chukps-giftedclass/services-1',
   courseLabel: '看莒光資優班完整課程規劃',
   bgm: 'assets/art/bgm.mp3'   // 配樂檔（選用）；沒有這個檔案就只有提示音
@@ -1173,6 +1178,23 @@ function classSiteBtn(kind){
 }
 
 /* ---------- 鑑定與報名 ---------- */
+// Google 行事曆「新增活動」連結：全天行程，今年 12/30 已過就排明年（臺灣時間）
+function reminderYear(now){
+  const tw = new Date((now==null?Date.now():now) + 8*3600e3);
+  const y = tw.getUTCFullYear(), m = tw.getUTCMonth()+1, d = tw.getUTCDate();
+  return (m===12 && d>30) ? y+1 : y;
+}
+function gcalUrl(now){
+  const y = reminderYear(now);
+  const p = new URLSearchParams({
+    action:'TEMPLATE',
+    text: CONFIG.reminder.title,
+    dates: `${y}1230/${y}1231`,
+    details: CONFIG.reminder.details + '\n' + CONFIG.school.classSiteUrl,
+    ctz:'Asia/Taipei'
+  });
+  return 'https://calendar.google.com/calendar/render?' + p.toString();
+}
 SCREENS.enroll = () => {
   const s = CONFIG.school;
   const brochure = s.brochureUrl
@@ -1182,12 +1204,11 @@ SCREENS.enroll = () => {
     <h2>想進一步了解？從正式資訊開始。</h2>
     <p>無論今天玩了幾站，都可以了解報名條件與流程。親子探索活動不決定是否能報名。</p>
     <table class="info">
-      <tr><th scope="row">學校</th><td>${esc(s.name)}</td></tr>
       <tr><th scope="row">報名資格</th><td>${esc(s.eligibility)}</td></tr>
       <tr><th scope="row">基本時程</th><td>
         <ol class="tl">${s.timeline.map(t=>`<li><b>${esc(t[0])}</b>${esc(t[1])}</li>`).join('')}</ol>
         <span class="muted">${esc(s.timelineNote)}</span></td></tr>
-      <tr><th scope="row">正式簡章</th><td>${s.brochureUrl ? '請點下方按鈕閱讀' : `<b>${esc(s.brochureNote)}</b>`}</td></tr>
+      <tr><th scope="row">正式簡章</th><td>${s.brochureUrl ? '請點下方按鈕閱讀' : `<b>${esc(s.brochureNote)}</b><a class="calbtn" href="${esc(gcalUrl())}" target="_blank" rel="noopener">加入 Google 行事曆提醒 ↗</a>`}</td></tr>
     </table>
     <p class="muted" style="margin-top:10px">資格、鑑定方式與重要提醒，以官方簡章為準。</p>
     <div class="btns">${brochure}</div>
@@ -1355,7 +1376,7 @@ window.addEventListener('error', ev=>{ if(ev.target && ev.target.tagName==='IMG'
 
 /* ---------- 測試積木：給自動測試呼叫 ---------- */
 window.__GAME = {
-  state: ()=>JSON.parse(JSON.stringify(S)), profile: ()=>parentProfile(), CARDS, strengthText: ()=>strengthText(parentProfile()), go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
+  state: ()=>JSON.parse(JSON.stringify(S)), profile: ()=>parentProfile(), CARDS, strengthText: ()=>strengthText(parentProfile()), gcalUrl, reminderYear, go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
   setRot: a=>{ S.g1.rot=a.slice(); g1Last=null; save(); render(); },
   run: runG1, reset: ()=>{ S=fresh(); hist=[]; g1Last=null; save(); render(); }
 };
