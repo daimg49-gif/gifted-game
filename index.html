@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   看見小宇宙 v13 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
+   看見小宇宙 v14 ｜ 程式：Claude ｜ 美術：ChatGPT（assets/art/）
    積木：入口(畫面) / 守門(規則) / 地基(單檔+GitHub Pages) / 工具箱(CONFIG)
    ========================================================= */
 :root{
@@ -376,7 +376,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v13',
+  version: 'v14',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -452,7 +452,7 @@ const CARDS = [
 const CARD_OPTS = ['很少看到','有時候','常常','幾乎每次'];
 
 const ROUTES = {
-  parent:  { label:'我想觀察孩子',  time:'3–4 分鐘',  say:'不用替孩子挑最漂亮的答案，回想您真的看過的情況就好。' },
+  parent:  { label:'我想觀察孩子',  time:'約 2 分鐘',  say:'不用替孩子挑最漂亮的答案，回想您真的看過的情況就好。' },
   child:   { label:'讓孩子試試看',  time:'4–6 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' }
 };
 
@@ -471,11 +471,11 @@ const TALK = {
 /* =========================================================
    地基：狀態（只存在目前分頁 sessionStorage，不送出、不跨裝置）
    ========================================================= */
-const KEY = 'xyz-state-v6';
+const KEY = 'xyz-state-v14';
 function fresh(){
   return {
     route:null, screen:'home', cardIdx:0,
-    cards:CARDS.map(()=>null), cardsDone:false,
+    cards:CARDS.map(()=>null), qset:[], cardsDone:false,
     g1:{ level:0, rot:[1,0,0,0,3], solved:[false,false], runs:0, hint:0, hintUsed:false, done:false },
     g2:{ round:0, roundSolved:false, solvedCount:0, done:false },
     g3:{ round:0, roundSolved:false, best:0, views:0, done:false },
@@ -636,7 +636,7 @@ AFTER.home = () => { document.body.classList.add('home'); };
 SCREENS.intro = () => {
   const r = ROUTES[S.route] || ROUTES.child;
   const mood = S.route==='child' ? 'happy' : 'guide';
-  const plan = S.route==='parent' ? '共 16 題日常情境，回想孩子最近半年在家裡、出遊或和朋友相處的樣子，選出最接近的頻率。'
+  const plan = S.route==='parent' ? '每次從題庫隨機抽出 8 題日常情境，四個面向各 2 題，回想孩子最近半年在家裡、出遊或和朋友相處的樣子，選出最接近的頻率。'
     : '三個小任務：轉軌道、找規律、記星星。不用讀字，看圖就能玩，想先玩哪一個都可以。';
   const childNote = S.route==='child' ? `<div class="panel note-adult">
     <h3>給陪伴的大人</h3>
@@ -652,7 +652,8 @@ SCREENS.intro = () => {
 
 /* ---------- 家長觀察樹屋 ---------- */
 SCREENS.cards = () => {
-  const N = CARDS.length, i = Math.min(S.cardIdx, N-1), c = CARDS[i], v = S.cards[i];
+  if(!S.qset || !S.qset.length) newQset();
+  const N = S.qset.length, i = Math.min(S.cardIdx, N-1), c = CARDS[S.qset[i]], v = S.cards[S.qset[i]];
   return `${sceneBanner('家長觀察樹屋','assets/art/scene-treehouse.webp')}
   <div class="panel pcard">
     <div class="prog">第 ${i+1} 題／共 ${N} 題</div>
@@ -1241,8 +1242,18 @@ function nextStation(cur){
   const left = ['g1','g2','g3'].filter(k=>!S[k].done && !S.skipped[k] && k!==cur);
   go(left.length ? left[0] : 'memento');
 }
+/* 題庫抽題：四個面向各抽 PER_DIM 題，兩輪交錯排列，讓各面向平均分散 */
+const PER_DIM = 2;
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function newQset(){
+  const pick = {};
+  DIM_ORDER.forEach(d=>{ pick[d] = shuffle(CARDS.map((c,i)=>c.d===d?i:-1).filter(i=>i>=0)).slice(0,PER_DIM); });
+  const q = [];
+  for(let r=0;r<PER_DIM;r++) shuffle(DIM_ORDER.slice()).forEach(d=>q.push(pick[d][r]));
+  S.qset = q; S.cards = CARDS.map(()=>null); S.cardIdx = 0; S.cardsDone = false;
+}
 function startRoute(){
-  if(S.route==='parent'){ S.cardIdx = 0; go('cards'); }
+  if(S.route==='parent'){ newQset(); save(); go('cards'); }
   else go('picker');
 }
 let cardLock = false;
@@ -1273,7 +1284,7 @@ function act(el){
     case 'spot': {
       const to = el.dataset.to;
       if(!S.route) S.route = to==='cards' ? 'parent' : 'child';
-      if(to==='cards'){ S.cardIdx = S.cardsDone?0:S.cardIdx; }
+      if(to==='cards' && (S.cardsDone || !S.qset || !S.qset.length)) newQset();
       save(); go(to); break; }
     case 'tochild': S.route='child'; save(); go('picker'); break;
     case 'memento': go('memento'); break;
@@ -1286,17 +1297,17 @@ function act(el){
       if(cardLock) break;
       cardLock = true;
       const idx = S.cardIdx;
-      S.cards[idx] = +el.dataset.v; save(); render();          // 先顯示選到的選項
+      S.cards[S.qset[idx]] = +el.dataset.v; save(); render();          // 先顯示選到的選項
       setTimeout(()=>{
         cardLock = false;
         if(S.screen!=='cards' || S.cardIdx!==idx) return;
-        if(idx>=CARDS.length-1) finishCards();                // 最後一題：自動開啟結果頁
+        if(idx>=S.qset.length-1) finishCards();                // 最後一題：自動開啟結果頁
         else { S.cardIdx++; save(); render(); main.focus(); }
       }, 500);
       break; }
-    case 'cardnext': if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
+    case 'cardnext': if(S.cardIdx>=S.qset.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
     case 'cardprev': if(S.cardIdx>0){ S.cardIdx--; save(); render(); main.focus(); } break;
-    case 'cardskip': S.cards[S.cardIdx] = null; if(S.cardIdx>=CARDS.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
+    case 'cardskip': S.cards[S.qset[S.cardIdx]] = null; if(S.cardIdx>=S.qset.length-1) finishCards(); else { S.cardIdx++; save(); render(); main.focus(); } break;
 
     case 'skipst': {
       const st = el.dataset.st;
